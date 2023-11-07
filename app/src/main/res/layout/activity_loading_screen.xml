@@ -19,7 +19,7 @@
         android:src="@drawable/corcodoingo_loading" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/text_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/krokodyl_loading"
