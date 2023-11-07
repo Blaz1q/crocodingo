@@ -1221,6 +1221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             DefaultMainPageActions();
         }
         else if(v.getId()==R.id.creditsbtn){
+            SaveSettings();
             setContentView(R.layout.credits);
             AddActions("credits");
         }
@@ -1241,7 +1242,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Resume_Question_Buttons_Final();
             AddActions("pytania_wybor_bledne");
         } else if (v.getId()==R.id.wroc_z_creditsow) {
-            SaveSettings();
             DefaultMainPageActions();
         } else if (v.getId()==R.id.wrocmenu) {
            DefaultMainPageActions();
