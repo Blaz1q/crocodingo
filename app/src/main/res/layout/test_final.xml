@@ -13,7 +13,7 @@
     <Button
         android:layout_below="@id/hiddentop"
         style="@style/Widget.MaterialComponents.Button"
-        android:id="@+id/zakoncz_wynik"
+        android:id="@+id/wrocmenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -27,7 +27,7 @@
         android:id="@+id/Wynik_testu_powitanie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/zakoncz_wynik"
+        android:layout_below="@id/wrocmenu"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="50dp"

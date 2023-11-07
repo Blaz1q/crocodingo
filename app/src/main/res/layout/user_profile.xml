@@ -11,7 +11,7 @@
         ></LinearLayout>
 
     <Button
-        android:id="@+id/wroc4"
+        android:id="@+id/wrocmenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/hiddentop"
@@ -31,7 +31,7 @@
         app:strokeColor="@android:color/darker_gray"
         app:strokeWidth="2dp"
         android:padding="2dp"
-        android:layout_below="@id/wroc4"
+        android:layout_below="@id/wrocmenu"
         android:layout_centerHorizontal="true"
         />
     <TextView

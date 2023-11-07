@@ -13,7 +13,7 @@
         ></LinearLayout>
 
     <Button
-        android:id="@+id/wroc4"
+        android:id="@+id/wrocmenu"
         android:layout_below="@id/hiddentop"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
         android:text="Wróć do startu" />
 
     <LinearLayout
-        android:layout_below="@id/wroc4"
+        android:layout_below="@id/wrocmenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">

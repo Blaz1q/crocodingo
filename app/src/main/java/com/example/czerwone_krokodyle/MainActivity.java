@@ -64,6 +64,8 @@ import org.scilab.forge.jlatexmath.BoldAtom;
 import org.w3c.dom.Text;
 
 import ru.noties.jlatexmath.JLatexMathDrawable;
+
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -90,11 +92,10 @@ import java.util.Random;
 import java.util.Date;
 import java.util.Set;
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
-    public int przyciskszybki;
     Czapka czapka;
-    public int ObecnyLayout = R.layout.main_page;
     private List<Czapka> listaCzapek = new ArrayList<>();
-    private List<Boolean> czykupioneczapki = new ArrayList<>();
+    private List<String> actions = new ArrayList<>();
+    int actionsindex = 0;
     AlertDialog wyjscie;
     String DBVERSIONval = "";
     private JLatexMathDrawable Test_Math_drawable;
@@ -107,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean zaladowano_czapki = false;
     boolean zaladowanodb = false; //tylko w przypadku gdy nie ma połączenia z bazą
     String[] LitABCD = {"A","B","C","D"};
+    boolean isPopupVisible = false;
     final int color_correct = 0xff88d18a;
     final int color_text_correct = 0xff0d1b15;
     final int color_incorrect = 0xfff52720;
@@ -225,43 +227,69 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     @Override
     public void onBackPressed() {
         canplayanimations = false;
-
-
-        if(ObecnyLayout == R.layout.main_page){
+        if(actionsindex!=0){
+            switch (actions.get(actionsindex-1)){
+                case "select_tests":
+                    DefaultMainPageActions();
+                    break;
+                case "pytania_wybor":
+                    if(isPopupVisible==false){
+                        isPopupVisible = true;
+                        myDialog = new Dialog(this);
+                        myDialog.setContentView(R.layout.zakonczenie_testu);
+                        myDialog.show();
+                        myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                isPopupVisible = false;
+                            }
+                        }); //muszę zrobić haxa bo nie mam parametru View aby wywołać funkcje popupTestyZakoncz() :<
+                    }
+                    break;
+                case "pytanie_wyglad":
+                    setContentView(R.layout.pytania_wybor);
+                    Resume_Question_Buttons();
+                    RemoveAction();
+                    break;
+                case "test_final":
+                    DefaultMainPageActions();
+                    break;
+                case "pytanie_wyglad_wyjasnienie":
+                    //wróć do pytania_wybor_bledne
+                    setContentView(R.layout.pytania_wybor_bledne);
+                    Resume_Question_Buttons_Final();
+                    RemoveAction();
+                    break;
+                case "pytania_wybor_bledne":
+                    DefaultMainPageActions();
+                    break;
+                case "userprofile":
+                    DefaultMainPageActions();
+                    break;
+                case "wyjasnienie":
+                    //wróć do pytanie_wyglad_wyjasnienie
+                    setContentView(R.layout.pytanie_wyglad_wyjasnienie);
+                    Set_pytanie_bledne();
+                    RemoveAction();
+                    break;
+                case "sklep":
+                    DefaultMainPageActions();
+                    break;
+                case "settings":
+                    SaveSettings();
+                    DefaultMainPageActions();
+                    break;
+                case "credits":
+                    setContentView(R.layout.settings);
+                    UpdateSettings();
+                    RemoveAction();
+                    break;
+                default:
+                    wyjscie.show();
+                    break;
+            }
+        }else{
             wyjscie.show();
-        }
-
-        else if (przyciskszybki==R.id.wroc){
-            setContentView(R.layout.main_page);
-            updateAccInfo();
-            canplayanimations = true;
-            ObecnyLayout = R.layout.main_page;
-            ustawCzapke();
-            ResumeOnLongListener();
-        }
-        else if(przyciskszybki==R.id.wroc3){
-            setContentView(R.layout.pytania_wybor);
-            Resume_Question_Buttons();
-            przyciskszybki=R.id.wroc4;
-        }
-        else if(przyciskszybki==R.id.wroc4){
-            myDialog = new Dialog(this);
-            myDialog.setContentView(R.layout.zakonczenie_testu);
-            myDialog.show();
-
-        }
-        else if(przyciskszybki == R.id.wroc10){
-            setContentView(R.layout.pytania_wybor_bledne);
-            Resume_Question_Buttons_Final();
-            przyciskszybki = R.id.wroc;
-        }
-        else if(przyciskszybki==0){
-            setContentView(R.layout.main_page);
-            canplayanimations=true;
-            updateAccInfo();
-            bgmusicnormal();
-            ustawCzapke();
-            ResumeOnLongListener();
         }
         czypokazana = false;
         LoadData();
@@ -532,9 +560,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 opisCzapki = "Opis czapki";
                 idCzapki = String.valueOf(przyciskNumer);
             }
-
+            if(isPopupVisible==false){
+                isPopupVisible=true;
             myDialog = new Dialog(this);
             myDialog.setContentView(R.layout.popup_layout);
+            myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        isPopupVisible = false;
+                    }
+                });
 
             ImageView czapaImage = myDialog.findViewById(R.id.czapa_image);
             TextView czapaNazwa = myDialog.findViewById(R.id.czapa_nazwa);
@@ -561,14 +596,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             SaveMoney(noweHajsy);
                             Toast.makeText(MainActivity.this, "Zakupiono " + nazwaCzapki, Toast.LENGTH_SHORT).show();
                             myDialog.dismiss();
+                            isPopupVisible=false;
                             aktualizujTextPrzyciskow();
                         } else {
                             Toast.makeText(MainActivity.this, "Nie masz wystarczająco crococoinów na zakup", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-
                 myDialog.show();
+            }
             }
             else if(akcja[Integer.valueOf(idCzapki)]==1){
                 SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
@@ -931,7 +967,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }catch (Exception e){
 
         }
-
         try{
             if(UserProfileUrl!=""){
                 Glide.with(getApplicationContext()).load(UserProfileUrl).into(userPic);
@@ -968,7 +1003,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         sw1 = findViewById(R.id.switch1);
         sw2 = findViewById(R.id.switch2);
         try{
-
             if(!Objects.equals(UserProfileUrl, "")){
                 Glide.with(getApplicationContext()).load(UserProfileUrl).into(userPic);
             }
@@ -1052,6 +1086,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             startActivityForResult(signInIntent,1000);
         } else if (v.getId()==R.id.zaloguj){
             myDialog.dismiss();
+            isPopupVisible=false;
             Intent signInIntent = gsc.getSignInIntent();
             startActivityForResult(signInIntent,1000);
         }
@@ -1153,142 +1188,172 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    public void DefaultMainPageActions(){
+        setContentView(R.layout.main_page);
+        updateAccInfo();
+        canplayanimations = true;
+        ResumeOnLongListener();
+        ustawCzapke();
+        ResetActions();
+    }
     public void Zmien_widoki(View v) {
         canplayanimations = false;
         if(v.getId()==R.id.ustawienia){
             setContentView(R.layout.settings);
             UpdateSettings();
-            ObecnyLayout = 0;
+            AddActions("settings");
         }
         else if(v.getId()==R.id.wroc_do_pytania){
             setContentView(R.layout.pytanie_wyglad_wyjasnienie);
             Set_pytanie_bledne();
-            ObecnyLayout = 0;
+            RemoveAction();
         }
         else if(v.getId()==R.id.user_profile){
             setContentView(R.layout.user_profile);
             UpdateUserProfile();
-            ObecnyLayout = 0;
+            AddActions("userprofile");
         }
         else if(v.getId()==R.id.wroc){
             SaveSettings();
-            setContentView(R.layout.main_page);
-            updateAccInfo();
-            canplayanimations = true;
-            ResumeOnLongListener();
-            ustawCzapke();
+            DefaultMainPageActions();
         }
         else if(v.getId()==R.id.zakoncz_test_bledne){
-            setContentView(R.layout.main_page);
-            updateAccInfo();
+            DefaultMainPageActions();
         }
         else if(v.getId()==R.id.creditsbtn){
             setContentView(R.layout.credits);
+            AddActions("credits");
         }
         else if (v.getId()==R.id.OtworzSklep){
             setContentView(R.layout.sklep);
             TextView iloschajsu = findViewById(R.id.crococoinyilosc);
             iloschajsu.setText(String.valueOf(getMoney()));
-            ObecnyLayout = 0;
             aktualizujTextPrzyciskow();
+            AddActions("sklep");
         }
         else if(v.getId()==R.id.wroc_do_pytan_bledne){
             setContentView(R.layout.pytania_wybor_bledne);
             Resume_Question_Buttons_Final();
-            ObecnyLayout = 0;
+            AddActions("pytania_wybor_bledne");
         }
-
         else if(v.getId()==R.id.zobacz_bledne){
             setContentView(R.layout.pytania_wybor_bledne);
             Resume_Question_Buttons_Final();
-            ObecnyLayout = 0;
-            przyciskszybki = R.id.wroc10;
-        }
-        else if (v.getId()==R.id.wroc||v.getId()==R.id.wroc3||v.getId()==R.id.wroc4||v.getId()==R.id.zakoncz_wynik||v.getId()==R.id.wroc10||v.getId()==R.id.wroc_z_creditsow){
-            setContentView(R.layout.main_page);
-            updateAccInfo();
-            canplayanimations = true;
-            ResumeOnLongListener();
-            ustawCzapke();
+            AddActions("pytania_wybor_bledne");
+        } else if (v.getId()==R.id.wroc_z_creditsow) {
+            SaveSettings();
+            DefaultMainPageActions();
+        } else if (v.getId()==R.id.wrocmenu) {
+           DefaultMainPageActions();
         }
         else if(v.getId()==R.id.wroc_do_menu_poj){
-            setContentView(R.layout.main_page);
-            updateAccInfo();
-            canplayanimations = true;
-            ResumeOnLongListener();
-            ustawCzapke();
+            DefaultMainPageActions();
             bgmusicnormal();
         }
         else if (v.getId()==R.id.ZmienNaTesty){
             setContentView(R.layout.select_tests);
-            ObecnyLayout = 0;
-            przyciskszybki = R.id.wroc;
             PierwszeUruchomienieTesty();
+            AddActions("select_tests");
         }
         else if (v.getId()==R.id.Rozpocznij_test1){
             setContentView(R.layout.pytania_wybor);
             Create_Question_Buttons();
             myDialog.dismiss();
+            isPopupVisible=false;
             bgmusictesty();
-            przyciskszybki = R.id.wroc4;
-            ObecnyLayout = R.layout.settings;
+            AddActions("pytania_wybor");
         }
         else if (v.getId()==R.id.Rozpocznij_test2){
             setContentView(R.layout.pojedyncze_pytanie);
             Set_pytanie_Poj();
-            przyciskszybki = 0;
             myDialog.dismiss();
+            isPopupVisible=false;
             bgmusictesty();
+            AddActions("pojedyncze_pytanie");
         }
         else if (v.getId()==R.id.wroc_do_pytan){
             setContentView(R.layout.pytania_wybor);
             Resume_Question_Buttons();
-            ObecnyLayout = 0;
-            przyciskszybki = R.id.wroc3;
-            ObecnyLayout = R.layout.settings;
-
+            AddActions("pytania_wybor");
         }
-
         else if (v.getId()==R.id.testy3){
             setContentView(R.layout.testy_debug);
+            AddActions("testy_debug");
             fetchData(1);
-            ObecnyLayout = 0;
-        }
-        int id = getResources().getIdentifier("gay", "raw", getPackageName());
-        //buttonsong.reset();
-        //buttonsong.release();
-        //buttonsong = MediaPlayer.create(this,id);
-        //buttonsong.start();
+        }//do testowania, nie będzie wspierane w późniejszych wersjach
         czypokazana = false;
         LoadData();
         Wibracje();
     }
+    public void ResetActions(){
+        actions.clear();
+        actionsindex=0;
+        Log.w("actionslist",actions.toString());
+        Log.w("actionsindex",String.valueOf(actionsindex));
+    }
+    public void AddActions(String str){
+        actions.add(str);
+        actionsindex++;
+        Log.w("actionslist",actions.toString());
+        Log.w("actionsindex",String.valueOf(actionsindex));
+    }
+    public void RemoveAction(){
+        actions.remove(actionsindex-1);
+        actionsindex--;
+        Log.w("actionslist",actions.toString());
+        Log.w("actionsindex",String.valueOf(actionsindex));
+    }
     public void Zamknij_Popup(View v){
         if(v.getId()==R.id.zamknijlogin||v.getId()==R.id.zamknij1||v.getId()==R.id.zamknij2||v.getId()==R.id.zamknij_test1||v.getId()==R.id.zakoncz_test_przycisk_popup||v.getId()==R.id.zamknijczapka){
             myDialog.dismiss();
+            isPopupVisible = false;
         }
     }
     public void PopupTestyRozpocznij(View v){
-        if(v.getId()==R.id.testy1){
-            myDialog = new Dialog(this);
-            myDialog.setContentView(R.layout.rozpoczecie_testu);
-            myDialog.show();
-        }
-        else if(v.getId()==R.id.testy2){
-            myDialog = new Dialog(this);
-            myDialog.setContentView(R.layout.rozpoczecie_testu_poj);
-            myDialog.show();
+        if(isPopupVisible==false){
+            if(v.getId()==R.id.testy1){
+                isPopupVisible = true;
+                myDialog = new Dialog(this);
+                myDialog.setContentView(R.layout.rozpoczecie_testu);
+                myDialog.show();
+                myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        isPopupVisible = false;
+                    }
+                });
+            }
+            else if(v.getId()==R.id.testy2){
+                isPopupVisible = true;
+                myDialog = new Dialog(this);
+                myDialog.setContentView(R.layout.rozpoczecie_testu_poj);
+                myDialog.show();
+                myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        isPopupVisible = false;
+                    }
+                });
+            }
         }
     }
     public void PopupTestyZakoncz(View v){
-        if(v.getId()==R.id.zakoncz_test||v.getId()==R.id.nextbutton){
-            myDialog = new Dialog(this);
-            myDialog.setContentView(R.layout.zakonczenie_testu);
-            myDialog.show();
+        if(isPopupVisible==false){
+            if(v.getId()==R.id.zakoncz_test||v.getId()==R.id.nextbutton){
+                isPopupVisible = true;
+                myDialog = new Dialog(this);
+                myDialog.setContentView(R.layout.zakonczenie_testu);
+                myDialog.show();
+                myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        isPopupVisible = false;
+                    }
+                });
+            }
         }
     }
     public void Zmien_Id_wartosc(View v){
-
         if(v.getId()==R.id.ZmienIdminus){
             if(SET_TEST_ID>1){
                 TextView id_wartosc = findViewById(R.id.ZmienIDtekst);
@@ -1446,6 +1511,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             CURRENT_INDEX = idList.indexOf(v.getTag());
                             SET_TEST_ID = ShuffledArray.get(CURRENT_INDEX);
                             setContentView(R.layout.pytanie_wyglad);
+                            AddActions("pytanie_wyglad");
                             Set_pytanie();
                         } catch (Exception e){
                             e.printStackTrace();
@@ -1512,6 +1578,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             CURRENT_INDEX = idList.indexOf(v.getTag());
                             SET_TEST_ID = ShuffledArray.get(CURRENT_INDEX);
                             setContentView(R.layout.pytanie_wyglad_wyjasnienie);
+                            AddActions("pytanie_wyglad_wyjasnienie");
                             Set_pytanie_bledne();
                         } catch (Exception e){
                             e.printStackTrace();
@@ -1550,7 +1617,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         Button zmientekst = findViewById(R.id.nextbutton);
                     }
                     if(v.getId()==R.id.nextbuttonbledne) Set_pytanie_bledne();
-                    Set_pytanie();
                 } catch (Exception e){
 
                 }
@@ -1581,6 +1647,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void Wyjasnij(View v){
         if(v.getId()==R.id.wyjasnienie){
             setContentView(R.layout.wyjasnienie);
+            AddActions("wyjasnienie");
             try{
                 ImageView wyjasnienie = findViewById(R.id.wyjasnienie_main);
                 String wyjasnienie_tekst = WyjasnieniaList.get(ShuffledArray.get(CURRENT_INDEX));
@@ -1604,7 +1671,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void Set_pytanie(){
-        przyciskszybki=R.id.wroc3;
         try{
             TextView numer_pytania = findViewById(R.id.numer_pytania);
             numer_pytania.setText("Pytanie "+ (CURRENT_INDEX + 1));
@@ -1714,7 +1780,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void Set_pytanie_bledne(){
-        przyciskszybki = R.id.wroc10;
         try{
                 int i = SET_TEST_ID;
                 String tresc,id;
@@ -2002,10 +2067,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void Zakoncz_test(View v){
         if(v.getId()==R.id.Zakoncz_test_popup){
             myDialog.dismiss();
+            isPopupVisible=false;
             Oblicz_Poprawne();
             bgmusicnormal();
             setContentView(R.layout.test_final);
-            przyciskszybki = R.id.wroc;
+            AddActions("test_final");
             try{
                 TextView poprawneodp = findViewById(R.id.poprawneodpilosc);
                 TextView ilosc_pytan = findViewById(R.id.iloscpytan);
