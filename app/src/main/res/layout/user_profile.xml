@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/hiddentop"
+        android:orientation="horizontal"
+        ></LinearLayout>
+
+    <Button
+        android:id="@+id/wroc4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hiddentop"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#333333"
+        android:onClick="Zmien_widoki"
+        android:text="wróć do startu" />
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/user_profile_pic_profile"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/usernotfound"
+        app:shapeAppearanceOverlay="@style/circleImageView"
+        app:strokeColor="@android:color/darker_gray"
+        app:strokeWidth="2dp"
+        android:padding="2dp"
+        android:layout_below="@id/wroc4"
+        android:layout_centerHorizontal="true"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/usernick_profile"
+        android:layout_below="@id/user_profile_pic_profile"
+        android:text="default"
+        android:textSize="20dp"
+        android:layout_centerHorizontal="true"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/layout_row1"
+        android:layout_below="@id/usernick_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            >
+            <ImageView
+                android:id="@+id/kasazdj"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/crococoin" />
+            <TextView
+                android:id="@+id/kasailosc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            >
+
+            <ImageView
+                android:id="@+id/streakimg"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/streak"
+                android:padding="3dp"
+                />
+
+            <TextView
+                android:id="@+id/streakilosc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="0" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_row2"
+        android:layout_below="@id/layout_row1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            >
+            <ImageView
+                android:id="@+id/zdaneimg"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/zdanetesty"
+                android:padding="3dp"
+                />
+            <TextView
+                android:id="@+id/zdaneilosc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            >
+
+            <ImageView
+                android:id="@+id/nzdaneimg"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="3dp"
+                android:src="@drawable/nzdanetesty" />
+
+            <TextView
+                android:id="@+id/nzdaneilosc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@id/layout_row2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/wyloguj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:onClick="signOut"
+            android:layout_gravity="center"
+            android:text="wyloguj"
+            android:visibility="visible"
+            />
+        <Button
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zaloguj się przez google"
+            android:onClick="signIn"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:visibility="visible"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

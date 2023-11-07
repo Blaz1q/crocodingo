@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/logo" />
+    <TextView
+        android:layout_below="@id/imageView3"
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Od dzisiaj Crocodingo to twój
+najlepszy przyjaciel!
+\n
+\n
+Musisz o niego się troszczyć i dbać.
+\n
+\n
+Jest on Twoim wsparciem aż do dnia matury.
+\n
+\n
+Aczkolwiek jeśli nie zadbasz odpowiednio o Croco...
+\n
+\n
+Cóż, będzie to miało swoje konsekwencje...
+\n"
+        android:textSize="22dp"
+        android:textAlignment="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        />
+    <Button
+        android:id="@+id/welcome_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="Witaj mój nowy przyjacielu!"
+        android:backgroundTint="#333333"
+        android:onClick="Zamknij_tutorial"
+        />
+</RelativeLayout>

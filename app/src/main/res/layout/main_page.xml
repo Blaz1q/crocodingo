@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/cktlo"
+    android:id="@+id/pierwsze_uruchomienie_animacja"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/hiddentop"
+        android:orientation="horizontal"
+        ></LinearLayout>
+    <LinearLayout
+        android:layout_below="@id/hiddentop"
+        android:id="@+id/menu_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ustawienia"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:background="#00FFFFFF"
+            android:contentDescription="@string/app_name"
+            android:onClick="Zmien_widoki"
+            android:scaleType="centerInside"
+            android:text="@string/ustawienia"
+            app:srcCompat="@drawable/settings"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/menu_top"
+        >
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/user_profile"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
+            android:onClick="Zmien_widoki"
+            android:padding="2dp"
+            android:src="@drawable/usernotfound"
+            android:text="profil_user"
+            app:shapeAppearanceOverlay="@style/circleImageView"
+            app:strokeColor="@android:color/darker_gray"
+            app:strokeWidth="2dp" />
+
+        <TextView
+            android:id="@+id/usernick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Usernamee"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/krokodyl"
+        android:layout_width="353dp"
+        android:layout_height="358dp"
+        android:layout_below="@+id/menu_top"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/app_name"
+        android:onClick="KrokodylKlikaj"
+        android:src="@drawable/logo"
+        tools:ignore="ImageContrastCheck" />
+
+
+    <ImageView
+        android:id="@+id/current_czapka_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_above="@+id/krokodyl"
+        android:layout_marginBottom="-350dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/czapa_1"
+        android:visibility="gone"
+        />
+
+    <LinearLayout
+        android:id="@+id/menu_sub"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_alignParentBottom="true"
+        android:alwaysDrawnWithCache="false"
+        android:background="#8DFFFFFF"
+        android:orientation="horizontal"
+
+
+        ></LinearLayout>
+
+    <TextView
+        android:id="@+id/liczba_ciastek"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/jedzeniebutton"
+        android:layout_alignRight="@id/menu"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="x Ciastek"
+        android:visibility="gone"
+        android:textAlignment="center" />
+    <ImageView
+        android:id="@+id/jedzeniebutton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_above="@id/menu"
+        android:layout_alignRight="@id/menu"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/pustamiskapsa"
+        android:visibility="gone"
+        android:onClick="Nakarm"
+        />
+
+    <LinearLayout
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@id/hiddenbottom"
+        android:alwaysDrawnWithCache="false"
+        android:orientation="horizontal"
+        >
+        <ImageButton
+            android:id="@+id/OtworzSklep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/sklep"
+            android:onClick="Zmien_widoki"
+            />
+
+        <ImageButton
+            android:id="@+id/ZmienNaTesty"
+            style="@style/Widget.AppCompat.ImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            android:contentDescription="@string/app_name"
+            android:onClick="Zmien_widoki"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/testy"
+            tools:ignore="ImageContrastCheck" />
+
+        <ImageButton
+            android:id="@+id/jedzeniemenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/jedzenie"
+            tools:ignore="ImageContrastCheck"
+            android:onClick="PokazMiske"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/hiddenbottom"
+        android:layout_alignParentBottom="true"
+        android:alwaysDrawnWithCache="false"
+        android:orientation="horizontal"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        >
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

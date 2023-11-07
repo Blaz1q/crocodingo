@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:layout_below="@id/imageView3"
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Witaj w części testowej!
+\n\n
+Tutaj Croco będzie Ci pomagał uczyć się matematyki.
+\n\n
+Masz do wyboru dwa rodzaje testów:\n
+1. Test składający się od 20 do 25 pytań.\n
+2. Pojedyncze pytania\n
+\n\n
+Pierwszy pozwala na zdobycie pieniążków, które możesz użyć w sklepie oraz ciastek do karmienia Croco.
+\nDrugi natomiast pozwala Ci na ćwiczenie matematyki.\n\n
+Wszystko jasne? To do dzieła!
+"
+        android:textSize="22dp"
+        android:textAlignment="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        />
+    <Button
+        android:layout_below="@id/textView2"
+        android:id="@+id/welcome_button_testy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Zaczynajmy!"
+        android:backgroundTint="#333333"
+        android:onClick="Zamknij_tutorial"
+        />
+</RelativeLayout>

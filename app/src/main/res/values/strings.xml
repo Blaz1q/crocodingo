@@ -1,0 +1,16 @@
+<resources>
+    <string name="hiddentopvalue">30dp</string>
+    <string name="app_name">Crocodingo</string>
+    <string name="tytul">tytul</string>
+    <string name="GoogleLogin">GoogleLogin</string>
+    <string name="ustawienia">ustawienia</string>
+    <string name="default_web_client_id" translatable="false">1094900032075-1uvmappkd8hmer2mqlovtgnrrjb8atn7.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://czerwone-krokodyle-default-rtdb.europe-west1.firebasedatabase.app</string>
+    <string name="gcm_defaultSenderId" translatable="false">1094900032075</string>
+    <string name="google_api_key" translatable="false">AIzaSyCCc2SZHwa8unTc58p9PRrHv24TKyRQ_Tg</string>
+    <string name="google_app_id" translatable="false">1:1094900032075:android:deb1b93231b78e5be763ce</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCCc2SZHwa8unTc58p9PRrHv24TKyRQ_Tg</string>
+    <string name="google_storage_bucket" translatable="false">czerwone-krokodyle.appspot.com</string>
+    <string name="project_id" translatable="false">czerwone-krokodyle</string>
+    <string name="version">RELEASE 1.0.0</string>
+</resources>

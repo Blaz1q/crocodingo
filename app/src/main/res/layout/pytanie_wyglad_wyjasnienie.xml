@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/hiddentop"
+        android:orientation="horizontal"
+        ></LinearLayout>
+    <ImageView
+        android:id="@+id/tresc_pytaniabledne"
+        android:layout_width="match_parent"
+        android:layout_height="357dp"
+        android:layout_below="@id/menu_top_pytania"
+        android:layout_centerHorizontal="true"
+         />
+
+    <LinearLayout
+        android:layout_below="@id/hiddentop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/menu_top_pytania"
+        >
+
+        <Button
+            android:id="@+id/wroc_do_pytan_bledne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="Zmien_widoki"
+            android:text="Wróć do pytań"
+            android:layout_weight="1"
+            android:layout_marginRight="3dp"
+            android:backgroundTint="#333333"
+            />
+
+        <Button
+            android:id="@+id/wyjasnienie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:onClick="Wyjasnij"
+            android:text="Wyjaśnienie"
+            android:backgroundTint="#333333"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/tresc_pytaniabledne"
+        android:id="@+id/select_id_containter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/prevbuttonbledne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Prev"
+            android:onClick="PrevPytanie"
+            android:layout_marginRight="3dp"
+            android:backgroundTint="#333333"
+            />
+
+        <Button
+            android:id="@+id/nextbuttonbledne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Next"
+            android:onClick="NextPytanie"
+            android:layout_marginLeft="3dp"
+            android:backgroundTint="#333333"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/select_id_containter"
+        android:layout_marginBottom="20dp"
+        >
+
+        <Button
+            android:id="@+id/odp_Abledne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="A"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:id="@+id/odp_Bbledne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="B"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:id="@+id/odp_Cbledne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="C"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:id="@+id/odp_Dbledne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="D"
+            />
+    </LinearLayout>
+</RelativeLayout>

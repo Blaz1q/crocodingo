@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1094900032075",
+    "firebase_url": "https://czerwone-krokodyle-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "czerwone-krokodyle",
+    "storage_bucket": "czerwone-krokodyle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094900032075:android:deb1b93231b78e5be763ce",
+        "android_client_info": {
+          "package_name": "com.example.czerwone_krokodyle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1094900032075-panelg6rioeguh97ckce9j45i656kkje.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.czerwone_krokodyle",
+            "certificate_hash": "0fc14e0276873efa8d0ceecbd7e1b0bdbfab9c9a"
+          }
+        },
+        {
+          "client_id": "1094900032075-1uvmappkd8hmer2mqlovtgnrrjb8atn7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCc2SZHwa8unTc58p9PRrHv24TKyRQ_Tg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1094900032075-1uvmappkd8hmer2mqlovtgnrrjb8atn7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/hiddentop"
+        android:orientation="horizontal"
+        ></LinearLayout>
+
+    <Button
+        android:id="@+id/wroc4"
+        android:layout_below="@id/hiddentop"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#333333"
+        android:onClick="Zmien_widoki"
+        android:text="Wróć do startu" />
+
+    <LinearLayout
+        android:layout_below="@id/wroc4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/testy1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="super"
+            android:onClick="PopupTestyRozpocznij"
+            android:scaleType="fitCenter"
+            android:background="@drawable/ckwklasie"
+             />
+
+        <ImageButton
+            android:id="@+id/testy2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="super"
+            android:scaleType="centerInside"
+            android:onClick="PopupTestyRozpocznij"
+            android:layout_weight="1"
+            android:background="@drawable/ckwdomu"
+            android:layout_marginTop="5dp"
+            />
+
+        <ImageButton
+            android:visibility="visible"
+            android:layout_marginTop="5dp"
+            android:id="@+id/testy3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="super"
+            android:scaleType="centerInside"
+            android:layout_weight="1"
+            android:background="@drawable/ckbudowa"
+        />
+    </LinearLayout>
+
+</RelativeLayout>

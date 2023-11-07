@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/hiddentop"
+        android:orientation="horizontal"
+        ></LinearLayout>
+    <Button
+        android:layout_below="@id/hiddentop"
+        android:id="@+id/wroc3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="wróć do startu"
+        android:onClick="Zmien_widoki"
+        />
+
+    <ScrollView
+        android:layout_below="@id/wroc3"
+        android:layout_width="match_parent"
+        android:layout_above="@id/hiddenbottom"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tresc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="tresc" />
+
+            <Button
+                android:id="@+id/opt1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="A" />
+
+            <Button
+                android:id="@+id/opt2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="B" />
+
+            <Button
+                android:id="@+id/opt3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="C" />
+
+            <Button
+                android:id="@+id/opt4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="D" />
+
+            <TextView
+                android:id="@+id/wyjasnienie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="wyjasnienie" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                >
+
+                <Button
+                    android:id="@+id/ZmienIdminus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:layout_weight="1"
+                    android:onClick="Zmien_Id_wartosc"
+                    />
+
+                <TextView
+                    android:id="@+id/ZmienIDtekst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textSize="30dp"
+                    android:layout_weight="2"
+                    />
+
+                <Button
+                    android:id="@+id/ZmienIdplus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:onClick="Zmien_Id_wartosc"
+                    />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/apply_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="Zmien_id"
+                android:text="Zastosuj"
+
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+    <LinearLayout
+        android:id="@+id/hiddenbottom"
+        android:layout_alignParentBottom="true"
+        android:alwaysDrawnWithCache="false"
+        android:orientation="horizontal"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        >
+
+    </LinearLayout>
+
+</RelativeLayout>

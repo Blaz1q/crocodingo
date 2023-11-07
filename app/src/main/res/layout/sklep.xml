@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/hiddentop"
+        android:orientation="horizontal"
+        ></LinearLayout>
+
+    <Button
+        android:id="@+id/wroc10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hiddentop"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#333333"
+        android:onClick="Zmien_widoki"
+        android:text="wróć do startu" />
+    <TextView
+        android:id="@+id/crococoiny_napis"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/scroll_container_sklep"
+        android:text="Crococoiny:"
+        android:layout_toRightOf="@id/wroc10"
+        android:layout_below="@id/hiddentop"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/crococoinyilosc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x"
+        android:layout_toRightOf="@id/crococoiny_napis"
+        android:layout_above="@id/scroll_container_sklep"
+        android:layout_below="@id/hiddentop"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/crococoinimg"
+        android:src="@drawable/crococoin"
+        android:layout_toRightOf="@id/crococoinyilosc"
+        android:layout_above="@id/scroll_container_sklep"
+        android:layout_below="@id/hiddentop"
+        android:layout_marginTop="10dp"/>
+    <ScrollView
+        android:id="@+id/scroll_container_sklep"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/wroc10"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            android:id="@+id/sklep_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp">
+
+                <ImageView
+                    android:id="@+id/a"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+
+                    android:src="@drawable/czapa_1"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@id/a"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/zolta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nazwa: Żółta Czapa " />
+
+                    <TextView
+                        android:id="@+id/zoltacena"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cena: 2150" />
+
+                    <Button
+                        android:id="@+id/kup_czapka0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="#333333"
+                        android:text="Kup"
+                        android:onClick="pokazPopupZakupuCzapek"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <ImageView
+                    android:id="@+id/b"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/czapa_2"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@id/b"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/zielona"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nazwa: Zielona Czapa " />
+
+                    <TextView
+                        android:id="@+id/zielonacena"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cena: 2150" />
+
+                    <Button
+                        android:id="@+id/kup_czapka1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="#333333"
+                        android:text="Kup"
+                        android:onClick="pokazPopupZakupuCzapek"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <ImageView
+                    android:id="@+id/c"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/czapa_3"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@id/c"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/niebieska"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nazwa: Niebieska Czapa " />
+
+                    <TextView
+                        android:id="@+id/niebieskacena"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cena: 2150" />
+
+                    <Button
+                        android:id="@+id/kup_czapka2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="#333333"
+                        android:text="Kup"
+                        android:onClick="pokazPopupZakupuCzapek"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <ImageView
+                    android:id="@+id/d"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/czapa_4"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@id/d"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/kucharska"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nazwa: Kucharska Czapa " />
+
+                    <TextView
+                        android:id="@+id/kucharskacena"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cena: 3200" />
+
+                    <Button
+                        android:id="@+id/kup_czapka3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="#333333"
+                        android:text="Kup"
+                        android:onClick="pokazPopupZakupuCzapek"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <ImageView
+                    android:id="@+id/e"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/czapa_5"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@id/e"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/slomiana"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nazwa: Słomiany Kapelusz " />
+
+                    <TextView
+                        android:id="@+id/slomianacena"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cena: 3950" />
+
+                    <Button
+                        android:id="@+id/kup_czapka4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="#333333"
+                        android:text="Kup"
+                        android:onClick="pokazPopupZakupuCzapek"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <ImageView
+                    android:id="@+id/f"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/czapa_6"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@id/f"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/magik"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nazwa: Czapka Magik " />
+
+                    <TextView
+                        android:id="@+id/magikcena"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cena: 3950" />
+
+                    <Button
+                        android:id="@+id/kup_czapka5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="#333333"
+                        android:text="Kup"
+                        android:onClick="pokazPopupZakupuCzapek"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <ImageView
+                    android:id="@+id/g"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/czapa_7"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@id/g"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/cowboy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nazwa: Cowboy Czapa " />
+
+                    <TextView
+                        android:id="@+id/cowboycena"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cena: 3200" />
+
+                    <Button
+                        android:id="@+id/kup_czapka6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="#333333"
+                        android:text="Kup"
+                        android:onClick="pokazPopupZakupuCzapek"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <ImageView
+                    android:id="@+id/h"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/czapa_8"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@id/h"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/czarna"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nazwa: Czarna Czapa " />
+
+                    <TextView
+                        android:id="@+id/czarnacena"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cena: 4300" />
+
+                    <Button
+                        android:id="@+id/kup_czapka7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="#333333"
+                        android:text="Kup"
+                        android:onClick="pokazPopupZakupuCzapek"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout> 

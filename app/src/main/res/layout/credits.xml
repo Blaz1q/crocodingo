@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/hiddentop"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:orientation="horizontal"></LinearLayout>
+
+    <Button
+        android:id="@+id/wroc_z_creditsow"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hiddentop"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/gray_active"
+        android:onClick="Zmien_widoki"
+        android:text="Wróć do startu" />
+
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/hiddentop"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toEndOf="@id/wroc_z_creditsow"
+        android:gravity="center"
+        android:text="@string/version"
+        android:textSize="17sp" />
+    <ScrollView
+        android:layout_below="@id/wroc_z_creditsow"
+        android:layout_above="@id/hiddenbottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/blz1"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="#fff"
+                android:src="@drawable/blz1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_toRightOf="@id/blz1"
+                >
+
+                <TextView
+                    android:id="@+id/bczt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Błażej Czarnecki"
+                    android:textAlignment="center"
+                    android:textColor="#f54e8e"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/bcz"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lead Developer, Project Manager"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/tymk"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_below="@id/blz1"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="#fff"
+                android:src="@drawable/tymk" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_below="@id/blz1"
+                android:layout_toRightOf="@id/blz1"
+                >
+
+                <TextView
+                    android:id="@+id/tft"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tymoteusz Fabiański"
+                    android:textAlignment="center"
+                    android:textColor="#ffff0000"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/tf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Backend Developer, Tester"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/jlka"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_below="@id/tymk"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="#fff"
+                android:src="@drawable/julkat" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_below="@id/tymk"
+                android:layout_toRightOf="@id/blz1"
+                >
+
+                <TextView
+                    android:id="@+id/jtt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Julia Tetkowska"
+                    android:textAlignment="center"
+                    android:textColor="#04C15F"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/jt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="UI/UX Designer, Frontend Developer"
+                    android:textAlignment="center" />
+            </LinearLayout>
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/wydma"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_below="@id/jlka"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="#fff"
+                android:src="@drawable/wydma" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_below="@id/jlka"
+                android:layout_toRightOf="@id/blz1"
+                >
+
+                <TextView
+                    android:id="@+id/azt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Adrian Żuchnik"
+                    android:textAlignment="center"
+                    android:textColor="#C10404"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/az"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lead Graphics Designer,\nMusic Producer"
+                    android:textAlignment="center" />
+            </LinearLayout>
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/plka"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_below="@id/wydma"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="#fff"
+                android:src="@drawable/plka" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_below="@id/wydma"
+                android:layout_toRightOf="@id/blz1"
+                >
+
+                <TextView
+                    android:id="@+id/pst"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Paulina Słowik"
+                    android:textAlignment="center"
+                    android:textColor="#8403fc"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/ps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Fullstack Developer, Tester"
+                    android:textAlignment="center" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/special_thanks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/plka"
+                android:text="Specjalne\npodziękowania:"
+                android:textAlignment="center"
+                android:textSize="35dp"
+                />
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/hiddenbottom"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:alwaysDrawnWithCache="false"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+</RelativeLayout>

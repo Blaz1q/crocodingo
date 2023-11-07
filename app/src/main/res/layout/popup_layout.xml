@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="250dp"
+    android:layout_gravity="center"
+    android:background="#bfc0c0"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/zamknijczapka"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:text="X"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:onClick="Zamknij_Popup"
+        tools:ignore="MissingConstraints,TextSizeCheck"
+        />
+
+
+    <ImageView
+        android:id="@+id/czapa_image"
+        android:layout_width="129dp"
+        android:layout_height="120dp"
+        android:layout_above="@id/kup_czapa"
+        android:layout_marginTop="34dp"
+        android:src="@drawable/circle" />
+
+    <TextView
+        android:id="@+id/czapa_nazwa"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/zamknijczapka"
+        android:layout_gravity="center"
+        android:layout_marginBottom="176dp"
+        android:layout_marginTop="0dp"
+        android:gravity="center"
+        android:text="Nazwa czapki"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/czapa_opis"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_toRightOf="@id/czapa_image"
+        android:layout_above="@id/kup_czapa"
+        android:gravity="center"
+        android:text="Opis czapki"
+        android:textSize="14dp" />
+
+    <Button
+        android:id="@+id/kup_czapa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="14dp"
+
+        android:text="Kup"
+        android:backgroundTint="#333333"/>
+
+</RelativeLayout>
