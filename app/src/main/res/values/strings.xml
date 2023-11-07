@@ -12,7 +12,7 @@
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCCc2SZHwa8unTc58p9PRrHv24TKyRQ_Tg</string>
     <string name="google_storage_bucket" translatable="false">czerwone-krokodyle.appspot.com</string>
     <string name="project_id" translatable="false">czerwone-krokodyle</string>
-    <string name="version">RELEASE 1.0.0</string>
+    <string name="version">RELEASE 1.0.1</string>
     <string name="Credits">Realizacja</string>
     <string name="back_to_start">Wróć do startu</string>
 </resources>
