@@ -9,14 +9,15 @@
         android:id="@+id/hiddentop"
         android:orientation="horizontal"
         ></LinearLayout>
+
     <Button
-        android:layout_below="@id/hiddentop"
         android:id="@+id/wroc3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="wróć do startu"
+        android:layout_below="@id/hiddentop"
+        android:layout_marginTop="1dp"
         android:onClick="Zmien_widoki"
-        />
+        android:text="@string/back_to_start"/>
 
     <ScrollView
         android:layout_below="@id/wroc3"

@@ -241,6 +241,37 @@
                 android:textAlignment="center"
                 android:textSize="35dp"
                 />
+
+            <TextView
+                android:id="@+id/sk"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/special_thanks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sebastian Kocik - za wsparcie w projekcie"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                />
+            <TextView
+                android:id="@+id/dop"
+                android:layout_below="@id/sk"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Piotr Donajski - za pomysł mechanik"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                />
+            <TextView
+                android:id="@+id/crocodingo_team"
+                android:layout_below="@id/dop"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="z całego serca dziękujemy \n-Czerwone Krokodyle"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                />
         </RelativeLayout>
     </ScrollView>
 

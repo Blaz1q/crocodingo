@@ -67,7 +67,7 @@
         android:layout_marginBottom="116dp"
         android:foregroundGravity="center"
         android:gravity="center"
-        android:text="Czy chcesz rozpocząć pojedyńcze pytania?"
+        android:text="Czy chcesz rozpocząć pojedyncze pytania?"
         android:textColor="#fff"
         android:textSize="30dp" />
 

@@ -21,7 +21,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="#333333"
         android:onClick="Zmien_widoki"
-        android:text="wróć do startu" />
+        android:text="@string/back_to_start" />
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_profile_pic_profile"
         android:layout_width="200dp"

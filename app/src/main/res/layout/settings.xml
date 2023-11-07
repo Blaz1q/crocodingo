@@ -23,7 +23,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="#333333"
         android:onClick="Zmien_widoki"
-        android:text="Wróć do startu" />
+        android:text="@string/back_to_start" />
 
 
     <LinearLayout
@@ -161,23 +161,22 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textPowiadomienia"
+        android:id="@+id/textRealizacja"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_switch2"
         android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:text="Realizajca"
+        android:text="@string/Credits"
         android:textColor="#494949"
         android:textSize="20sp" />
     <LinearLayout
         android:id="@+id/layout_switch3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textPowiadomienia"
+        android:layout_below="@+id/textRealizacja"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"

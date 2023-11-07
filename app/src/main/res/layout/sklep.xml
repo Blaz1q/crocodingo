@@ -21,7 +21,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="#333333"
         android:onClick="Zmien_widoki"
-        android:text="wróć do startu" />
+        android:text="@string/back_to_start" />
     <TextView
         android:id="@+id/crococoiny_napis"
         android:layout_width="wrap_content"
