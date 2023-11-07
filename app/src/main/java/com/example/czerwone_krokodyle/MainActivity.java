@@ -275,6 +275,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 case "sklep":
                     DefaultMainPageActions();
                     break;
+                case "pojedyncze_pytanie":
+                    DefaultMainPageActions();
+                    break;
                 case "settings":
                     SaveSettings();
                     DefaultMainPageActions();
