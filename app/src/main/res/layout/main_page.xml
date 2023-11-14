@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/cktlo"
     android:id="@+id/pierwsze_uruchomienie_animacja"
+    android:orientation="vertical"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,60 +40,65 @@
 
     </LinearLayout>
 
-    <LinearLayout
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/user_profile"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_below="@id/menu_top"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_width="wrap_content"
+        android:contentDescription="@string/app_name"
+        android:onClick="Zmien_widoki"
+        android:padding="2dp"
+        android:src="@drawable/usernotfound"
+        android:text="profil_user"
+        app:shapeAppearanceOverlay="@style/circleImageView"
+        app:strokeColor="@android:color/darker_gray"
+        app:strokeWidth="2dp" />
+    <TextView
+        android:id="@+id/usernick"
+        android:layout_width="72dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@+id/menu_top"
-        >
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/user_profile"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/app_name"
-            android:onClick="Zmien_widoki"
-            android:padding="2dp"
-            android:src="@drawable/usernotfound"
-            android:text="profil_user"
-            app:shapeAppearanceOverlay="@style/circleImageView"
-            app:strokeColor="@android:color/darker_gray"
-            app:strokeWidth="2dp" />
-
-        <TextView
-            android:id="@+id/usernick"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Usernamee"
-            android:textAlignment="center" />
-    </LinearLayout>
+        android:layout_below="@id/user_profile"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="Username"
+        android:textAlignment="center" />
 
     <ImageView
         android:id="@+id/krokodyl"
-        android:layout_width="353dp"
-        android:layout_height="358dp"
-        android:layout_below="@+id/menu_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/menu_sub"
+        android:layout_below="@+id/usernick"
         android:layout_centerInParent="true"
         android:contentDescription="@string/app_name"
         android:onClick="KrokodylKlikaj"
         android:src="@drawable/logo"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         tools:ignore="ImageContrastCheck" />
 
 
     <ImageView
         android:id="@+id/current_czapka_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_above="@+id/krokodyl"
-        android:layout_marginBottom="-350dp"
-        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/menu_sub"
+        android:layout_below="@+id/usernick"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:padding="100dp"
         android:src="@drawable/czapa_1"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/menu_sub"

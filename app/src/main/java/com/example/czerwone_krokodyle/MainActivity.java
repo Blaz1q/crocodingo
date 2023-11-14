@@ -503,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Log.w("kurwa",String.valueOf(przycisk.length));
         akcja = new int[przycisk.length];
         Log.w("kurwaw",String.valueOf(akcja.length));
-        Log.w("kurwawa",String.valueOf(kupioneczapkibool.length()));
+        Log.w("kurwawa",String.valueOf(kupioneczapkibool.length())); //XDDDD
         for (int i = 0; i < przycisk.length; i++) {
             Czapka czapka = listaCzapek.get(i);
             //Button przycisk = findViewById(getResources().getIdentifier("kup_czapka" + String.valueOf(i), "id", getPackageName()));
@@ -1067,6 +1067,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
         else{
+            czyZalogowany=false;
             try{
                 if(!showonce){
                     myDialog = new Dialog(this);
@@ -1100,6 +1101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 @Override
                 public void onComplete(Task<Void> task) {
                     updateAccInfo();
+                    DefaultMainPageActions();
                 }
             });
         }
