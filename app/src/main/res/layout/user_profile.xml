@@ -24,8 +24,8 @@
         android:text="@string/back_to_start" />
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_profile_pic_profile"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:src="@drawable/usernotfound"
         app:shapeAppearanceOverlay="@style/circleImageView"
         app:strokeColor="@android:color/darker_gray"

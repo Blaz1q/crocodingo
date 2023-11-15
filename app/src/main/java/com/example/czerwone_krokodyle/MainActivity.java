@@ -94,21 +94,21 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
     Czapka czapka;
     private List<Czapka> listaCzapek = new ArrayList<>();
+    // zmienne do akcji
     private List<String> actions = new ArrayList<>();
     int actionsindex = 0;
     AlertDialog wyjscie;
-    String DBVERSIONval = "";
+    int pojedyncze_zrobione=0;
     private JLatexMathDrawable Test_Math_drawable;
     public JLatexMathDrawable[] CurrentQuestion = new JLatexMathDrawable[4];
     public String[] StringCurrentQuestion = new String[4];
     private final math_syntax Math_syn = new math_syntax();
-    JSONArray czapkiJSON;
-    JSONArray dbbackupJSON;
     String defaultUsername = "SuperKrokodyl26";
+    //zabezpieczenia
     boolean zaladowano_czapki = false;
+    boolean isPopupVisible = false;
     boolean zaladowanodb = false; //tylko w przypadku gdy nie ma połączenia z bazą
     String[] LitABCD = {"A","B","C","D"};
-    boolean isPopupVisible = false;
     final int color_correct = 0xff88d18a;
     final int color_text_correct = 0xff0d1b15;
     final int color_incorrect = 0xfff52720;
@@ -143,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     Switch sw2;
     int currentVol = -1;
     int current_item_index=-1;
+    int POPUP_EXCEPTION_MODE=0;
+    int POPUP_RESOLUTION=0; // 0 - normalny, 1 - fullscreen
     String czapkiilosc="";
     String[] Wynik_msg = {
             "Niestety, nie udało się tym razem.\nAle nie przejmuj się, poćwicz dalej.\nCrocodingo w Ciebie wierzy. Razem możecie zdziałać cuda!",
@@ -151,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             "Croco jest pod wrażeniem. Mało kto dociera do poziomu Mistrza takiego jak Crocodingo.\nCzy to czas oddać swój tytuł Croco?",
             "Crocodingo uważa, że jesteś gotowy.\nJesteś gotowy na walkę o przetrwanie, na walkę o godność, na walkę z Najtrudniejszym Przeciwnikiem...\nJesteś gotowy na Maturę z Matematyki!"
     };
+    // ustawienia
     public Boolean switchstate = true;
     public Boolean switchstatewibracje = false;
     int SET_TEST_ID = 1;
@@ -160,10 +163,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     MediaPlayer buttonsong;
     long currentTime = new Date().getTime();
     long lastFeed = 0;
-    long savedTime=0;
+    long savedTime = 0;
     public static final String FAILED_TESTS = "FAILED_TESTS";
     public static final String PASSED_TESTS = "PASSED_TESTS";
     public static final String STREAK = "STREAK";
+    public static final String STREAK_POJEDYNCZE = "STREAK_POJEDYNCZE"; //do questow;
     public static final String BEST_STREAK = "BEST_STREAK";
     public static final String MONEY = "MONEY";
     public static final String FOOD = "FOOD";
@@ -234,16 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     break;
                 case "pytania_wybor":
                     if(isPopupVisible==false){
-                        isPopupVisible = true;
-                        myDialog = new Dialog(this);
-                        myDialog.setContentView(R.layout.zakonczenie_testu);
-                        myDialog.show();
-                        myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                isPopupVisible = false;
-                            }
-                        }); //muszę zrobić haxa bo nie mam parametru View aby wywołać funkcje popupTestyZakoncz() :<
+                        ShowPopup(R.layout.zakonczenie_testu); //naprawiłem haxa
                     }
                     break;
                 case "pytanie_wyglad":
@@ -540,10 +535,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     int przyciskNumer=0;
     public void pokazPopupZakupuCzapek(View view) {
         String buttonId = getResources().getResourceEntryName(view.getId());
-
         if (buttonId.startsWith("kup_czapka")) {
             przyciskNumer = Integer.parseInt(buttonId.substring("kup_czapka".length()));
-
             int obrazResId = 0;
             final int[] cenaCzapki = new int[1]; // Użyj tablicy jednoelementowej do przekazania ceny
             final String nazwaCzapki;
@@ -564,49 +557,40 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 idCzapki = String.valueOf(przyciskNumer);
             }
             if(isPopupVisible==false){
-                isPopupVisible=true;
-            myDialog = new Dialog(this);
-            myDialog.setContentView(R.layout.popup_layout);
-            myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        isPopupVisible = false;
-                    }
-                });
+                POPUP_EXCEPTION_MODE = 1;
+                ShowPopup(R.layout.popup_layout);
+                ImageView czapaImage = myDialog.findViewById(R.id.czapa_image);
+                TextView czapaNazwa = myDialog.findViewById(R.id.czapa_nazwa);
+                TextView czapaOpis = myDialog.findViewById(R.id.czapa_opis);
+                Button kupCzapaButton = myDialog.findViewById(R.id.kup_czapa);
+                if (obrazResId != 0) {
+                    czapaImage.setImageResource(obrazResId);
+                } else {
+                    czapaImage.setImageResource(R.drawable.circle);
+                }
 
-            ImageView czapaImage = myDialog.findViewById(R.id.czapa_image);
-            TextView czapaNazwa = myDialog.findViewById(R.id.czapa_nazwa);
-            TextView czapaOpis = myDialog.findViewById(R.id.czapa_opis);
-            Button kupCzapaButton = myDialog.findViewById(R.id.kup_czapa);
-
-            if (obrazResId != 0) {
-                czapaImage.setImageResource(obrazResId);
-            } else {
-                czapaImage.setImageResource(R.drawable.circle);
-            }
-
-            czapaNazwa.setText(nazwaCzapki);
-            czapaOpis.setText(opisCzapki);
-            Log.w("akcjasuper",String.valueOf(akcja[Integer.valueOf(idCzapki)]));
-            if(akcja[Integer.valueOf(idCzapki)]==0){
-                kupCzapaButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int dostepneHajsy = getMoney();
-                        if (dostepneHajsy >= cenaCzapki[0]) { // Użyj tablicy cenaCzapki[0]
+                czapaNazwa.setText(nazwaCzapki);
+                czapaOpis.setText(opisCzapki);
+                Log.w("akcjasuper",String.valueOf(akcja[Integer.valueOf(idCzapki)]));
+                if(akcja[Integer.valueOf(idCzapki)]==0){
+                    kupCzapaButton.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View v) {
+                         int dostepneHajsy = getMoney();
+                         if (dostepneHajsy >= cenaCzapki[0]) { // Użyj tablicy cenaCzapki[0]
                             savePurchasedCzapka(idCzapki);
                             int noweHajsy = cenaCzapki[0]*-1; // Użyj tablicy cenaCzapki[0]
                             SaveMoney(noweHajsy);
                             Toast.makeText(MainActivity.this, "Zakupiono " + nazwaCzapki, Toast.LENGTH_SHORT).show();
-                            myDialog.dismiss();
-                            isPopupVisible=false;
+                            ClosePopup();
                             aktualizujTextPrzyciskow();
-                        } else {
+                         } else {
                             Toast.makeText(MainActivity.this, "Nie masz wystarczająco crococoinów na zakup", Toast.LENGTH_SHORT).show();
-                        }
+                         }
                     }
                 });
                 myDialog.show();
+                POPUP_EXCEPTION_MODE = 0;
             }
             }
             else if(akcja[Integer.valueOf(idCzapki)]==1){
@@ -1070,9 +1054,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             czyZalogowany=false;
             try{
                 if(!showonce){
-                    myDialog = new Dialog(this);
-                    myDialog.setContentView(R.layout.popup_login);
-                    myDialog.show();
+                    ShowPopup(R.layout.popup_login);
                     showonce = true;
                 }
                 UserProfileUrl = "";
@@ -1201,6 +1183,29 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         ustawCzapke();
         ResetActions();
     }
+    public void ShowPopup(int layout){
+        isPopupVisible = true;
+        if(POPUP_RESOLUTION==1)
+            myDialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
+        else
+            myDialog = new Dialog(this);
+        myDialog.setContentView(layout);
+        myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                isPopupVisible = false;
+            }
+        });
+        switch(POPUP_EXCEPTION_MODE){
+            case 0:myDialog.show();break;
+            case 1:/*don't show dialog */break;
+            default:myDialog.show();break;
+        }
+    }
+    public void ClosePopup(){
+        myDialog.dismiss();
+        isPopupVisible = false;
+    }
     public void Zmien_widoki(View v) {
         canplayanimations = false;
         if(v.getId()==R.id.ustawienia){
@@ -1212,6 +1217,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             setContentView(R.layout.pytanie_wyglad_wyjasnienie);
             Set_pytanie_bledne();
             RemoveAction();
+        }
+        else if(v.getId()==R.id.questy){
+            POPUP_RESOLUTION = 1;
+            POPUP_EXCEPTION_MODE = 1;
+            ShowPopup(R.layout.popup_quest);
+            ProgressBar progress = (ProgressBar) myDialog.findViewById(R.id.DailyQuest1);
+            TextView progresstext = myDialog.findViewById(R.id.questvalue);
+            progresstext.setText(String.valueOf(pojedyncze_zrobione));
+            progress.setProgress(pojedyncze_zrobione);
+            POPUP_RESOLUTION = 0;
+            POPUP_EXCEPTION_MODE = 0;
+            myDialog.show();
+
         }
         else if(v.getId()==R.id.user_profile){
             setContentView(R.layout.user_profile);
@@ -1263,16 +1281,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         else if (v.getId()==R.id.Rozpocznij_test1){
             setContentView(R.layout.pytania_wybor);
             Create_Question_Buttons();
-            myDialog.dismiss();
-            isPopupVisible=false;
+            ClosePopup();
             bgmusictesty();
             AddActions("pytania_wybor");
         }
         else if (v.getId()==R.id.Rozpocznij_test2){
             setContentView(R.layout.pojedyncze_pytanie);
             Set_pytanie_Poj();
-            myDialog.dismiss();
-            isPopupVisible=false;
+            ClosePopup();
             bgmusictesty();
             AddActions("pojedyncze_pytanie");
         }
@@ -1309,52 +1325,25 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Log.w("actionsindex",String.valueOf(actionsindex));
     }
     public void Zamknij_Popup(View v){
-        if(v.getId()==R.id.zamknijlogin||v.getId()==R.id.zamknij1||v.getId()==R.id.zamknij2||v.getId()==R.id.zamknij_test1||v.getId()==R.id.zakoncz_test_przycisk_popup||v.getId()==R.id.zamknijczapka){
-            myDialog.dismiss();
-            isPopupVisible = false;
-        }
+        ClosePopup();
+        /*if(v.getId()==R.id.zamknijlogin||v.getId()==R.id.zamknij1||v.getId()==R.id.zamknij2||v.getId()==R.id.zamknij_test1||v.getId()==R.id.zakoncz_test_przycisk_popup||v.getId()==R.id.zamknijczapka){ClosePopup();}
+         //stary kod
+         */
     }
     public void PopupTestyRozpocznij(View v){
         if(isPopupVisible==false){
             if(v.getId()==R.id.testy1){
-                isPopupVisible = true;
-                myDialog = new Dialog(this);
-                myDialog.setContentView(R.layout.rozpoczecie_testu);
-                myDialog.show();
-                myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        isPopupVisible = false;
-                    }
-                });
+                ShowPopup(R.layout.rozpoczecie_testu);
             }
             else if(v.getId()==R.id.testy2){
-                isPopupVisible = true;
-                myDialog = new Dialog(this);
-                myDialog.setContentView(R.layout.rozpoczecie_testu_poj);
-                myDialog.show();
-                myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        isPopupVisible = false;
-                    }
-                });
+                ShowPopup(R.layout.rozpoczecie_testu_poj);
             }
         }
     }
     public void PopupTestyZakoncz(View v){
         if(isPopupVisible==false){
             if(v.getId()==R.id.zakoncz_test||v.getId()==R.id.nextbutton){
-                isPopupVisible = true;
-                myDialog = new Dialog(this);
-                myDialog.setContentView(R.layout.zakonczenie_testu);
-                myDialog.show();
-                myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        isPopupVisible = false;
-                    }
-                });
+                ShowPopup(R.layout.zakonczenie_testu);
             }
         }
     }
@@ -1849,6 +1838,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void UpdateAnswer_Poj(){
         try{
+            pojedyncze_zrobione++;
             Button[] buttony = {
                     findViewById(R.id.odp_A_Poj),
                     findViewById(R.id.odp_B_Poj),
@@ -2071,8 +2061,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void Zakoncz_test(View v){
         if(v.getId()==R.id.Zakoncz_test_popup){
-            myDialog.dismiss();
-            isPopupVisible=false;
+            ClosePopup();
             Oblicz_Poprawne();
             bgmusicnormal();
             setContentView(R.layout.test_final);

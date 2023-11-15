@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7f000000"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/quest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageView3"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Zrób pojedyncze testy"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="22dp" />
+        <TextView
+            android:id="@+id/questvalue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/DailyQuest1"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="x"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="22dp" />
+        <TextView
+            android:id="@+id/questvaluemax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/DailyQuest1"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="/10"
+            android:layout_toRightOf="@id/questvalue"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="22dp" />
+
+        <Button
+            android:id="@+id/welcome_button_testy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/quest"
+            android:layout_marginTop="48dp"
+            android:backgroundTint="#333333"
+            android:onClick="Zamknij_Popup"
+            android:text="Zaczynajmy!" />
+
+        <ProgressBar
+            android:id="@+id/DailyQuest1"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/quest"
+            android:layout_marginTop="10dp"
+            android:max="9"
+            android:progress="6"
+            android:progressDrawable="@drawable/custom_progressbar"
+            android:progressTint="@color/ckred" />
+    </RelativeLayout>
+</RelativeLayout>

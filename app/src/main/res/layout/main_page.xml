@@ -38,8 +38,27 @@
             tools:ignore="DuplicateSpeakableTextCheck" />
 
 
+
+
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/questy"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_below="@id/menu_top"
+        android:layout_alignEnd="@+id/menu_top"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="10dp"
+        android:background="#00FFFFFF"
+        android:contentDescription="@string/app_name"
+        android:onClick="Zmien_widoki"
+        android:scaleType="centerInside"
+        android:text="@string/ustawienia"
+        app:srcCompat="@drawable/settings"
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_profile"
@@ -58,6 +77,7 @@
         app:shapeAppearanceOverlay="@style/circleImageView"
         app:strokeColor="@android:color/darker_gray"
         app:strokeWidth="2dp" />
+
     <TextView
         android:id="@+id/usernick"
         android:layout_width="72dp"
