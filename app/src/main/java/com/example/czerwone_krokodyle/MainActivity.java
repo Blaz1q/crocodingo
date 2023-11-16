@@ -83,10 +83,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Date;
@@ -94,11 +97,12 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
     Czapka czapka;
     private List<Czapka> listaCzapek = new ArrayList<>();
+    private List<Quests> listaQuestow = new ArrayList<>();
+    private List<Integer> listaQuestowId = new ArrayList<>();
     // zmienne do akcji
     private List<String> actions = new ArrayList<>();
     int actionsindex = 0;
     AlertDialog wyjscie;
-    int pojedyncze_zrobione=0;
     private JLatexMathDrawable Test_Math_drawable;
     public JLatexMathDrawable[] CurrentQuestion = new JLatexMathDrawable[4];
     public String[] StringCurrentQuestion = new String[4];
@@ -106,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     String defaultUsername = "SuperKrokodyl26";
     //zabezpieczenia
     boolean zaladowano_czapki = false;
+    boolean zaladowano_questy = false;
     boolean isPopupVisible = false;
     boolean zaladowanodb = false; //tylko w przypadku gdy nie ma połączenia z bazą
     String[] LitABCD = {"A","B","C","D"};
@@ -113,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     final int color_text_correct = 0xff0d1b15;
     final int color_incorrect = 0xfff52720;
     final int color_text_incorrect = 0xff270302;
-    final int wartosc_ciastka = 7000; //2 h
+    final int wartosc_ciastka = 7000; //2 h (prawie)
     List<Integer> idList = new ArrayList<Integer>();
     List<Integer> ShuffledArray = new ArrayList<Integer>();
     List<Integer> AnswerList = new ArrayList<Integer>();
@@ -141,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean czyZalogowany = false;
     Switch sw1;
     Switch sw2;
+
     int currentVol = -1;
     int current_item_index=-1;
     int POPUP_EXCEPTION_MODE=0;
@@ -162,9 +168,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     MediaPlayer bgsong;
     MediaPlayer buttonsong;
     long currentTime = new Date().getTime();
+    String currentDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
+    Random daily_qnum_seed = new Random(Integer.valueOf(currentDate));
     long lastFeed = 0;
     long savedTime = 0;
     public static final String FAILED_TESTS = "FAILED_TESTS";
+    public static final String QUESTSPROGRESS = "QUESTSPROGRESS";
     public static final String PASSED_TESTS = "PASSED_TESTS";
     public static final String STREAK = "STREAK";
     public static final String STREAK_POJEDYNCZE = "STREAK_POJEDYNCZE"; //do questow;
@@ -206,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         LoadData();
         Log.w("DBBACKUP",loadJSONFromAssetVer2("DB.json"));
         loadJSONFromAsset();
+        loadQuestsFromAsset();
+
         fetchData(0);
         //DebugSetGlodny();
         ResumeOnLongListener();
@@ -469,6 +480,51 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             ex.printStackTrace();
         }
     }
+    public void loadQuestsFromAsset() {
+        try {
+            InputStream is = getAssets().open("questy.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+            Log.d("Questy", "Prawidłowo wczytano JSON: " + json);
+            JSONArray jsonArray = new JSONArray(json);
+            listaQuestow.clear();
+            listaQuestowId.clear();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject questJson = jsonArray.getJSONObject(i);
+                int id = questJson.getInt("id");
+                String tresc = questJson.getString("tresc");
+                int nagroda = questJson.getInt("Nagroda");
+                int przedzial_dolny = questJson.getInt("przedzial_dolny");
+                int przedzial_gorny = questJson.getInt("przedzial_gorny");
+                int exp = questJson.getInt("exp");
+
+                Quests quest = new Quests();
+                quest.setId(id);
+                quest.setTresc(tresc);
+                quest.setNagroda(nagroda);
+                quest.setPrzedzial_Dolny(przedzial_dolny);
+                quest.setPrzedzial_Gorny(przedzial_gorny);
+                daily_qnum_seed = new Random(Integer.valueOf(currentDate));
+                int max = daily_qnum_seed.nextInt(quest.getPrzedzial_Gorny()-quest.getPrzedzial_Dolny()+1)+quest.getPrzedzial_Dolny();
+                quest.setGeneratedMax(max);
+                quest.setProgress(0);
+                quest.setExp(exp);
+                listaQuestow.add(quest);
+                listaQuestowId.add(i);
+            }
+            zaladowano_questy = true;
+            Collections.shuffle(listaQuestowId,new Random(daily_seed_value));
+            for (Quests quest : listaQuestow) {
+                Log.d("MojaAplikacja", "ID: " + quest.getId() + ", Tresc: " + quest.getTresc());
+            }
+            Log.d("fasasf",String.valueOf(listaQuestowId));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     int[] akcja;
     public void ustawCzapke(){
         if(canplayanimations){
@@ -710,6 +766,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(v.getId()==R.id.jedzeniebutton){
             ustawMiche();
             if(getFood()>0){
+                addProgress(2);
                 Hapaba();
                 SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -1114,10 +1171,24 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             users.setUserId(user.getUid());
                             users.setName(user.getDisplayName());
                             users.setProfile(user.getPhotoUrl().toString());
+                            users.setUserMoney(getMoney());
+                            Log.w("money",String.valueOf(users.getMoney()));
                             database.getReference().child("Users").child(user.getUid()).setValue(users);
                         }
                     }
                 });
+    }
+    private void updateFirebaseData(String idToken){
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken,null);
+        auth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    FirebaseUser user = auth.getCurrentUser();
+                    database.getReference().child("Users").child(user.getUid()).child("money").setValue(getMoney());
+                }
+            }
+        });
     }
     void navigateToSecondActivity(){
         //Toast.makeText(getApplicationContext(), "navigateToSecondActivity", Toast.LENGTH_SHORT).show();
@@ -1206,6 +1277,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         myDialog.dismiss();
         isPopupVisible = false;
     }
+    int daily_seed_value = daily_qnum_seed.nextInt(10)+10;
     public void Zmien_widoki(View v) {
         canplayanimations = false;
         if(v.getId()==R.id.ustawienia){
@@ -1219,13 +1291,34 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             RemoveAction();
         }
         else if(v.getId()==R.id.questy){
+
             POPUP_RESOLUTION = 1;
             POPUP_EXCEPTION_MODE = 1;
             ShowPopup(R.layout.popup_quest);
-            ProgressBar progress = (ProgressBar) myDialog.findViewById(R.id.DailyQuest1);
-            TextView progresstext = myDialog.findViewById(R.id.questvalue);
-            progresstext.setText(String.valueOf(pojedyncze_zrobione));
-            progress.setProgress(pojedyncze_zrobione);
+
+            for(int i=0;i<3;i++){
+                Quests quest = listaQuestow.get(listaQuestowId.indexOf(i));
+                String progressName = "DailyQuest"+String.valueOf(i+1);
+                String questName = "quest"+String.valueOf(i+1);
+                String questValue = "quest"+String.valueOf(i+1)+"value";
+                String questMax = "questvalue"+String.valueOf(i+1)+"max";
+
+                int resID = getResources().getIdentifier(progressName, "id", getPackageName());
+                ProgressBar progress = (ProgressBar) myDialog.findViewById(resID);
+                resID = getResources().getIdentifier(questName, "id", getPackageName());
+                TextView questtresc = myDialog.findViewById(resID);
+                questtresc.setText(quest.getTresc());
+                resID = getResources().getIdentifier(questValue, "id", getPackageName());
+                TextView progresstextval = myDialog.findViewById(resID);
+                progresstextval.setText(String.valueOf(quest.getProgress()));
+                progress.setMax(quest.getGeneratedMax());
+                progress.setProgress(quest.getProgress());
+                //TextView progresstextval = myDialog.findViewById(R.id.quest1value);
+                resID = getResources().getIdentifier(questMax, "id", getPackageName());
+                TextView progresstextmax = myDialog.findViewById(resID);
+                progresstextmax.setText(String.valueOf(quest.getGeneratedMax()));
+
+            }
             POPUP_RESOLUTION = 0;
             POPUP_EXCEPTION_MODE = 0;
             myDialog.show();
@@ -1838,7 +1931,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void UpdateAnswer_Poj(){
         try{
-            pojedyncze_zrobione++;
+
             Button[] buttony = {
                     findViewById(R.id.odp_A_Poj),
                     findViewById(R.id.odp_B_Poj),
@@ -1886,12 +1979,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     odpint=0;
                     break;
             }
+            boolean czy_poprawne=true;
+
             int current_color= 0x00ffffff;
             for(int j=0;j<4;j++){
                 current_color= 0x00ffffff;
                 if(AnswerListPoj==j+1){
                     if(odp!=CorrectAnswerList.get(get_id).charAt(0)){
                         current_color = color_incorrect;
+                        czy_poprawne=false;
                     }
                 }
                 CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],current_color,color_text_incorrect);
@@ -1901,9 +1997,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 CurrentQuestion[odpint-1] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[odpint-1],color_correct,color_text_correct);
                 buttony[odpint-1].setBackground(CurrentQuestion[odpint-1]);
             }
+            if(czy_poprawne){
+                addProgress(0);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+    public void addProgress(int id){
+        Quests quest = listaQuestow.get(id);
+        quest.addProgress();
     }
     public void UpdateAnswerBledne(){
         try{
@@ -2065,6 +2168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Oblicz_Poprawne();
             bgmusicnormal();
             setContentView(R.layout.test_final);
+            addProgress(1);
             AddActions("test_final");
             try{
                 TextView poprawneodp = findViewById(R.id.poprawneodpilosc);
@@ -2102,6 +2206,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     msg_text.setText(Wynik_msg[4]);
                     SaveFood(10);
                     SaveMoney(1000);
+                }
+                if(czyZalogowany==true){
+                    updateFirebaseData(acct.getIdToken());
                 }
             }catch (Exception e){
                 e.printStackTrace();

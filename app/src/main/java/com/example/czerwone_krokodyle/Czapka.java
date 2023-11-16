@@ -1,5 +1,7 @@
 package com.example.czerwone_krokodyle;
 
+import java.io.InputStream;
+
 public class Czapka {
     private int id;
     private String plik;
@@ -62,4 +64,5 @@ public class Czapka {
     public void setCzyZalozona(boolean czyZalozona) {
         this.czyZalozona = czyZalozona;
     }
+
 }

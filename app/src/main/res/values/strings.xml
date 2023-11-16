@@ -6,7 +6,7 @@
     <string name="ustawienia">ustawienia</string>
     <string name="google_storage_bucket" translatable="false">czerwone-krokodyle.appspot.com</string>
     <string name="project_id" translatable="false">czerwone-krokodyle</string>
-    <string name="version">RELEASE 1.1.0DEV</string>
+    <string name="version">DEVELOPMENT 1.1.0</string>
     <string name="Credits">Realizacja</string>
     <string name="back_to_start">Wróć do startu</string>
 </resources>

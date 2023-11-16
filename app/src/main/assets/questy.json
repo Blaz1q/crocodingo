@@ -1,0 +1,47 @@
+[
+  {
+    "id": 0,
+    "tresc": "Rozwiąż poprawnie pojedyncze testy",
+    "Nagroda": 2150,
+    "exp": 0,
+    "przedzial_dolny": 10,
+    "przedzial_gorny": 25,
+    "exception": 0
+  },
+  {
+    "id": 1,
+    "tresc": "Rozwiąż testy",
+    "Nagroda": 2150,
+    "exp": 0,
+    "przedzial_dolny": 1,
+    "przedzial_gorny": 2,
+    "exception": 0
+  },
+  {
+    "id": 2,
+    "tresc": "Nakarm croco",
+    "Nagroda": 2150,
+    "exp": 0,
+    "przedzial_dolny": 3,
+    "przedzial_gorny": 12,
+    "exception": 0
+  },
+  {
+    "id": 3,
+    "tresc": "Kup Czapke",
+    "Nagroda": 2150,
+    "exp": 0,
+    "przedzial_dolny": 1,
+    "przedzial_gorny": 1,
+    "exception": 0
+  },
+  {
+    "id": 4,
+    "tresc": "Zrób backflipa",
+    "Nagroda": 2150,
+    "exp": 0,
+    "przedzial_dolny": 7,
+    "przedzial_gorny": 64,
+    "exception": 0
+  }
+]
