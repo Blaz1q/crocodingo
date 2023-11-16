@@ -83,6 +83,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -172,8 +173,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     Random daily_qnum_seed = new Random(Integer.valueOf(currentDate));
     long lastFeed = 0;
     long savedTime = 0;
+
     public static final String FAILED_TESTS = "FAILED_TESTS";
-    public static final String QUESTSPROGRESS = "QUESTSPROGRESS";
     public static final String PASSED_TESTS = "PASSED_TESTS";
     public static final String STREAK = "STREAK";
     public static final String STREAK_POJEDYNCZE = "STREAK_POJEDYNCZE"; //do questow;
@@ -183,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public static final String CURRENT_ITEM_ID = "CURRENT_ITEM_ID";
     public static final String USERNAME = "USERNAME";
     public static final String LAST_FEED = "Feeding_time";
+    public static final String SAVED_QUEST_DATE = "QUEST_DATE";
+    public static final String QUEST_PROGRESS = "QUEST_PROGGRES_"; //tutaj 3 zmienne int
     public static final String SAVED_DATE = "Date";
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String SWITCH = "switch1";
@@ -214,9 +217,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         updateAccInfo();
         LoadData();
         Log.w("DBBACKUP",loadJSONFromAssetVer2("DB.json"));
+
         loadJSONFromAsset();
         loadQuestsFromAsset();
-
+        SaveQuestDate();
+        loadQuestProgress();
         fetchData(0);
         //DebugSetGlodny();
         ResumeOnLongListener();
@@ -480,6 +485,22 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             ex.printStackTrace();
         }
     }
+
+    public void UpdateQuestDate(){
+        listaQuestowId.clear();
+        if(zaladowano_questy){
+            int i=0;
+            daily_qnum_seed = new Random(Integer.valueOf(currentDate));
+            for (Quests quest : listaQuestow) {
+                Log.d("MojaAplikacja", "ID: " + quest.getId() + ", Tresc: " + quest.getTresc());
+                int max = daily_qnum_seed.nextInt(quest.getPrzedzial_Gorny()-quest.getPrzedzial_Dolny()+1)+quest.getPrzedzial_Dolny();
+                quest.setGeneratedMax(max);
+                listaQuestowId.add(i);
+                i++;
+            }
+            Collections.shuffle(listaQuestowId,new Random(daily_seed_value));
+        }
+    }
     public void loadQuestsFromAsset() {
         try {
             InputStream is = getAssets().open("questy.json");
@@ -491,7 +512,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Log.d("Questy", "Prawidłowo wczytano JSON: " + json);
             JSONArray jsonArray = new JSONArray(json);
             listaQuestow.clear();
-            listaQuestowId.clear();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject questJson = jsonArray.getJSONObject(i);
                 int id = questJson.getInt("id");
@@ -500,26 +520,18 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 int przedzial_dolny = questJson.getInt("przedzial_dolny");
                 int przedzial_gorny = questJson.getInt("przedzial_gorny");
                 int exp = questJson.getInt("exp");
-
                 Quests quest = new Quests();
                 quest.setId(id);
                 quest.setTresc(tresc);
                 quest.setNagroda(nagroda);
                 quest.setPrzedzial_Dolny(przedzial_dolny);
                 quest.setPrzedzial_Gorny(przedzial_gorny);
-                daily_qnum_seed = new Random(Integer.valueOf(currentDate));
-                int max = daily_qnum_seed.nextInt(quest.getPrzedzial_Gorny()-quest.getPrzedzial_Dolny()+1)+quest.getPrzedzial_Dolny();
-                quest.setGeneratedMax(max);
                 quest.setProgress(0);
                 quest.setExp(exp);
                 listaQuestow.add(quest);
-                listaQuestowId.add(i);
             }
             zaladowano_questy = true;
-            Collections.shuffle(listaQuestowId,new Random(daily_seed_value));
-            for (Quests quest : listaQuestow) {
-                Log.d("MojaAplikacja", "ID: " + quest.getId() + ", Tresc: " + quest.getTresc());
-            }
+            UpdateQuestDate();
             Log.d("fasasf",String.valueOf(listaQuestowId));
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -877,6 +889,30 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(FAILED_TESTS,sharedPreferences.getInt(FAILED_TESTS,0)+1);
+        editor.apply();
+    }
+    public void SaveQuestDate(){
+        String readableDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
+        if(!readableDate.equals(currentDate)){
+            Log.w("readable",readableDate);
+            Log.w("readable",currentDate);
+            currentDate = readableDate;
+            UpdateQuestDate();
+            for(int i=0;i<3;i++){
+                UpdateQuestProgress(listaQuestowId.get(i),0);
+            }
+        }
+    }
+    public void UpdateQuestProgress(int number,int value){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int quest = sharedPreferences.getInt(QUEST_PROGRESS+String.valueOf(number),-1);
+        if(quest==-1){
+            editor.putInt(QUEST_PROGRESS+String.valueOf(number),0);
+        }
+        else{
+            editor.putInt(QUEST_PROGRESS+String.valueOf(number),value);
+        }
         editor.apply();
     }
     public void SaveMoney(int value){
@@ -1294,6 +1330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
             POPUP_RESOLUTION = 1;
             POPUP_EXCEPTION_MODE = 1;
+            SaveQuestDate();
             ShowPopup(R.layout.popup_quest);
 
             for(int i=0;i<3;i++){
@@ -2004,9 +2041,28 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             e.printStackTrace();
         }
     }
+    public void loadQuestProgress(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        for(int i=0;i<listaQuestow.size();i++){
+            Quests quests = listaQuestow.get(i);
+            int questv = sharedPreferences.getInt(QUEST_PROGRESS+String.valueOf(i),0);
+            quests.setProgress(questv);
+        }
+    }
     public void addProgress(int id){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        int questv = sharedPreferences.getInt(QUEST_PROGRESS+String.valueOf(id),0);
         Quests quest = listaQuestow.get(id);
-        quest.addProgress();
+        if(quest.getGeneratedMax()>questv){
+            quest.setProgress(questv+1);
+            editor.putInt(QUEST_PROGRESS+String.valueOf(id),questv+1);
+            Log.d("QUESTVALUE",String.valueOf(questv+1));
+        }else{
+            //editor.putInt(QUEST_PROGRESS+String.valueOf(id),0); //debug
+        }
+        editor.apply();
     }
     public void UpdateAnswerBledne(){
         try{

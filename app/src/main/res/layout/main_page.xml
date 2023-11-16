@@ -36,30 +36,24 @@
             android:text="@string/ustawienia"
             app:srcCompat="@drawable/settings"
             tools:ignore="DuplicateSpeakableTextCheck" />
-
-
-
-
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/questy"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_below="@id/menu_top"
-        android:layout_alignEnd="@+id/menu_top"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="10dp"
-        android:background="#00FFFFFF"
-        android:contentDescription="@string/app_name"
-        android:onClick="Zmien_widoki"
-        android:scaleType="centerInside"
-        android:text="@string/ustawienia"
-        android:src="@drawable/questlog"
-        tools:ignore="DuplicateSpeakableTextCheck" />
 
+    <ImageView
+        android:id="@+id/krokodyl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/menu_sub"
+        android:layout_below="@+id/usernick"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="@string/app_name"
+        android:onClick="KrokodylKlikaj"
+        android:src="@drawable/logo"
+        tools:ignore="ImageContrastCheck" />
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_profile"
         android:layout_width="72dp"
@@ -88,21 +82,7 @@
         android:text="Username"
         android:textAlignment="center" />
 
-    <ImageView
-        android:id="@+id/krokodyl"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/menu_sub"
-        android:layout_below="@+id/usernick"
-        android:layout_centerInParent="true"
-        android:contentDescription="@string/app_name"
-        android:onClick="KrokodylKlikaj"
-        android:src="@drawable/logo"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        tools:ignore="ImageContrastCheck" />
+
 
 
     <ImageView
@@ -119,6 +99,23 @@
         android:padding="100dp"
         android:src="@drawable/czapa_1"
         android:visibility="gone" />
+    <ImageButton
+        android:id="@+id/questy"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_below="@id/menu_top"
+        android:layout_alignEnd="@+id/menu_top"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="10dp"
+        android:background="#00FFFFFF"
+        android:contentDescription="@string/app_name"
+        android:onClick="Zmien_widoki"
+        android:scaleType="centerInside"
+        android:text="@string/ustawienia"
+        android:src="@drawable/questlog"
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
     <LinearLayout
         android:id="@+id/menu_sub"

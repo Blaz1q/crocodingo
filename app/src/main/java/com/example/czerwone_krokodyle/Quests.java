@@ -60,7 +60,9 @@ public class Quests {
     }
 
     public void setProgress(int progress){
+        if(progress<=GeneratedMax){
         this.Progress = progress;
+        }
     }
     public void addProgress(){
         if(Progress<GeneratedMax){
