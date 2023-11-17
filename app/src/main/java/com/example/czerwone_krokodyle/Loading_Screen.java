@@ -50,6 +50,7 @@ public class Loading_Screen extends AppCompatActivity {
         } catch (Exception e){
             e.printStackTrace();
         }
+
     }
     int i=0;
     @Override

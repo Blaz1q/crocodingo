@@ -30,6 +30,9 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -199,6 +202,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     Dialog dialog;
     Dialog myDialog;
     Boolean showonce = false;
+    final int[] sectors = {1,2,3,4,5,6,7,8,9,10};
+    final int[] sectorDegrees = new int[sectors.length];
+
+    int randomSectorIndex = 0;
+
+    boolean spinning = false;
+    int earningsRecord = 0;
+    Random random = new Random();
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
@@ -244,6 +255,44 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Uruchomienie_animajca();
         ustawCzapke();
     }
+    public void generateSectorDegrees() {
+        int sectorDegree = 360/sectors.length;
+
+        for (int i=0; i<sectors.length; i++){
+            sectorDegrees[i] = (i+1)*sectorDegree;
+        }
+    }
+    private int generateRandomDegreeToSpin() {
+        return (360*sectors.length) + sectorDegrees[randomSectorIndex];
+    }
+    private void spin(){
+        randomSectorIndex = random.nextInt(sectors.length);
+        int randomDegree = generateRandomDegreeToSpin();
+        RotateAnimation rotateAnimation = new RotateAnimation(0, randomDegree,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f );
+        rotateAnimation.setDuration(3600);
+        rotateAnimation.setFillAfter(true);
+
+        rotateAnimation.setInterpolator(new DecelerateInterpolator());
+    }
+    private void losowanie(){
+        ImageView kolo = findViewById(R.id.kolo);
+        ImageView obramowanie = findViewById(R.id.obramowanie);
+
+
+    }
+    public void krec(View v){
+        if(v.getId()==R.id.kolo){
+
+                if(!spinning){
+                    spin();
+                    spinning = true;
+
+                }
+
+        }
+    }
+
     @Override
     public void onBackPressed() {
         canplayanimations = false;
@@ -1314,8 +1363,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         isPopupVisible = false;
     }
     int daily_seed_value = daily_qnum_seed.nextInt(10)+10;
+
     public void Zmien_widoki(View v) {
         canplayanimations = false;
+
         if(v.getId()==R.id.ustawienia){
             setContentView(R.layout.settings);
             UpdateSettings();
@@ -1326,12 +1377,22 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Set_pytanie_bledne();
             RemoveAction();
         }
+        else if(v.getId()==R.id.kolo_fortuny){
+            POPUP_RESOLUTION = 1;
+            ShowPopup(R.layout.popup_kolo_fortuny);
+                generateSectorDegrees();
+                losowanie();
+                POPUP_RESOLUTION = 0;
+
+        }
+
         else if(v.getId()==R.id.questy){
 
             POPUP_RESOLUTION = 1;
             POPUP_EXCEPTION_MODE = 1;
             SaveQuestDate();
             ShowPopup(R.layout.popup_quest);
+
 
             for(int i=0;i<3;i++){
                 Quests quest = listaQuestow.get(listaQuestowId.indexOf(i));
@@ -2357,4 +2418,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         return false;
     }
+
+
+
+
+
+
+
+
 }
