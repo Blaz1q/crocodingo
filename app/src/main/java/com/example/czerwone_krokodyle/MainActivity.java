@@ -272,14 +272,64 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private void spin(){
         ImageView kolopasy = (ImageView) myDialog.findViewById(R.id.kolopaski);
         spinning = true;
+        String nagroda;
         kolopasy.animate().rotation(deg-12).setInterpolator(new DecelerateInterpolator()).setDuration(500);
         deg+=generateRandomDegreeToSpin();
+        switch(deg%10) {
+            case 0:
+                nagroda = "100 coinow";
+                SaveMoney(100);
+                break;
+            case 1:
+                nagroda = " coinow";
+                SaveMoney(100);
+                break;
+            case 2:
+                nagroda = "1000 coinow";
+                SaveMoney(100);
+                break;
+            case 3:
+                nagroda = "1000 coinow";
+                SaveMoney(100);
+                break;
+            case 4:
+                nagroda = "1000 coinow";
+                SaveMoney(100);
+                break;
+            case 5:
+                nagroda = "1000 coinow";
+                SaveMoney(100);
+                break;
+            case 6:
+                nagroda = "1000 coinow";
+                SaveMoney(100);
+                break;
+            case 7:
+                nagroda = "1000 coinow";
+                SaveMoney(100);
+                break;
+            case 8:
+                nagroda = "1000 coinow";
+                SaveMoney(100);
+                break;
+            case 9:
+                nagroda = "1000 coinow";
+                SaveMoney(100);
+                break;
+
+            default:
+                nagroda = "Wystapil jakis blad";
+                break;
+        }
         new Handler(getMainLooper()).postDelayed(() -> {
-            new Handler(getMainLooper()).postDelayed(() -> {
             kolopasy.animate().rotation(deg+12).setInterpolator(new DecelerateInterpolator()).setDuration(10000);
-            },10000);
-                },500);
-        spinning = false;
+        },500);
+        Log.d("deg/",String.valueOf(deg%10));
+        new Handler(getMainLooper()).postDelayed(() -> {
+            spinning = false;
+            TextView tekst_nagroda = myDialog.findViewById(R.id.nagroda);
+            tekst_nagroda.setText(nagroda);
+        },10500);
     }
     public void krec(View v){
         if(v.getId()==R.id.obramowanie){

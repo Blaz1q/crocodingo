@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:text="Twoje wylosowane rzeczy: "
         android:textSize="25dp"
+        android:id="@+id/nagroda"
         />
 
 
