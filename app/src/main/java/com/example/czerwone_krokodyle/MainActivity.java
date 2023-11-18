@@ -281,10 +281,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 },500);
         spinning = false;
     }
-    private void losowanie(){
-        ImageView obramowanie = findViewById(R.id.obramowanie);
-
-    }
     public void krec(View v){
         if(v.getId()==R.id.obramowanie){
             if(!spinning){
@@ -1377,7 +1373,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             POPUP_RESOLUTION = 1;
             ShowPopup(R.layout.popup_kolo_fortuny);
                 generateSectorDegrees();
-                losowanie();
                 deg =0;
                 POPUP_RESOLUTION = 0;
 
