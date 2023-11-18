@@ -8,13 +8,12 @@
     >
 
     <ImageView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/srodekkolo"
-        android:id="@+id/kolo"
-
-        />
-
+        android:id="@+id/kolopaski"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/welcome_button_testy2"
+        android:layout_marginBottom="-48dp"
+        android:src="@drawable/srodekkolo" />
     <ImageView
         android:id="@+id/obramowanie"
         android:layout_width="wrap_content"
@@ -23,6 +22,7 @@
         android:layout_marginBottom="-48dp"
         android:src="@drawable/kolofortunyramka"
         android:onClick="krec"/>
+
 
     <Button
         android:id="@+id/welcome_button_testy2"
@@ -42,10 +42,6 @@
         android:text="Twoje wylosowane rzeczy: "
         android:textSize="25dp"
         />
-   <View
-       android:layout_width="0dp"
-       android:layout_height="0dp"
-       />
 
 
 

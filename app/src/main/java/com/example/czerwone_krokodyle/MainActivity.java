@@ -30,6 +30,8 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
@@ -262,34 +264,32 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             sectorDegrees[i] = (i+1)*sectorDegree;
         }
     }
-    private int generateRandomDegreeToSpin() {
-        return (360*sectors.length) + sectorDegrees[randomSectorIndex];
+    private float generateRandomDegreeToSpin() {
+        Random r = new Random();
+        return (360*sectors.length)+r.nextInt(360/10);
     }
+    int deg =0;
     private void spin(){
-        randomSectorIndex = random.nextInt(sectors.length);
-        int randomDegree = generateRandomDegreeToSpin();
-        RotateAnimation rotateAnimation = new RotateAnimation(0, randomDegree,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f );
-        rotateAnimation.setDuration(3600);
-        rotateAnimation.setFillAfter(true);
-
-        rotateAnimation.setInterpolator(new DecelerateInterpolator());
+        ImageView kolopasy = (ImageView) myDialog.findViewById(R.id.kolopaski);
+        spinning = true;
+        kolopasy.animate().rotation(deg-12).setInterpolator(new DecelerateInterpolator()).setDuration(500);
+        deg+=generateRandomDegreeToSpin();
+        new Handler(getMainLooper()).postDelayed(() -> {
+            new Handler(getMainLooper()).postDelayed(() -> {
+            kolopasy.animate().rotation(deg+12).setInterpolator(new DecelerateInterpolator()).setDuration(10000);
+            },10000);
+                },500);
+        spinning = false;
     }
     private void losowanie(){
-        ImageView kolo = findViewById(R.id.kolo);
         ImageView obramowanie = findViewById(R.id.obramowanie);
-
 
     }
     public void krec(View v){
-        if(v.getId()==R.id.kolo){
-
-                if(!spinning){
-                    spin();
-                    spinning = true;
-
-                }
-
+        if(v.getId()==R.id.obramowanie){
+            if(!spinning){
+                spin();
+            }
         }
     }
 
@@ -619,7 +619,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         for (int i = 0; i < przycisk.length; i++) {
             Czapka czapka = listaCzapek.get(i);
             //Button przycisk = findViewById(getResources().getIdentifier("kup_czapka" + String.valueOf(i), "id", getPackageName()));
-
             Log.w("cototjest","kup_czapka" + String.valueOf(i));
             Log.w("akcja",String.valueOf(akcja[i]));
                 if (i==current_item_index) {
@@ -685,7 +684,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 } else {
                     czapaImage.setImageResource(R.drawable.circle);
                 }
-
                 czapaNazwa.setText(nazwaCzapki);
                 czapaOpis.setText(opisCzapki);
                 Log.w("akcjasuper",String.valueOf(akcja[Integer.valueOf(idCzapki)]));
@@ -851,7 +849,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 lastFeed = sharedPreferences.getLong(LAST_FEED,0);
                 LoadData();
                 Animacja_Jedzenia();
-
                 SaveFood(-1);
                 ustawMiche();
 
@@ -992,7 +989,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         } catch(Exception e){
             e.printStackTrace();
         }
-
         editor.apply();
     }
     public void Wibracje(){
@@ -1382,6 +1378,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             ShowPopup(R.layout.popup_kolo_fortuny);
                 generateSectorDegrees();
                 losowanie();
+                deg =0;
                 POPUP_RESOLUTION = 0;
 
         }
@@ -1415,7 +1412,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 resID = getResources().getIdentifier(questMax, "id", getPackageName());
                 TextView progresstextmax = myDialog.findViewById(resID);
                 progresstextmax.setText(String.valueOf(quest.getGeneratedMax()));
-
             }
             POPUP_RESOLUTION = 0;
             POPUP_EXCEPTION_MODE = 0;
