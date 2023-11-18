@@ -18,12 +18,12 @@
         android:theme="@style/Theme.Sql_test"
         tools:targetApi="31"
         >
-        <activity android:name=".MainActivity"
+        <activity android:name="czerwone.krokodyle.czerwone_krokodyle.MainActivity"
             android:screenOrientation="portrait"
             >
 
         </activity>
-        <activity   android:name=".Loading_Screen"
+        <activity   android:name="czerwone.krokodyle.czerwone_krokodyle.Loading_Screen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

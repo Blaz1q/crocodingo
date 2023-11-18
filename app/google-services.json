@@ -15,11 +15,80 @@
       },
       "oauth_client": [
         {
+          "client_id": "1094900032075-39dktsamenj49ma9gn5mrj77kt7ng5dg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.czerwone_krokodyle",
+            "certificate_hash": "1c6dd92fbb5290fade5f6c106e0e3a28f906ccb1"
+          }
+        },
+        {
+          "client_id": "1094900032075-f1m1n69p4s6oc14o5lkk4d1uvkpmfqal.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.czerwone_krokodyle",
+            "certificate_hash": "4434db64776dfa5c880237e8f236a72d8612ef7f"
+          }
+        },
+        {
           "client_id": "1094900032075-panelg6rioeguh97ckce9j45i656kkje.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.czerwone_krokodyle",
             "certificate_hash": "0fc14e0276873efa8d0ceecbd7e1b0bdbfab9c9a"
+          }
+        },
+        {
+          "client_id": "1094900032075-1uvmappkd8hmer2mqlovtgnrrjb8atn7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCc2SZHwa8unTc58p9PRrHv24TKyRQ_Tg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1094900032075-1uvmappkd8hmer2mqlovtgnrrjb8atn7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094900032075:android:d48b9a3126450036e763ce",
+        "android_client_info": {
+          "package_name": "czerwone.krokodyle.czerwone_krokodyle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1094900032075-75662llaq1khltuu2sl39d7luql3cc28.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "czerwone.krokodyle.czerwone_krokodyle",
+            "certificate_hash": "1c6dd92fbb5290fade5f6c106e0e3a28f906ccb1"
+          }
+        },
+        {
+          "client_id": "1094900032075-9armq095irpkkuvpf512n6jtjucqn1vm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "czerwone.krokodyle.czerwone_krokodyle",
+            "certificate_hash": "0fc14e0276873efa8d0ceecbd7e1b0bdbfab9c9a"
+          }
+        },
+        {
+          "client_id": "1094900032075-rs56ct9slopuoab9qornq1tfbhtpe50c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "czerwone.krokodyle.czerwone_krokodyle",
+            "certificate_hash": "4434db64776dfa5c880237e8f236a72d8612ef7f"
           }
         },
         {

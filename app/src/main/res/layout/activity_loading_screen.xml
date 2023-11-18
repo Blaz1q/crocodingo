@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/cktlo_loading1"
     android:id="@+id/MAIN_LOADING_BG"
-    tools:context=".Loading_Screen">
+    tools:context="czerwone.krokodyle.czerwone_krokodyle.Loading_Screen">
 
 
     <ImageView

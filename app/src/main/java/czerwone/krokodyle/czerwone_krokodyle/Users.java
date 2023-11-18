@@ -1,4 +1,4 @@
-package com.example.czerwone_krokodyle;
+package czerwone.krokodyle.czerwone_krokodyle;
 
 public class Users {
     String userId, name, profile;

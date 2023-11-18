@@ -5,7 +5,7 @@
 przyszłe wersje:
 -Powiadomienia
 * */
-package com.example.czerwone_krokodyle;
+package czerwone.krokodyle.czerwone_krokodyle;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,19 +22,13 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -46,7 +40,6 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -57,6 +50,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.example.czerwone_krokodyle.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -65,12 +59,9 @@ import com.google.android.gms.common.api.ApiException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.scilab.forge.jlatexmath.BoldAtom;
-import org.w3c.dom.Text;
 
 import ru.noties.jlatexmath.JLatexMathDrawable;
 
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -80,26 +71,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Date;
-import java.util.Set;
+
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
     Czapka czapka;
     private List<Czapka> listaCzapek = new ArrayList<>();
@@ -175,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     MediaPlayer buttonsong;
     long currentTime = new Date().getTime();
     String currentDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
-    Random daily_qnum_seed = new Random(Integer.valueOf(currentDate));
+    Random daily_qnum_seed;
     long lastFeed = 0;
     long savedTime = 0;
 
@@ -593,8 +574,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 listaQuestowId.add(i);
                 i++;
             }
-            Collections.shuffle(listaQuestowId,new Random(daily_seed_value));
+            Collections.shuffle(listaQuestowId,new Random(Integer.valueOf(currentDate)));
         }
+        Log.d("QID",String.valueOf(listaQuestowId));
     }
     public void loadQuestsFromAsset() {
         try {
@@ -623,14 +605,26 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 quest.setPrzedzial_Gorny(przedzial_gorny);
                 quest.setProgress(0);
                 quest.setExp(exp);
+                quest.checkifDone();
                 listaQuestow.add(quest);
             }
             zaladowano_questy = true;
             UpdateQuestDate();
-            Log.d("fasasf",String.valueOf(listaQuestowId));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    public void ResetAllQuestProgress(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        for (int i = 0; i < listaQuestow.size(); i++) {
+            Quests quest = listaQuestow.get(i);
+            quest.setProgress(0);
+            quest.setExp(0);
+            quest.checkifDone();
+            editor.putInt(QUEST_PROGRESS+String.valueOf(i),0);
+        }
+        editor.apply();
     }
     int[] akcja;
     public void ustawCzapke(){
@@ -983,6 +977,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         editor.putInt(FAILED_TESTS,sharedPreferences.getInt(FAILED_TESTS,0)+1);
         editor.apply();
     }
+    public void DebugSetDate(String ddMMyyyy){
+    currentDate = ddMMyyyy;
+    }
     public void SaveQuestDate(){
         String readableDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
         if(!readableDate.equals(currentDate)){
@@ -990,9 +987,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Log.w("readable",currentDate);
             currentDate = readableDate;
             UpdateQuestDate();
-            for(int i=0;i<3;i++){
-                UpdateQuestProgress(listaQuestowId.get(i),0);
-            }
+            ResetAllQuestProgress();
         }
     }
     public void UpdateQuestProgress(int number,int value){
@@ -1404,7 +1399,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         myDialog.dismiss();
         isPopupVisible = false;
     }
-    int daily_seed_value = daily_qnum_seed.nextInt(10)+10;
 
     public void Zmien_widoki(View v) {
         canplayanimations = false;
@@ -1420,31 +1414,38 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             RemoveAction();
         }
         else if(v.getId()==R.id.kolo_fortuny){
-            POPUP_RESOLUTION = 1;
-            ShowPopup(R.layout.popup_kolo_fortuny);
+            if(isPopupVisible==false){
+                POPUP_RESOLUTION = 1;
+                ShowPopup(R.layout.popup_kolo_fortuny);
                 generateSectorDegrees();
                 deg =0;
                 POPUP_RESOLUTION = 0;
+            }
 
         }
 
         else if(v.getId()==R.id.questy){
-
+            if(!isPopupVisible){
             POPUP_RESOLUTION = 1;
             POPUP_EXCEPTION_MODE = 1;
             SaveQuestDate();
             ShowPopup(R.layout.popup_quest);
-
-
             for(int i=0;i<3;i++){
                 Quests quest = listaQuestow.get(listaQuestowId.indexOf(i));
                 String progressName = "DailyQuest"+String.valueOf(i+1);
                 String questName = "quest"+String.valueOf(i+1);
                 String questValue = "quest"+String.valueOf(i+1)+"value";
                 String questMax = "questvalue"+String.valueOf(i+1)+"max";
+                String questProgressImgID = "questcomplete"+String.valueOf(i+1);
+                String questIcon = "questIcon"+String.valueOf(i+1);
 
                 int resID = getResources().getIdentifier(progressName, "id", getPackageName());
                 ProgressBar progress = (ProgressBar) myDialog.findViewById(resID);
+                resID = getResources().getIdentifier(questProgressImgID, "id", getPackageName());
+                ImageView questProgressImg = myDialog.findViewById(resID);
+                if(quest.getisDone()){
+                    questProgressImg.setImageResource(R.drawable.done);
+                }else questProgressImg.setImageResource(R.drawable.notdone);
                 resID = getResources().getIdentifier(questName, "id", getPackageName());
                 TextView questtresc = myDialog.findViewById(resID);
                 questtresc.setText(quest.getTresc());
@@ -1461,7 +1462,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             POPUP_RESOLUTION = 0;
             POPUP_EXCEPTION_MODE = 0;
             myDialog.show();
-
+            }
         }
         else if(v.getId()==R.id.user_profile){
             setContentView(R.layout.user_profile);
@@ -2149,6 +2150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Quests quests = listaQuestow.get(i);
             int questv = sharedPreferences.getInt(QUEST_PROGRESS+String.valueOf(i),0);
             quests.setProgress(questv);
+            Log.d("QPROGRESS",String.valueOf(quests.getisDone()));
         }
     }
     public void addProgress(int id){

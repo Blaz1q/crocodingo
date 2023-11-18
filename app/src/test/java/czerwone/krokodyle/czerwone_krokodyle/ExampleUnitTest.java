@@ -1,4 +1,4 @@
-package com.example.czerwone_krokodyle;
+package czerwone.krokodyle.czerwone_krokodyle;
 
 import org.junit.Test;
 

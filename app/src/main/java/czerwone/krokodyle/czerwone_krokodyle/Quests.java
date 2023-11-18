@@ -1,4 +1,4 @@
-package com.example.czerwone_krokodyle;
+package czerwone.krokodyle.czerwone_krokodyle;
 
 import android.renderscript.ScriptGroup;
 
@@ -18,6 +18,7 @@ public class Quests {
     private int Przedzial_Gorny;
     private int Progress;
     private int GeneratedMax;
+    private boolean isDone;
     public Quests(){
 
     }
@@ -64,13 +65,22 @@ public class Quests {
         this.Progress = progress;
         }
     }
+    public void checkifDone(){
+        if(Progress==GeneratedMax)
+            this.isDone = true;
+        else
+            this.isDone = false;
+    }
     public void addProgress(){
         if(Progress<GeneratedMax){
             this.Progress+=1;
         }
 
     }
-
+    public boolean getisDone(){
+        checkifDone();
+        return this.isDone;
+    }
     public int getProgress() {
         return Progress;
     }

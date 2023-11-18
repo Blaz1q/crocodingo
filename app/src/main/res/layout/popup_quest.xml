@@ -7,7 +7,8 @@
     android:background="#7f000000"
     >
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -17,7 +18,6 @@
         android:layout_marginBottom="15dp"
         android:background="@android:drawable/dialog_holo_light_frame"
         android:padding="15dp">
-
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="150dp"
@@ -25,125 +25,251 @@
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             app:srcCompat="@drawable/logo" />
-
-        <TextView
-            android:id="@+id/quest1"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_below="@id/imageView3"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="quest1"
-            android:textColor="@color/black"
-            android:textAlignment="center"
-            android:textSize="22dp" />
-        <TextView
-            android:id="@+id/quest1value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/DailyQuest1"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="x"
-            android:textColor="@color/black"
-            android:textAlignment="center"
-            android:textSize="22dp"
-            android:layout_toLeftOf="@id/slashquest1"/>
-        <TextView
-            android:id="@+id/questvalue1max"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/DailyQuest1"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="y"
-            android:layout_toRightOf="@id/slashquest1"
-            android:textColor="@color/black"
-            android:textAlignment="center"
-            android:textSize="22dp" />
+            android:background="@drawable/custom_quest_bg"
+            >
 
-        <TextView
-            android:id="@+id/slashquest1"
-            android:layout_below="@id/DailyQuest1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="/"
-            android:textColor="@color/black"
-            android:textAlignment="center"
-            android:textSize="22dp" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                >
 
-        <ProgressBar
-            android:id="@+id/DailyQuest1"
-            style="?android:attr/progressBarStyleHorizontal"
+                <TextView
+                    android:id="@+id/quest1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="quest2"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/quest1value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest1"
+                    android:layout_toLeftOf="@id/slashquest1"
+                    android:text="x"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/questvalue1max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest1"
+                    android:layout_toRightOf="@id/slashquest1"
+                    android:text="y"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/slashquest1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest1"
+                    android:layout_centerInParent="true"
+                    android:text="/"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+                <ProgressBar
+                    android:id="@+id/DailyQuest1"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/quest1"
+                    android:layout_marginTop="10dp"
+                    android:max="10"
+                    android:progress="6"
+                    android:progressDrawable="@drawable/custom_progressbar"
+                    android:progressTint="@color/ckred" />
+
+                <ImageView
+                    android:id="@+id/questcomplete1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest1"
+                    android:layout_alignBottom="@+id/questvalue1max"
+                    android:layout_toRightOf="@id/slashquest1"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/done" />
+            </RelativeLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/quest1"
+            android:orientation="horizontal"
+            android:layout_below="@id/imageView3"
+            android:background="@drawable/custom_quest_bg"
+            >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                >
+
+                <TextView
+                    android:id="@+id/quest2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="quest2"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/quest2value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest2"
+                    android:layout_toLeftOf="@id/slashquest2"
+                    android:text="x"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/questvalue2max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest2"
+                    android:layout_toRightOf="@id/slashquest2"
+                    android:text="y"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/slashquest2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest2"
+                    android:layout_centerInParent="true"
+                    android:text="/"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+                <ProgressBar
+                    android:id="@+id/DailyQuest2"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/quest2"
+                    android:layout_marginTop="10dp"
+                    android:max="10"
+                    android:progress="6"
+                    android:progressDrawable="@drawable/custom_progressbar"
+                    android:progressTint="@color/ckred" />
+
+                <ImageView
+                    android:id="@+id/questcomplete2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest2"
+                    android:layout_alignBottom="@+id/questvalue2max"
+                    android:layout_toRightOf="@id/slashquest2"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/done" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+        <RelativeLayout
             android:layout_marginTop="10dp"
-            android:max="10"
-            android:progress="6"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progressTint="@color/ckred" />
-
-        <TextView
-            android:id="@+id/quest2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/slashquest1"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
-            android:text="quest2"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="22dp" />
-
-        <TextView
-            android:id="@+id/quest2value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/DailyQuest2"
-            android:layout_centerInParent="true"
-            android:layout_toLeftOf="@id/slashquest2"
-            android:text="x"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="22dp" />
-
-        <TextView
-            android:id="@+id/questvalue2max"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/DailyQuest2"
-            android:layout_centerInParent="true"
-            android:layout_toRightOf="@id/slashquest2"
-            android:text="y"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="22dp" />
-
-        <TextView
-            android:id="@+id/slashquest2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/DailyQuest2"
-            android:layout_centerInParent="true"
-            android:text="/"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="22dp" />
-
-        <ProgressBar
-            android:id="@+id/DailyQuest2"
-            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/quest2"
-            android:layout_marginTop="10dp"
-            android:max="10"
-            android:progress="6"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progressTint="@color/ckred" />
+            android:orientation="horizontal"
+            android:layout_below="@id/imageView3"
+            android:background="@drawable/custom_quest_bg"
+            >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                >
+
+                <TextView
+                    android:id="@+id/quest3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="quest2"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/quest3value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest3"
+                    android:layout_toLeftOf="@id/slashquest3"
+                    android:text="x"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/questvalue3max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest3"
+                    android:layout_toRightOf="@id/slashquest3"
+                    android:text="y"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/slashquest3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest3"
+                    android:layout_centerInParent="true"
+                    android:text="/"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+                <ProgressBar
+                    android:id="@+id/DailyQuest3"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/quest3"
+                    android:layout_marginTop="10dp"
+                    android:max="10"
+                    android:progress="6"
+                    android:progressDrawable="@drawable/custom_progressbar"
+                    android:progressTint="@color/ckred" />
+
+                <ImageView
+                    android:id="@+id/questcomplete3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/DailyQuest3"
+                    android:layout_alignBottom="@+id/questvalue3max"
+                    android:layout_toRightOf="@id/slashquest3"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/done" />
+            </RelativeLayout>
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/welcome_button_testy"
@@ -155,64 +281,7 @@
             android:onClick="Zamknij_Popup"
             android:text="Zaczynajmy!" />
 
-        <TextView
-            android:id="@+id/quest3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/slashquest2"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
-            android:text="quest3"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="22dp" />
 
-        <TextView
-            android:id="@+id/quest3value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/DailyQuest3"
-            android:layout_centerInParent="true"
-            android:layout_toLeftOf="@id/slashquest3"
-            android:text="x"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="22dp" />
 
-        <TextView
-            android:id="@+id/questvalue3max"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/DailyQuest3"
-            android:layout_centerInParent="true"
-            android:layout_toRightOf="@id/slashquest3"
-            android:text="y"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="22dp" />
-
-        <TextView
-            android:id="@+id/slashquest3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/DailyQuest3"
-            android:layout_centerInParent="true"
-            android:text="/"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="22dp" />
-
-        <ProgressBar
-            android:id="@+id/DailyQuest3"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/quest3"
-            android:layout_marginTop="10dp"
-            android:max="10"
-            android:progress="6"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progressTint="@color/ckred" />
-
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

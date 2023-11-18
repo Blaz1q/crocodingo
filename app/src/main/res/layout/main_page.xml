@@ -76,7 +76,9 @@
         android:scaleType="centerInside"
         android:src="@drawable/questlog"
         android:text="@string/ustawienia"
-        tools:ignore="DuplicateSpeakableTextCheck" />
+        tools:ignore="DuplicateSpeakableTextCheck"
+        android:visibility="gone"
+        />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_profile"
