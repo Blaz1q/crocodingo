@@ -254,9 +254,26 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         ImageView kolopasy = (ImageView) myDialog.findViewById(R.id.kolopaski);
         spinning = true;
         String nagroda;
+        int truedeg = 0;
         kolopasy.animate().rotation(deg-12).setInterpolator(new DecelerateInterpolator()).setDuration(500);
         deg+=generateRandomDegreeToSpin();
-        switch(deg%10) {
+        truedeg = (deg+4)%360 ; //4 stopnie offsetu
+        int switchvalue=0;
+        int przedzial = 10;
+        int wartosc_dolna;
+        int wartosc_gorna;
+        Log.d("truedeg",String.valueOf(truedeg));
+        for(int i=0;i<przedzial;i++){
+            wartosc_dolna = (i*360/przedzial);
+            wartosc_gorna = (i+1)*360/przedzial;
+            Log.w("przedzialy",String.valueOf(wartosc_dolna)+" "+String.valueOf(wartosc_gorna));
+            Log.w("przedzialyif",String.valueOf(truedeg>=wartosc_dolna&&truedeg<wartosc_gorna));
+            if(truedeg>=wartosc_dolna&&truedeg<wartosc_gorna){
+                switchvalue=i;
+            }
+        }
+        int trueswitchvalue = 10-switchvalue-1;
+        switch(trueswitchvalue) {
             case 0:
                 nagroda = "100 coinow";
                 SaveMoney(100);
@@ -302,6 +319,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 nagroda = "Wystapil jakis blad";
                 break;
         }
+        Toast.makeText(this,String.valueOf(trueswitchvalue),Toast.LENGTH_SHORT).show();
         new Handler(getMainLooper()).postDelayed(() -> {
             kolopasy.animate().rotation(deg+12).setInterpolator(new DecelerateInterpolator()).setDuration(10000);
         },500);
