@@ -18,6 +18,6 @@
     <string name="zaloguj_sie">Sign in with Google</string>
     <string name="wroc">Back</string>
     <string name="Polski">Polish</string>
-    <string name="Angielski">English</string>
+    <string name="Angielski">English (BETA)</string>
     <string name="Hiszpanski">Spanish (Not implemented!)</string>
 </resources>
