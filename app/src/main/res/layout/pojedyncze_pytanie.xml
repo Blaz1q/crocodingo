@@ -23,7 +23,7 @@
             android:id="@+id/wroc_do_menu_poj"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Wróć do menu"
+            android:text="@string/wroc_do_startu"
             android:onClick="Zmien_widoki"
             android:layout_weight="1"
             android:layout_marginRight="3dp"
@@ -67,7 +67,7 @@
             android:backgroundTint="@color/gray_active"
             android:onClick="Wyjasnij"
 
-            android:text="Wyjaśnienie" />
+            android:text="@string/wyjasnienie" />
 
         <Button
             android:id="@+id/nextpojpytanie"
@@ -77,7 +77,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/gray_active"
             android:onClick="NextPytanie"
-            android:text="Następne" />
+            android:text="@string/next" />
 
     </LinearLayout>
     <LinearLayout

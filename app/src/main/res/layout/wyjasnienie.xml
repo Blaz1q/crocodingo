@@ -19,7 +19,7 @@
         android:layout_below="@id/hiddentop"
         android:backgroundTint="#333333"
         android:onClick="Zmien_widoki"
-        android:text="Wróć do pytania" />
+        android:text="@string/wroc" />
 
     <ImageView
         android:id="@+id/wyjasnienie_main"

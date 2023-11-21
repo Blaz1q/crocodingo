@@ -17,7 +17,7 @@
         android:layout_below="@id/hiddentop"
         android:layout_marginTop="1dp"
         android:onClick="Zmien_widoki"
-        android:text="@string/back_to_start"/>
+        android:text="@string/wroc_do_startu"/>
 
     <ScrollView
         android:layout_below="@id/wroc"

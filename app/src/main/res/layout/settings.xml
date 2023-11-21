@@ -23,7 +23,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="#333333"
         android:onClick="Zmien_widoki"
-        android:text="@string/back_to_start" />
+        android:text="@string/wroc_do_startu" />
 
 
     <LinearLayout
@@ -72,7 +72,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:text="Dźwięk"
+        android:text="Dźwięk i wibracje"
         android:textColor="#494949"
         android:textSize="20sp" />
 
@@ -108,7 +108,6 @@
 
 
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/layout_switch1"
         android:layout_width="match_parent"
@@ -131,7 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
-            android:text="Dźwięk w menu"
+            android:text="@string/dzwiek_w_menu"
             android:textSize="20dp" />
     </LinearLayout>
 
@@ -156,15 +155,61 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wibracje"
+            android:text="@string/wibracje"
             android:textSize="20dp" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/textJęzyk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_switch2"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="Język"
+        android:textColor="#494949"
+        android:textSize="20sp" />
+
+    <RadioGroup
+        android:id="@+id/selectlangcontainer"
+        android:layout_below="@id/textJęzyk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="30dp"
+        >
+
+        <RadioButton
+            android:id="@+id/radioLangPl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Polski"
+            android:onClick="ChangeLang"
+            />
+        <RadioButton
+            android:id="@+id/radioLangEng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Angielski"
+            android:onClick="ChangeLang"
+            />
+        <RadioButton
+            android:id="@+id/radioLangEsp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Hiszpanski" />
+
+    </RadioGroup>
 
     <TextView
         android:id="@+id/textRealizacja"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_switch2"
+        android:layout_below="@id/selectlangcontainer"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"

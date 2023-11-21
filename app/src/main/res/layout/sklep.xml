@@ -21,7 +21,7 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="#333333"
         android:onClick="Zmien_widoki"
-        android:text="@string/back_to_start" />
+        android:text="@string/wroc_do_startu" />
     <TextView
         android:id="@+id/crococoiny_napis"
         android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:backgroundTint="#333333"
-                        android:text="Kup"
+                        android:text="@string/kup"
                         android:onClick="pokazPopupZakupuCzapek"/>
                 </LinearLayout>
 

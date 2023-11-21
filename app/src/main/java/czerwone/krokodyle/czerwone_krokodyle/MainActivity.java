@@ -17,6 +17,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -25,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -35,6 +38,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -94,6 +98,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public JLatexMathDrawable[] CurrentQuestion = new JLatexMathDrawable[4];
     public String[] StringCurrentQuestion = new String[4];
     private final math_syntax Math_syn = new math_syntax();
+    int[] radioButtonsIds = {
+            R.id.radioLangPl,
+            R.id.radioLangEng,
+            R.id.radioLangEsp
+    };
     String defaultUsername = "SuperKrokodyl26";
     //zabezpieczenia
     boolean zaladowano_czapki = false;
@@ -133,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean czyZalogowany = false;
     Switch sw1;
     Switch sw2;
-
+    int radioButtonChecked = 0;
     int currentVol = -1;
     int current_item_index=-1;
     int POPUP_EXCEPTION_MODE=0;
@@ -162,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     public static final String FAILED_TESTS = "FAILED_TESTS";
     public static final String PASSED_TESTS = "PASSED_TESTS";
+    public static final String LANG = "LANG";
+    public static final String CHECKEDLANG = "CHECKEDLANG";
     public static final String STREAK = "STREAK";
     public static final String STREAK_POJEDYNCZE = "STREAK_POJEDYNCZE"; //do questow;
     public static final String BEST_STREAK = "BEST_STREAK";
@@ -211,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         updateAccInfo();
         LoadData();
         Log.w("DBBACKUP",loadJSONFromAssetVer2("DB.json"));
-
+        UpdateLocale();
         loadJSONFromAsset();
         loadQuestsFromAsset();
         SaveQuestDate();
@@ -237,6 +248,28 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         PierwszeUruchomienie();
         Uruchomienie_animajca();
         ustawCzapke();
+    }
+    public void ChangeLang(View v){
+        if(v.getId()==R.id.radioLangPl){
+            setLocale("Pl");
+        }
+        else if(v.getId()==R.id.radioLangEng){
+            setLocale("En");
+        }
+    }
+    public void setLocale(String lang) {
+        changeLang(lang);
+        Locale myLocale = new Locale(getLang());
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+        SaveSettings();
+        setContentView(R.layout.settings);
+        UpdateSettings();
+        //Intent refresh = new Intent(this, MainActivity.class);
+        //startActivity(refresh);
     }
     public void generateSectorDegrees() {
         int sectorDegree = 360/sectors.length;
@@ -686,7 +719,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     przycisk[i].setText("Załóż");
                     akcja[i] = 1;
                 } else {
-                    przycisk[i].setText("Kup");
+                    przycisk[i].setText(getString(R.string.kup));
                     akcja[i] = 0;
                 }
         }
@@ -785,9 +818,32 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Log.w("CURRENT_INDEX_CAZAPA",String.valueOf(current_item_index));
         }
     }
+    public int GetRadioButtonChecked(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getInt(CHECKEDLANG, 0);
+    }
     public int getMoney() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         return sharedPreferences.getInt(MONEY, 0);
+    }
+    public String getLang() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(LANG, "Pl");
+    }
+    public void changeLang(String lang){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(LANG,lang);
+        editor.apply();
+    }
+    public void UpdateLocale(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String lang = sharedPreferences.getString(LANG,"Pl");
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getBaseContext().getResources().updateConfiguration(config,getBaseContext().getResources().getDisplayMetrics());
     }
     boolean czypokazana = false;
     public void ustawMiche(){
@@ -1045,6 +1101,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             editor.putBoolean(SWITCH, sw1.isChecked());
             editor.putBoolean(SWITCHWIBRACJE, sw2.isChecked());
             editor.putString(USERNAME,username.getText().toString());
+            for(int i=0;i<radioButtonsIds.length;i++){
+                RadioButton radiobutton = findViewById(radioButtonsIds[i]);
+                if(radiobutton.isChecked()) radioButtonChecked = i;
+            }
+            editor.putInt(CHECKEDLANG,radioButtonChecked);
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -1217,10 +1278,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             username.setText(sharedPreferences.getString(USERNAME,defaultUsername));
             sw1.setChecked(switchstate);
             sw2.setChecked(switchstatewibracje);
+            int idradio = 0;
+            idradio = GetRadioButtonChecked();
+            RadioButton radiobutton = findViewById(radioButtonsIds[GetRadioButtonChecked()]);
+            radiobutton.setChecked(true);
         } catch (Exception e){
             e.printStackTrace();
         }
     }
+
     public String UserProfileUrl =""; // Uwaga! - nie zapisuje się w aplikacji!!
     void updateAccInfo(){
         login_name = findViewById(R.id.usernick);
@@ -2089,7 +2155,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void UpdateAnswer_Poj(){
         try{
-
             Button[] buttony = {
                     findViewById(R.id.odp_A_Poj),
                     findViewById(R.id.odp_B_Poj),
@@ -2479,12 +2544,4 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         return false;
     }
-
-
-
-
-
-
-
-
 }

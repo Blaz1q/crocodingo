@@ -22,7 +22,7 @@
         android:gravity="center"
         android:maxWidth="20dp"
         android:padding="5dp"
-        android:text="Tak"
+        android:text="@string/yes"
         android:textSize="18dp"
         android:onClick="Zmien_widoki"
         android:textStyle="bold" />
@@ -40,7 +40,7 @@
         android:backgroundTint="#2D3142"
         android:gravity="center"
         android:padding="5dp"
-        android:text="Nie"
+        android:text="@string/no"
         android:textSize="18dp"
         android:onClick="Zamknij_Popup"
         android:textStyle="bold" />

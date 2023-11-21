@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ustawienia">settings</string>
+    <string name="Credits">Credits</string>
+    <string name="wroc_do_startu">Back to start</string>
+    <string name="special_thanks">Specjal\nthanks:</string>
+    <string name="wyjasnienie">Explenation</string>
+    <string name="next">Next</string>
+    <string name="prev">Previous</string>
+    <string name="wroc_do_pytan">Back to questions</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="dzwiek_w_menu">Sound in menu</string>
+    <string name="wibracje">Vibrations</string>
+    <string name="kup">Buy</string>
+    <string name="zobacz_bledne">Show mistakes</string>
+    <string name="wyloguj">Sign out</string>
+    <string name="zaloguj_sie">Sign in with Google</string>
+    <string name="wroc">Back</string>
+    <string name="Polski">Polish</string>
+    <string name="Angielski">English</string>
+    <string name="Hiszpanski">Spanish (Not implemented!)</string>
+</resources>

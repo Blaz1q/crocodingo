@@ -75,7 +75,6 @@ public class Quests {
         if(Progress<GeneratedMax){
             this.Progress+=1;
         }
-
     }
     public boolean getisDone(){
         checkifDone();
