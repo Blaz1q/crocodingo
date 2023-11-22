@@ -20,5 +20,5 @@
     <string name="Polski">Polish</string>
     <string name="Angielski">English (BETA)</string>
     <string name="Hiszpanski">Spanish (Not implemented!)</string>
-    <string name="pytanie">Pytanie</string>
+    <string name="pytanie">Question</string>
 </resources>

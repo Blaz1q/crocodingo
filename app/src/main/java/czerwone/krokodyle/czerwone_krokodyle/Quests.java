@@ -1,6 +1,11 @@
 package czerwone.krokodyle.czerwone_krokodyle;
 
+import android.content.Context;
+import android.media.MediaPlayer;
 import android.renderscript.ScriptGroup;
+import android.util.Log;
+
+import com.example.czerwone_krokodyle.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +24,7 @@ public class Quests {
     private int Progress;
     private int GeneratedMax;
     private boolean isDone;
+    private boolean hadPlayedsound=false;
     public Quests(){
 
     }
@@ -65,19 +71,24 @@ public class Quests {
         this.Progress = progress;
         }
     }
+    public boolean gethadPlayedsound(){
+        return this.hadPlayedsound;
+    }
+    public void setHadPlayedsound(boolean hadplayed){
+        this.hadPlayedsound = hadplayed;
+    }
     public void checkifDone(){
-        if(Progress==GeneratedMax)
+        if(this.Progress==this.GeneratedMax)
             this.isDone = true;
         else
             this.isDone = false;
-    }
-    public void addProgress(){
-        if(Progress<GeneratedMax){
-            this.Progress+=1;
-        }
+        Log.w("QProgress:",String.valueOf(this.Progress));
+        Log.w("QGenMax:",String.valueOf(this.GeneratedMax));
     }
     public boolean getisDone(){
         checkifDone();
+        Log.w("QProgress:",String.valueOf(this.Progress));
+        Log.w("QGenMax:",String.valueOf(this.GeneratedMax));
         return this.isDone;
     }
     public int getProgress() {

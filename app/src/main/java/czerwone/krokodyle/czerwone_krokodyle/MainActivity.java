@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -650,6 +651,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 Quests quest = new Quests();
                 quest.setId(id);
                 quest.setTresc(tresc);
+                quest.setHadPlayedsound(false);
                 quest.setNagroda(nagroda);
                 quest.setPrzedzial_Dolny(przedzial_dolny);
                 quest.setPrzedzial_Gorny(przedzial_gorny);
@@ -777,6 +779,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             int noweHajsy = czapka.getCena()*-1;
                             SaveMoney(noweHajsy);
                             Toast.makeText(MainActivity.this, "Zakupiono " + czapka.getNazwa(), Toast.LENGTH_SHORT).show();
+                            addProgress(3);
                             ClosePopup();
                             aktualizujTextPrzyciskow();
                          } else {
@@ -1486,7 +1489,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 int resIDprogressImg = getResources().getIdentifier(questProgressImgID, "id", getPackageName());
                 int resIDquestname = getResources().getIdentifier(questName, "id", getPackageName());
                 int resIDquestvalue = getResources().getIdentifier(questValue, "id", getPackageName());
-                int resIDquestmax = getResources().getIdentifier(questValue, "id", getPackageName());
+                int resIDquestmax = getResources().getIdentifier(questMax, "id", getPackageName());
                 ProgressBar progress = (ProgressBar) myDialog.findViewById(resIDprogress);
                 ImageView questProgressImg = myDialog.findViewById(resIDprogressImg);
                 if(quest.getisDone()){
@@ -1685,11 +1688,30 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(quest.getGeneratedMax()>questv){
             quest.setProgress(questv+1);
             editor.putInt(QUEST_PROGRESS+String.valueOf(id),questv+1);
-            Log.d("QUESTVALUE",String.valueOf(questv+1));
+            Log.d("QUESTVALUEACTUAL",String.valueOf(quest.getProgress()));
+            questPlaySound(quest);
         }else{
             //editor.putInt(QUEST_PROGRESS+String.valueOf(id),0); //debug
         }
+
         editor.apply();
+    }
+    public void questPlaySound(Quests q){
+        Log.w("qsound","1");
+        if(q.getisDone()){
+            Log.w("qsound","2");
+            if(!q.gethadPlayedsound()){
+                Log.w("qsound","3");
+                MediaPlayer playComplete = MediaPlayer.create(this,R.raw.questcomplete);
+                playComplete.start();
+                playComplete.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mp) {
+                        mp.release();
+                    };
+                });
+                q.setHadPlayedsound(true);
+            }
+        }
     }
     // koniec sekcji
     // tutaj sekcja z testami #SECTEST
@@ -1951,7 +1973,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void Set_pytanie(){
         try{
             TextView numer_pytania = findViewById(R.id.numer_pytania);
-            numer_pytania.setText("Pytanie "+ (CURRENT_INDEX + 1));
+            numer_pytania.setText(getString(R.string.pytanie)+" "+(CURRENT_INDEX + 1));
             int i = SET_TEST_ID;
             String tresc,id;
 
