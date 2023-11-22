@@ -48,7 +48,6 @@ public class Czapka {
         return cena;
     }
 
-
     public boolean isCzyZakupiona() {
         return czyZakupiona;
     }

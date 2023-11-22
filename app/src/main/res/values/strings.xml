@@ -26,4 +26,6 @@
     <string name="Polski">Polski</string>
     <string name="Angielski">Angielski</string>
     <string name="Hiszpanski">Hiszpański (Brak implementacji!)</string>
+    <string name="pytanie">Pytanie</string>
+
 </resources>

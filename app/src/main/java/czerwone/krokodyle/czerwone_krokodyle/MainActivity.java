@@ -249,128 +249,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Uruchomienie_animajca();
         ustawCzapke();
     }
-    public void ChangeLang(View v){
-        if(v.getId()==R.id.radioLangPl){
-            setLocale("Pl");
-        }
-        else if(v.getId()==R.id.radioLangEng){
-            setLocale("En");
-        }
-    }
-    public void setLocale(String lang) {
-        changeLang(lang);
-        Locale myLocale = new Locale(getLang());
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);
-        SaveSettings();
-        setContentView(R.layout.settings);
-        UpdateSettings();
-        //Intent refresh = new Intent(this, MainActivity.class);
-        //startActivity(refresh);
-    }
-    public void generateSectorDegrees() {
-        int sectorDegree = 360/sectors.length;
-
-        for (int i=0; i<sectors.length; i++){
-            sectorDegrees[i] = (i+1)*sectorDegree;
-        }
-    }
-    private float generateRandomDegreeToSpin() {
-        Random r = new Random();
-        return (360*sectors.length)+r.nextInt(360/10);
-    }
-    int deg =0;
-    private void spin(){
-        ImageView kolopasy = (ImageView) myDialog.findViewById(R.id.kolopaski);
-        spinning = true;
-        String nagroda;
-        int truedeg = 0;
-        kolopasy.animate().rotation(deg-12).setInterpolator(new DecelerateInterpolator()).setDuration(500);
-        deg+=generateRandomDegreeToSpin();
-        truedeg = (deg+4)%360 ; //4 stopnie offsetu
-        int switchvalue=0;
-        int przedzial = 10;
-        int wartosc_dolna;
-        int wartosc_gorna;
-        Log.d("truedeg",String.valueOf(truedeg));
-        for(int i=0;i<przedzial;i++){
-            wartosc_dolna = (i*360/przedzial);
-            wartosc_gorna = (i+1)*360/przedzial;
-            Log.w("przedzialy",String.valueOf(wartosc_dolna)+" "+String.valueOf(wartosc_gorna));
-            Log.w("przedzialyif",String.valueOf(truedeg>=wartosc_dolna&&truedeg<wartosc_gorna));
-            if(truedeg>=wartosc_dolna&&truedeg<wartosc_gorna){
-                switchvalue=i;
-            }
-        }
-        int trueswitchvalue = 10-switchvalue-1;
-        switch(trueswitchvalue) {
-            case 0:
-                nagroda = "100 coinow";
-                SaveMoney(100);
-                break;
-            case 1:
-                nagroda = " coinow";
-                SaveMoney(100);
-                break;
-            case 2:
-                nagroda = "1000 coinow";
-                SaveMoney(100);
-                break;
-            case 3:
-                nagroda = "1000 coinow";
-                SaveMoney(100);
-                break;
-            case 4:
-                nagroda = "1000 coinow";
-                SaveMoney(100);
-                break;
-            case 5:
-                nagroda = "1000 coinow";
-                SaveMoney(100);
-                break;
-            case 6:
-                nagroda = "1000 coinow";
-                SaveMoney(100);
-                break;
-            case 7:
-                nagroda = "1000 coinow";
-                SaveMoney(100);
-                break;
-            case 8:
-                nagroda = "1000 coinow";
-                SaveMoney(100);
-                break;
-            case 9:
-                nagroda = "1000 coinow";
-                SaveMoney(100);
-                break;
-
-            default:
-                nagroda = "Wystapil jakis blad";
-                break;
-        }
-        Toast.makeText(this,String.valueOf(trueswitchvalue),Toast.LENGTH_SHORT).show();
-        new Handler(getMainLooper()).postDelayed(() -> {
-            kolopasy.animate().rotation(deg+12).setInterpolator(new DecelerateInterpolator()).setDuration(10000);
-        },500);
-        Log.d("deg/",String.valueOf(deg%10));
-        new Handler(getMainLooper()).postDelayed(() -> {
-            spinning = false;
-            TextView tekst_nagroda = myDialog.findViewById(R.id.nagroda);
-            tekst_nagroda.setText(nagroda);
-        },10500);
-    }
-    public void krec(View v){
-        if(v.getId()==R.id.obramowanie){
-            if(!spinning){
-                spin();
-            }
-        }
-    }
-
     @Override
     public void onBackPressed() {
         canplayanimations = false;
@@ -435,8 +313,129 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         czypokazana = false;
         LoadData();
         Wibracje();
-
     }
+    public void ChangeLang(View v){
+        if(v.getId()==R.id.radioLangPl){
+            setLocale("Pl");
+        }
+        else if(v.getId()==R.id.radioLangEng){
+            setLocale("En");
+        }
+    }
+    public void setLocale(String lang) {
+        changeLang(lang);
+        Locale myLocale = new Locale(getLang());
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+        SaveSettings();
+        setContentView(R.layout.settings);
+        UpdateSettings();
+        //Intent refresh = new Intent(this, MainActivity.class);
+        //startActivity(refresh);
+    }
+    public void generateSectorDegrees() {
+        int sectorDegree = 360/sectors.length;
+
+        for (int i=0; i<sectors.length; i++){
+            sectorDegrees[i] = (i+1)*sectorDegree;
+        }
+    }
+    private float generateRandomDegreeToSpin() {
+        Random r = new Random();
+        return (360*sectors.length)+r.nextInt(360);
+    }
+    int deg =0;
+    private void spin(){
+        ImageView kolopasy = (ImageView) myDialog.findViewById(R.id.kolopaski);
+        spinning = true;
+        String nagroda;
+        int truedeg = 0;
+        kolopasy.animate().rotation(deg-12).setInterpolator(new DecelerateInterpolator()).setDuration(500);
+        deg+=generateRandomDegreeToSpin();
+        truedeg = (deg+4)%360 ; //4 stopnie offsetu
+        int switchvalue=0;
+        int przedzial = 10;
+        int wartosc_dolna;
+        int wartosc_gorna;
+        Log.d("truedeg",String.valueOf(truedeg));
+        for(int i=0;i<przedzial;i++){
+            wartosc_dolna = (i*360/przedzial);
+            wartosc_gorna = (i+1)*360/przedzial;
+            Log.w("przedzialy",String.valueOf(wartosc_dolna)+" "+String.valueOf(wartosc_gorna));
+            Log.w("przedzialyif",String.valueOf(truedeg>=wartosc_dolna&&truedeg<wartosc_gorna));
+            if(truedeg>=wartosc_dolna&&truedeg<wartosc_gorna){
+                switchvalue=i;
+            }
+        }
+        int trueswitchvalue = 10-switchvalue-1;
+        switch(trueswitchvalue) {
+            case 0:
+                nagroda = "100 coinow";
+                SaveMoney(100);
+                break;
+            case 1:
+                nagroda = "200 coinow";
+                SaveMoney(200);
+                break;
+            case 2:
+                nagroda = "1000 coinow";
+                SaveMoney(1000);
+                break;
+            case 3:
+                nagroda = "500 coinow";
+                SaveMoney(500);
+                break;
+            case 4:
+                nagroda = "5000 coinow";
+                SaveMoney(5000);
+                break;
+            case 5:
+                nagroda = "300 coinow";
+                SaveMoney(300);
+                break;
+            case 6:
+                nagroda = "400 coinow";
+                SaveMoney(400);
+                break;
+            case 7:
+                nagroda = "10 coinow";
+                SaveMoney(10);
+                break;
+            case 8:
+                nagroda = "0 coinow";
+                break;
+            case 9:
+                nagroda = "700 coinow";
+                SaveMoney(700);
+                break;
+
+            default:
+                nagroda = "Wystapil jakis blad";
+                break;
+        }
+        Toast.makeText(this,String.valueOf(trueswitchvalue),Toast.LENGTH_SHORT).show();
+        new Handler(getMainLooper()).postDelayed(() -> {
+            kolopasy.animate().rotation(deg+12).setInterpolator(new DecelerateInterpolator()).setDuration(10000);
+        },500);
+        Log.d("deg/",String.valueOf(deg%10));
+        new Handler(getMainLooper()).postDelayed(() -> {
+            spinning = false;
+            TextView tekst_nagroda = myDialog.findViewById(R.id.nagroda);
+            tekst_nagroda.setText(nagroda);
+        },10500);
+    }
+    public void krec(View v){
+        if(v.getId()==R.id.obramowanie){
+            if(!spinning){
+                spin();
+            }
+        }
+    }
+
+
     void Uruchomienie_animajca(){
         RelativeLayout relativeLayout = findViewById(R.id.pierwsze_uruchomienie_animacja);
         relativeLayout.setVisibility(View.VISIBLE);
@@ -688,28 +687,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 ImageView czapkaimage = findViewById(R.id.current_czapka_image);
                 czapkaimage.setVisibility(View.VISIBLE);
                 Context c = getApplicationContext();
-                czapkaimage.setImageResource(getResources().getIdentifier("drawable/czapa_" +String.valueOf(current_item_index+1) ,null,c.getPackageName()));
+                czapkaimage.setImageResource(getResources().getIdentifier("drawable/basicczapa_" +String.valueOf(current_item_index+1) ,null,c.getPackageName()));
             }
         }
     }
     public void aktualizujTextPrzyciskow() {
-        Button[] przycisk = {
-                findViewById(R.id.kup_czapka0),
-                findViewById(R.id.kup_czapka1),
-                findViewById(R.id.kup_czapka2),
-                findViewById(R.id.kup_czapka3),
-                findViewById(R.id.kup_czapka4),
-                findViewById(R.id.kup_czapka5),
-                findViewById(R.id.kup_czapka6),
-                findViewById(R.id.kup_czapka7)
-        };
+        Button[] przycisk = new Button[listaCzapek.size()];
+        for(int i=0;i<listaCzapek.size();i++){
+            String przyciskId = "kup_czapka"+String.valueOf(i);
+            int resID = getResources().getIdentifier(przyciskId, "id", getPackageName());
+            przycisk[i] = findViewById(resID);
+        } //odmałpiłem kod
         Log.w("kurwa",String.valueOf(przycisk.length));
         akcja = new int[przycisk.length];
         Log.w("kurwaw",String.valueOf(akcja.length));
         Log.w("kurwawa",String.valueOf(kupioneczapkibool.length())); //XDDDD
         for (int i = 0; i < przycisk.length; i++) {
             Czapka czapka = listaCzapek.get(i);
-            //Button przycisk = findViewById(getResources().getIdentifier("kup_czapka" + String.valueOf(i), "id", getPackageName()));
             Log.w("cototjest","kup_czapka" + String.valueOf(i));
             Log.w("akcja",String.valueOf(akcja[i]));
                 if (i==current_item_index) {
@@ -745,49 +739,44 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if (buttonId.startsWith("kup_czapka")) {
             przyciskNumer = Integer.parseInt(buttonId.substring("kup_czapka".length()));
             int obrazResId = 0;
-            final int[] cenaCzapki = new int[1]; // Użyj tablicy jednoelementowej do przekazania ceny
             final String nazwaCzapki;
             final String opisCzapki;
             final String idCzapki;
             if (zaladowano_czapki && przyciskNumer < listaCzapek.size()) {
                 czapka = listaCzapek.get(przyciskNumer);
-                idCzapki = String.valueOf(czapka.getId());
-                nazwaCzapki = czapka.getNazwa();
-                opisCzapki = czapka.getOpis();
-                String plikObrazu = czapka.getPlik();
-                obrazResId = getResources().getIdentifier(plikObrazu, "drawable", getPackageName());
-                cenaCzapki[0] = czapka.getCena(); // Przypisz cenę do tablicy
+                obrazResId = getResources().getIdentifier(czapka.getPlik(), "drawable", getPackageName());
             } else {
                 Log.w("MojaAplikacja", "Brak czapki dla przycisku numer: " + przyciskNumer);
                 nazwaCzapki = "Nazwa czapki";
                 opisCzapki = "Opis czapki";
                 idCzapki = String.valueOf(przyciskNumer);
             }
-            if(isPopupVisible==false){
-                POPUP_EXCEPTION_MODE = 1;
-                ShowPopup(R.layout.popup_layout);
-                ImageView czapaImage = myDialog.findViewById(R.id.czapa_image);
-                TextView czapaNazwa = myDialog.findViewById(R.id.czapa_nazwa);
-                TextView czapaOpis = myDialog.findViewById(R.id.czapa_opis);
-                Button kupCzapaButton = myDialog.findViewById(R.id.kup_czapa);
-                if (obrazResId != 0) {
-                    czapaImage.setImageResource(obrazResId);
-                } else {
-                    czapaImage.setImageResource(R.drawable.circle);
-                }
-                czapaNazwa.setText(nazwaCzapki);
-                czapaOpis.setText(opisCzapki);
-                Log.w("akcjasuper",String.valueOf(akcja[Integer.valueOf(idCzapki)]));
-                if(akcja[Integer.valueOf(idCzapki)]==0){
+            Log.w("POPUP_VISIBLE",String.valueOf(isPopupVisible));
+                if(akcja[czapka.getId()]==0){
+                    if(isPopupVisible==false){
+                        POPUP_EXCEPTION_MODE = 1;
+                        ShowPopup(R.layout.popup_layout);
+                        ImageView czapaImage = myDialog.findViewById(R.id.czapa_image);
+                        TextView czapaNazwa = myDialog.findViewById(R.id.czapa_nazwa);
+                        TextView czapaOpis = myDialog.findViewById(R.id.czapa_opis);
+                        Button kupCzapaButton = myDialog.findViewById(R.id.kup_czapa);
+                        if (obrazResId != 0) {
+                            czapaImage.setImageResource(obrazResId);
+                        } else {
+                            czapaImage.setImageResource(R.drawable.circle);
+                        }
+                        czapaNazwa.setText(czapka.getNazwa());
+                        czapaOpis.setText(czapka.getOpis());
+                        Log.w("akcjasuper",String.valueOf(akcja[czapka.getId()]));
                     kupCzapaButton.setOnClickListener(new View.OnClickListener() {
                      @Override
                      public void onClick(View v) {
                          int dostepneHajsy = getMoney();
-                         if (dostepneHajsy >= cenaCzapki[0]) { // Użyj tablicy cenaCzapki[0]
-                            savePurchasedCzapka(idCzapki);
-                            int noweHajsy = cenaCzapki[0]*-1; // Użyj tablicy cenaCzapki[0]
+                         if (dostepneHajsy >= czapka.getCena()) {
+                            savePurchasedCzapka(String.valueOf(czapka.getId()));
+                            int noweHajsy = czapka.getCena()*-1;
                             SaveMoney(noweHajsy);
-                            Toast.makeText(MainActivity.this, "Zakupiono " + nazwaCzapki, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Zakupiono " + czapka.getNazwa(), Toast.LENGTH_SHORT).show();
                             ClosePopup();
                             aktualizujTextPrzyciskow();
                          } else {
@@ -799,15 +788,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 POPUP_EXCEPTION_MODE = 0;
             }
             }
-            else if(akcja[Integer.valueOf(idCzapki)]==1){
+            else if(akcja[czapka.getId()]==1){
                 SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(CURRENT_ITEM_ID,Integer.valueOf(idCzapki));
+                editor.putInt(CURRENT_ITEM_ID,czapka.getId());
                 editor.apply();
                 current_item_index = sharedPreferences.getInt(CURRENT_ITEM_ID,-1);
                 aktualizujTextPrzyciskow();
             }
-            else if(akcja[Integer.valueOf(idCzapki)]==2){
+            else if(akcja[czapka.getId()]==2){
                 SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt(CURRENT_ITEM_ID,-1);
@@ -816,6 +805,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 aktualizujTextPrzyciskow();
             }
             Log.w("CURRENT_INDEX_CAZAPA",String.valueOf(current_item_index));
+        }
+    }
+    public void KupCiastka(View v){
+        if(getMoney()>=200){
+            SaveFood(1);
+            SaveMoney(-200);
         }
     }
     public int GetRadioButtonChecked(){
@@ -943,7 +938,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 Hapaba();
                 SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-
                 if(lastFeed<umiera_po){
                     currentTime = new Date().getTime();
                     try{
@@ -991,7 +985,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         editor.apply();
         Log.w("kupione_czapy",kupioneczapkibool);
     }
-
     void Mrugnij(){
         try{
             czerwony_krokodyl = findViewById(R.id.krokodyl);
@@ -1226,12 +1219,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
         }
     }
-    public void SaveVolume(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(VOLUME,currentVol);
-        editor.apply();
-    }
     public void UpdateSettings(){
         LoadData();
         SeekBar volume = findViewById(R.id.seekBar);
@@ -1460,33 +1447,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         ustawCzapke();
         ResetActions();
     }
-    public void ShowPopup(int layout){
-        isPopupVisible = true;
-        if(POPUP_RESOLUTION==1)
-            myDialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
-        else
-            myDialog = new Dialog(this);
-        myDialog.setContentView(layout);
-        myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                isPopupVisible = false;
-            }
-        });
-        switch(POPUP_EXCEPTION_MODE){
-            case 0:myDialog.show();break;
-            case 1:/*don't show dialog */break;
-            default:myDialog.show();break;
-        }
-    }
-    public void ClosePopup(){
-        myDialog.dismiss();
-        isPopupVisible = false;
-    }
-
     public void Zmien_widoki(View v) {
         canplayanimations = false;
-
         if(v.getId()==R.id.ustawienia){
             setContentView(R.layout.settings);
             UpdateSettings();
@@ -1505,9 +1467,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 deg =0;
                 POPUP_RESOLUTION = 0;
             }
-
         }
-
         else if(v.getId()==R.id.questy){
             if(!isPopupVisible){
             POPUP_RESOLUTION = 1;
@@ -1522,25 +1482,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 String questMax = "questvalue"+String.valueOf(i+1)+"max";
                 String questProgressImgID = "questcomplete"+String.valueOf(i+1);
                 String questIcon = "questIcon"+String.valueOf(i+1);
-
-                int resID = getResources().getIdentifier(progressName, "id", getPackageName());
-                ProgressBar progress = (ProgressBar) myDialog.findViewById(resID);
-                resID = getResources().getIdentifier(questProgressImgID, "id", getPackageName());
-                ImageView questProgressImg = myDialog.findViewById(resID);
+                int resIDprogress = getResources().getIdentifier(progressName, "id", getPackageName());
+                int resIDprogressImg = getResources().getIdentifier(questProgressImgID, "id", getPackageName());
+                int resIDquestname = getResources().getIdentifier(questName, "id", getPackageName());
+                int resIDquestvalue = getResources().getIdentifier(questValue, "id", getPackageName());
+                int resIDquestmax = getResources().getIdentifier(questValue, "id", getPackageName());
+                ProgressBar progress = (ProgressBar) myDialog.findViewById(resIDprogress);
+                ImageView questProgressImg = myDialog.findViewById(resIDprogressImg);
                 if(quest.getisDone()){
                     questProgressImg.setImageResource(R.drawable.done);
                 }else questProgressImg.setImageResource(R.drawable.notdone);
-                resID = getResources().getIdentifier(questName, "id", getPackageName());
-                TextView questtresc = myDialog.findViewById(resID);
+                TextView questtresc = myDialog.findViewById(resIDquestname);
                 questtresc.setText(quest.getTresc());
-                resID = getResources().getIdentifier(questValue, "id", getPackageName());
-                TextView progresstextval = myDialog.findViewById(resID);
+                TextView progresstextval = myDialog.findViewById(resIDquestvalue);
                 progresstextval.setText(String.valueOf(quest.getProgress()));
                 progress.setMax(quest.getGeneratedMax());
                 progress.setProgress(quest.getProgress());
-                //TextView progresstextval = myDialog.findViewById(R.id.quest1value);
-                resID = getResources().getIdentifier(questMax, "id", getPackageName());
-                TextView progresstextmax = myDialog.findViewById(resID);
+                TextView progresstextmax = myDialog.findViewById(resIDquestmax);
                 progresstextmax.setText(String.valueOf(quest.getGeneratedMax()));
             }
             POPUP_RESOLUTION = 0;
@@ -1641,11 +1599,28 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Log.w("actionslist",actions.toString());
         Log.w("actionsindex",String.valueOf(actionsindex));
     }
+    //tutaj sekcja z popupami #SECPOPUP
+    public void ShowPopup(int layout){
+        isPopupVisible = true;
+        if(POPUP_RESOLUTION==1)
+            myDialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
+        else
+            myDialog = new Dialog(this);
+        myDialog.setContentView(layout);
+        myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                isPopupVisible = false;
+            }
+        });
+        switch(POPUP_EXCEPTION_MODE){
+            case 0:myDialog.show();break;
+            case 1:/*don't show dialog */break;
+            default:myDialog.show();break;
+        }
+    }
     public void Zamknij_Popup(View v){
         ClosePopup();
-        /*if(v.getId()==R.id.zamknijlogin||v.getId()==R.id.zamknij1||v.getId()==R.id.zamknij2||v.getId()==R.id.zamknij_test1||v.getId()==R.id.zakoncz_test_przycisk_popup||v.getId()==R.id.zamknijczapka){ClosePopup();}
-         //stary kod
-         */
     }
     public void PopupTestyRozpocznij(View v){
         if(isPopupVisible==false){
@@ -1664,6 +1639,60 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    public void ClosePopup(){
+        myDialog.dismiss();
+        isPopupVisible = false;
+    }
+    // koniec sekcji
+    public void Hapaba(){
+        String name = "hapaba";
+        Random r = new Random();
+        name+=String.valueOf(r.nextInt(4)+1);
+        int id = getResources().getIdentifier(name, "raw", getPackageName());
+        //buttonsong.reset();
+        buttonsong = MediaPlayer.create(this,id);
+        buttonsong.start();
+        buttonsong.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            };
+        });
+    }
+    // tutaj sekcja z pobieraniem danych z pamięci #SECMEMO
+    public void loadQuestProgress(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        for(int i=0;i<listaQuestow.size();i++){
+            Quests quests = listaQuestow.get(i);
+            int questv = sharedPreferences.getInt(QUEST_PROGRESS+String.valueOf(i),0);
+            quests.setProgress(questv);
+            Log.d("QPROGRESS",String.valueOf(quests.getisDone()));
+        }
+    }
+    // koniec sekcji
+    // tutaj sekcja z przypisywaniem danych do pamięci #SECMEMO
+    public void SaveVolume(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(VOLUME,currentVol);
+        editor.apply();
+    }
+    public void addProgress(int id){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        int questv = sharedPreferences.getInt(QUEST_PROGRESS+String.valueOf(id),0);
+        Quests quest = listaQuestow.get(id);
+        if(quest.getGeneratedMax()>questv){
+            quest.setProgress(questv+1);
+            editor.putInt(QUEST_PROGRESS+String.valueOf(id),questv+1);
+            Log.d("QUESTVALUE",String.valueOf(questv+1));
+        }else{
+            //editor.putInt(QUEST_PROGRESS+String.valueOf(id),0); //debug
+        }
+        editor.apply();
+    }
+    // koniec sekcji
+    // tutaj sekcja z testami #SECTEST
     public void Zmien_Id_wartosc(View v){
         if(v.getId()==R.id.ZmienIdminus){
             if(SET_TEST_ID>1){
@@ -1682,48 +1711,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(v.getId()==R.id.apply_id){
             fetchData(1);
         }
-    }
-    public void fetchData(int action){
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url =final_connection;
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //Toast.makeText(getApplicationContext(), "Response: " + response,Toast.LENGTH_SHORT).show();
-                        Log.d("JSON_DATA",response);
-                        switch (action){
-                            case 0:
-                                Set_Ids_List(response);
-                            break;
-                            case 1:
-                                parseJson(response);
-                            break;
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Response_Error",error.toString());
-                Set_Ids_List("");
-            }
-        });
-        queue.add(stringRequest);
-    }
-    public void Hapaba(){
-        String name = "hapaba";
-        Random r = new Random();
-        name+=String.valueOf(r.nextInt(4)+1);
-        int id = getResources().getIdentifier(name, "raw", getPackageName());
-        //buttonsong.reset();
-        buttonsong = MediaPlayer.create(this,id);
-        buttonsong.start();
-        buttonsong.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            public void onCompletion(MediaPlayer mp) {
-                mp.release();
-            };
-        });
     }
     public void Set_Ids_List(String response){
         if(response.equals("")){
@@ -1804,7 +1791,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             for(int i=0;i<q_num;i++){
                 Button btn_tests = new Button(new ContextThemeWrapper(getApplicationContext(), buttonStyle), null, buttonStyle);
                 btn_tests.setLayoutParams(params);
-                btn_tests.setText("Pytanie "+ (i + 1));
+                btn_tests.setText(getString(R.string.pytanie)+" "+(i+1));
                 btn_tests.setTextSize(30);
                 btn_tests.setTag(ShuffledArray.get(i));
 
@@ -1850,30 +1837,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             for(int i=0;i<q_num;i++){
                 Button btn_tests = new Button(new ContextThemeWrapper(getApplicationContext(), buttonStyle), null, buttonStyle);
                 btn_tests.setLayoutParams(params);
-                btn_tests.setText("Pytanie "+ (i + 1));
+                btn_tests.setText(getString(R.string.pytanie)+" "+(i+1));
                 btn_tests.setTextSize(30);
                 btn_tests.setTag(ShuffledArray.get(i));
-                char odp;
-                switch(AnswerList.get(i)){
-                    case 0:
-                        odp=' ';
-                        break;
-                    case 1:
-                        odp = 'A';
-                        break;
-                    case 2:
-                        odp = 'B';
-                        break;
-                    case 3:
-                        odp = 'C';
-                        break;
-                    case 4:
-                        odp = 'D';
-                        break;
-                    default:
-                        odp=' ';
-                        break;
-                }
+                char odp = returnAnswear(AnswerList.get(i));
                 int get_id = ShuffledArray.get(i);
                 if(odp!=CorrectAnswerList.get(get_id).charAt(0)){
                     btn_tests.setBackgroundColor(color_incorrect);
@@ -1985,58 +1952,58 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         try{
             TextView numer_pytania = findViewById(R.id.numer_pytania);
             numer_pytania.setText("Pytanie "+ (CURRENT_INDEX + 1));
-                int i = SET_TEST_ID;
-                String tresc,id;
+            int i = SET_TEST_ID;
+            String tresc,id;
 
-                id = idList.get(i).toString();
-                tresc = Tresci_PytaniaList.get(i);
-                String[] pytania = {
-                        Odpowiedzi_AList.get(i),
-                        Odpowiedzi_BList.get(i),
-                        Odpowiedzi_CList.get(i),
-                        Odpowiedzi_DList.get(i)
-                };
-                ImageView tes = findViewById(R.id.tresc_pytania);
-                try{
-                    Test_Math_drawable=Math_syn.set_Math(tresc);
-                    tes.setBackground(Test_Math_drawable);
-                } catch (Exception e){
+            id = idList.get(i).toString();
+            tresc = Tresci_PytaniaList.get(i);
+            String[] pytania = {
+                    Odpowiedzi_AList.get(i),
+                    Odpowiedzi_BList.get(i),
+                    Odpowiedzi_CList.get(i),
+                    Odpowiedzi_DList.get(i)
+            }; //#todo odmałp to
+            ImageView tes = findViewById(R.id.tresc_pytania);
+            try{
+                Test_Math_drawable=Math_syn.set_Math(tresc);
+                tes.setBackground(Test_Math_drawable);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            Button[] buttony = {
+                    findViewById(R.id.odp_A),
+                    findViewById(R.id.odp_B),
+                    findViewById(R.id.odp_C),
+                    findViewById(R.id.odp_D)
+            };//#todo i to też
+            for(int j=0;j<4;j++){
+                try {
+                    buttony[j].setText("");
+                    StringCurrentQuestion[j] = "\\text{" + LitABCD[j] + ": }" + pytania[j];
+                    CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
+                    buttony[j].setBackground(CurrentQuestion[j]);
+                }catch (Exception e){
                     e.printStackTrace();
+                    buttony[j].setText("crash");
                 }
-                Button[] buttony = {
-                        findViewById(R.id.odp_A),
-                        findViewById(R.id.odp_B),
-                        findViewById(R.id.odp_C),
-                        findViewById(R.id.odp_D)
-                };
-                for(int j=0;j<4;j++){
-                    try {
-                        buttony[j].setText("");
-                        StringCurrentQuestion[j] = "\\text{" + LitABCD[j] + ": }" + pytania[j];
-                        CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
-                        buttony[j].setBackground(CurrentQuestion[j]);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        buttony[j].setText("crash");
-                    }
-                }
-                if(CURRENT_INDEX==0){
-                    Button zmientekst=findViewById(R.id.prevbutton);
-                    zmientekst.setEnabled(false);
-                }else{
-                    Button zmientekst=findViewById(R.id.prevbutton);
-                    zmientekst.setEnabled(true);
-                }
-                if(q_num-1==CURRENT_INDEX){
-                    Button zmientekst=findViewById(R.id.nextbutton);
-                    zmientekst.setText("zakończ");
-                    wywolajfunkcje=true;
-                }else{
-                    Button zmientekst=findViewById(R.id.nextbutton);
-                    zmientekst.setText("Następne");
-                    wywolajfunkcje=false;
-                }
-                UpdateAnswer();
+            }
+            if(CURRENT_INDEX==0){
+                Button zmientekst=findViewById(R.id.prevbutton);
+                zmientekst.setEnabled(false);
+            }else{
+                Button zmientekst=findViewById(R.id.prevbutton);
+                zmientekst.setEnabled(true);
+            }
+            if(q_num-1==CURRENT_INDEX){
+                Button zmientekst=findViewById(R.id.nextbutton);
+                zmientekst.setText("zakończ"); //#todo tłumacz
+                wywolajfunkcje=true;
+            }else{
+                Button zmientekst=findViewById(R.id.nextbutton);
+                zmientekst.setText(getString(R.string.next));
+                wywolajfunkcje=false;
+            }
+            UpdateAnswer();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -2092,23 +2059,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void Set_pytanie_bledne(){
         try{
-                int i = SET_TEST_ID;
-                String tresc,id;
-                id = idList.get(i).toString();
-                tresc = Tresci_PytaniaList.get(i);
-                String[] pytania = {
-                        Odpowiedzi_AList.get(i),
-                        Odpowiedzi_BList.get(i),
-                        Odpowiedzi_CList.get(i),
-                        Odpowiedzi_DList.get(i)
-                };
-                ImageView tes = findViewById(R.id.tresc_pytaniabledne);
-                try{
-                    Test_Math_drawable=Math_syn.set_Math(tresc);
-                    tes.setBackground(Test_Math_drawable);
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
+            int i = SET_TEST_ID;
+            String tresc,id;
+            id = idList.get(i).toString();
+            tresc = Tresci_PytaniaList.get(i);
+            String[] pytania = {
+                    Odpowiedzi_AList.get(i),
+                    Odpowiedzi_BList.get(i),
+                    Odpowiedzi_CList.get(i),
+                    Odpowiedzi_DList.get(i)
+            };
+            ImageView tes = findViewById(R.id.tresc_pytaniabledne);
+            try{
+                Test_Math_drawable=Math_syn.set_Math(tresc);
+                tes.setBackground(Test_Math_drawable);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
             Button[] buttony = {
                     findViewById(R.id.odp_Abledne),
                     findViewById(R.id.odp_Bbledne),
@@ -2126,7 +2093,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     buttony[j].setText("crash");
                 }
             }
-                UpdateAnswerBledne();
+            UpdateAnswerBledne();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -2161,28 +2128,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     findViewById(R.id.odp_C_Poj),
                     findViewById(R.id.odp_D_Poj)
             };
-            char odp;
+            char odp = returnAnswear(AnswerListPoj);
             int odpint=0;
-            switch(AnswerListPoj){
-                case 0:
-                    odp=' ';
-                    break;
-                case 1:
-                    odp = 'A';
-                    break;
-                case 2:
-                    odp = 'B';
-                    break;
-                case 3:
-                    odp = 'C';
-                    break;
-                case 4:
-                    odp = 'D';
-                    break;
-                default:
-                    odp=' ';
-                    break;
-            }
             int get_id = ShuffledArray.get(CURRENT_INDEX);
             char correctansw = CorrectAnswerList.get(get_id).charAt(0);
             switch (correctansw){
@@ -2227,32 +2174,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             e.printStackTrace();
         }
     }
-    public void loadQuestProgress(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        for(int i=0;i<listaQuestow.size();i++){
-            Quests quests = listaQuestow.get(i);
-            int questv = sharedPreferences.getInt(QUEST_PROGRESS+String.valueOf(i),0);
-            quests.setProgress(questv);
-            Log.d("QPROGRESS",String.valueOf(quests.getisDone()));
-        }
-    }
-    public void addProgress(int id){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        int questv = sharedPreferences.getInt(QUEST_PROGRESS+String.valueOf(id),0);
-        Quests quest = listaQuestow.get(id);
-        if(quest.getGeneratedMax()>questv){
-            quest.setProgress(questv+1);
-            editor.putInt(QUEST_PROGRESS+String.valueOf(id),questv+1);
-            Log.d("QUESTVALUE",String.valueOf(questv+1));
-        }else{
-            //editor.putInt(QUEST_PROGRESS+String.valueOf(id),0); //debug
-        }
-        editor.apply();
-    }
     public void UpdateAnswerBledne(){
         try{
+
             Button[] buttony = {
                     findViewById(R.id.odp_Abledne),
                     findViewById(R.id.odp_Bbledne),
@@ -2266,26 +2190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             char odp;
             int odpint=0;
-            switch(AnswerList.get(CURRENT_INDEX)){
-                case 0:
-                    odp=' ';
-                    break;
-                case 1:
-                    odp = 'A';
-                    break;
-                case 2:
-                    odp = 'B';
-                    break;
-                case 3:
-                    odp = 'C';
-                    break;
-                case 4:
-                    odp = 'D';
-                    break;
-                default:
-                    odp=' ';
-                    break;
-            }
+            odp = returnAnswear(AnswerList.get(CURRENT_INDEX));
             int get_id = ShuffledArray.get(CURRENT_INDEX);
             char correctansw = CorrectAnswerList.get(get_id).charAt(0);
             switch (correctansw){
@@ -2324,6 +2229,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+    public void setAnswerParent(){
+        // #TODO wrzuć wszystko do jednej funkcji
     }
     public void setAnswer(View v){
         try{
@@ -2369,30 +2277,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public float oblicz_percenty;
+    public char returnAnswear(int answ){
+        char odp = ' ';
+        switch(answ){
+            case 0: odp=' ';break;
+            case 1: odp = 'A';break;
+            case 2: odp = 'B';break;
+            case 3: odp = 'C';break;
+            case 4: odp = 'D';break;
+            default: odp=' ';break;
+        }
+        return odp;
+    }
     void Oblicz_Poprawne(){
         int npoprawne = 0;
         char odp;
         for(int i=0;i<q_num;i++){
-            switch(AnswerList.get(i)){
-                case 0:
-                    odp=' ';
-                    break;
-                case 1:
-                    odp = 'A';
-                    break;
-                case 2:
-                    odp = 'B';
-                    break;
-                case 3:
-                    odp = 'C';
-                    break;
-                case 4:
-                    odp = 'D';
-                    break;
-                default:
-                    odp=' ';
-                    break;
-            }
+            odp = returnAnswear(AnswerList.get(i));
             try{
                 int get_id = ShuffledArray.get(i);
             if(CorrectAnswerList.get(get_id).charAt(0)!=odp) npoprawne++;
@@ -2526,6 +2427,34 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         } catch (JSONException e){
             e.printStackTrace();
         }
+    }
+    public void fetchData(int action){
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url =final_connection;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //Toast.makeText(getApplicationContext(), "Response: " + response,Toast.LENGTH_SHORT).show();
+                        Log.d("JSON_DATA",response);
+                        switch (action){
+                            case 0:
+                                Set_Ids_List(response);
+                                break;
+                            case 1:
+                                parseJson(response);
+                                break;
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Response_Error",error.toString());
+                Set_Ids_List("");
+            }
+        });
+        queue.add(stringRequest);
     }
     @Override
     public boolean onLongClick(View v) {

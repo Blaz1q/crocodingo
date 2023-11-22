@@ -19,4 +19,5 @@
     <string name="Polski">Polski</string>
     <string name="Angielski">Angielski (BETA)</string>
     <string name="Hiszpanski">Hiszpański (Brak implementacji!)</string>
+    <string name="pytanie">Question</string>
 </resources>

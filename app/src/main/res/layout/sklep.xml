@@ -68,9 +68,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-
             >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp">
 
+                <ImageView
+                    android:id="@+id/ciastka"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+
+                    android:src="@drawable/czapa_1"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@id/ciastka"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/ciasko"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ciastka" />
+
+                    <TextView
+                        android:id="@+id/ciastkocena"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cena: 200" />
+
+                    <Button
+                        android:id="@+id/kup_ciastko"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="#333333"
+                        android:text="@string/kup"
+                        android:onClick="KupCiastka"/>
+                </LinearLayout>
+
+
+            </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -121,7 +163,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
-
                 <ImageView
                     android:id="@+id/b"
                     android:layout_width="200dp"
