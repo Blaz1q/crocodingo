@@ -4,55 +4,71 @@
     "plik": "czapa_1",
     "cena": 2150,
     "nazwa": "Żółta Czapa",
-    "opis": "Interesujący wybór. Croco powiedział że ten kolor kojarzy mu się ze słońcem. Ciekawe czemu..."
+    "nazwaeng": "Yellow Hat",
+    "opis": "Interesujący wybór. Croco powiedział że ten kolor kojarzy mu się ze słońcem. Ciekawe czemu...",
+    "opiseng": "Interesting choise, Croco said that this color reminds him of sun. I wonder why.."
   },
   {
     "id": 1,
     "plik": "czapa_2",
     "cena": 2150,
     "nazwa": "Zielona Czapa",
-    "opis": "Zielony kolor oznacza spokój. Czy myślisz że po zakupie tej czapki Croco da ci spokój od testów? Oj nie nie..."
+    "nazwaeng": "Green Hat",
+    "opis": "Zielony kolor oznacza spokój. Czy myślisz że po zakupie tej czapki Croco da ci spokój od testów? Oj nie nie...",
+    "opiseng": "Green color means peace. Do you really think that after buying this hat Croco will leave you alone from tests? Of course not."
   },
   {
     "id": 2,
     "plik": "czapa_3",
     "cena": 2150,
     "nazwa": "Niebieska Czapa",
-    "opis": "Croco mówi że można przyjąć wybór niebieskiej czapki za symbol wpływającej do głowy wiedzy. Oby nie było jakiegoś wycieku"
+    "nazwaeng": "Blue Hat",
+    "opis": "Croco mówi że można przyjąć wybór niebieskiej czapki za symbol wpływającej do głowy wiedzy. Oby nie było jakiegoś wycieku",
+    "opiseng": "Croco sais that choice of a blue hat can be taken as a symbol of knowledge flowing into the head. Let's hope there isn't any leakage"
   },
   {
     "id": 3,
     "plik": "czapa_4",
     "cena": 3200,
     "nazwa": "Kucharska Czapa",
-    "opis": "Crobert Crokłowicz na pokładzie. Pora ugotować jakieś mózgi!"
+    "nazwaeng": "Cooking Hat",
+    "opis": "Crobert Crokłowicz na pokładzie. Pora ugotować jakieś mózgi!",
+    "opiseng": "Crocdor Ramsay on the board. Let's cook some brains!"
   },
   {
     "id": 4,
     "plik": "czapa_5",
     "cena": 3950,
     "nazwa": "Słomiany Kapelusz",
-    "opis": "Halo Halo! Słomiany kapelusz to nie przepustka do wakacji. Wracaj szybko do uczenia się! Migiem"
+    "nazwaeng": "Straw hat",
+    "opis": "Halo Halo! Słomiany kapelusz to nie przepustka do wakacji. Wracaj szybko do uczenia się! Migiem",
+    "opiseng": "Hey Hey! Straw hat isn't a pass for holidays. Come back to learning! Quickly!"
   },
   {
     "id": 5,
     "plik": "czapa_6",
     "cena": 3950,
     "nazwa": "Czapka Magik",
-    "opis": "Kupienie tej czapki da ci +120 punktów mocy umiejętności, ale nie wyczaruje lepszych wyników. Leć się uczyć"
+    "nazwaeng": "Magic Hat",
+    "opis": "Kupienie tej czapki da ci +120 punktów mocy umiejętności, ale nie wyczaruje lepszych wyników. Leć się uczyć",
+    "opiseng": "Buying this hat will grant you +120 points of magic, but doesn't grant better outcomes. Go back to learning"
   },
   {
     "id": 6,
     "plik": "czapa_7",
     "cena": 3200,
     "nazwa": "Cowboy Czapa",
-    "opis": "Teraz stajesz się potęgą, niszczycielem matematyki, buahaha..."
+    "nazwaeng": "Cowboy Hat",
+    "opis": "Teraz stajesz się potęgą, niszczycielem matematyki, buahaha...",
+    "opiseng": "Now you are becoming the power, the destroyer of math, buahaha..."
   },
   {
     "id": 7,
     "plik": "czapa_8",
     "cena": 4300,
     "nazwa": "Czarna Czapa",
-    "opis": "Mimo czapki kucharskiej, w tej czapce croco bardziej wygląda na kucharza"
+    "nazwaeng": "Black Hat",
+    "opis": "Mimo czapki kucharskiej, w tej czapce Croco bardziej wygląda na kucharza",
+    "opiseng": "Despite of the Cooking hat, in this hat Croco looks more like a cook."
   }
 ]

@@ -65,10 +65,13 @@ public class Quests {
     public int getGeneratedMax() {
         return GeneratedMax;
     }
+    public void overrideProgress(int progress){
+        this.Progress = progress;
+    }
 
     public void setProgress(int progress){
         if(progress<=GeneratedMax){
-        this.Progress = progress;
+        overrideProgress(progress);
         }
     }
     public boolean gethadPlayedsound(){

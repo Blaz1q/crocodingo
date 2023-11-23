@@ -13,6 +13,8 @@
     <string name="dzwiek_w_menu">Sound in menu</string>
     <string name="wibracje">Vibrations</string>
     <string name="kup">Buy</string>
+    <string name="zaloz">Put on</string>
+    <string name="zdejmij">Take off</string>
     <string name="zobacz_bledne">Show mistakes</string>
     <string name="wyloguj">Sign out</string>
     <string name="zaloguj_sie">Sign in with Google</string>
@@ -21,4 +23,5 @@
     <string name="Angielski">English (BETA)</string>
     <string name="Hiszpanski">Spanish (Not implemented!)</string>
     <string name="pytanie">Question</string>
+
 </resources>

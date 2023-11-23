@@ -592,10 +592,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 int id = czapkaJson.getInt("id");
                 String plik = czapkaJson.getString("plik");
                 String nazwa = czapkaJson.getString("nazwa");
+                String nazwaeng = czapkaJson.getString("nazwaeng");
                 String opis = czapkaJson.getString("opis");
+                String opiseng = czapkaJson.getString("opiseng");
                 int cena = czapkaJson.getInt("cena"); // Pobierz cenę czapki
 
                 Czapka czapka = new Czapka(id, plik, nazwa, opis, cena); // Zaktualizuj obiekt Czapka
+                czapka.setNazwaeng(nazwaeng);
+                czapka.setOpiseng(opiseng);
                 listaCzapek.add(czapka);
             }
             zaladowano_czapki = true;
@@ -612,7 +616,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             ex.printStackTrace();
         }
     }
-
     public void UpdateQuestDate(){
         listaQuestowId.clear();
         if(zaladowano_questy){
@@ -672,7 +675,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         for (int i = 0; i < listaQuestow.size(); i++) {
             Quests quest = listaQuestow.get(i);
             quest.setProgress(0);
-            quest.setExp(0);
+            quest.setHadPlayedsound(false);
+            quest.overrideProgress(0);
             quest.checkifDone();
             editor.putInt(QUEST_PROGRESS+String.valueOf(i),0);
         }
@@ -767,8 +771,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         } else {
                             czapaImage.setImageResource(R.drawable.circle);
                         }
-                        czapaNazwa.setText(czapka.getNazwa());
-                        czapaOpis.setText(czapka.getOpis());
+                        if(getLang().equals("Pl")){
+                            czapaNazwa.setText(czapka.getNazwa());
+                            czapaOpis.setText(czapka.getOpis());
+                        }
+                        else if(getLang().equals("En")){
+                            czapaNazwa.setText(czapka.getNazwaEng());
+                            czapaOpis.setText(czapka.getOpisEng());
+                        }
                         Log.w("akcjasuper",String.valueOf(akcja[czapka.getId()]));
                     kupCzapaButton.setOnClickListener(new View.OnClickListener() {
                      @Override
@@ -782,6 +792,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             addProgress(3);
                             ClosePopup();
                             aktualizujTextPrzyciskow();
+                            updateCrococoinsInShop();
                          } else {
                             Toast.makeText(MainActivity.this, "Nie masz wystarczająco crococoinów na zakup", Toast.LENGTH_SHORT).show();
                          }
@@ -814,6 +825,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(getMoney()>=200){
             SaveFood(1);
             SaveMoney(-200);
+            updateCrococoinsInShop();
         }
     }
     public int GetRadioButtonChecked(){
@@ -1051,11 +1063,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     currentDate = ddMMyyyy;
     }
     public void SaveQuestDate(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
         String readableDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
+        if(sharedPreferences.getString(SAVED_QUEST_DATE,"N/A").equals("N/A")){
+            editor.putString(SAVED_QUEST_DATE,readableDate);
+            editor.apply();
+        }
+        else{
+            readableDate = sharedPreferences.getString(SAVED_QUEST_DATE,readableDate);
+        }
         if(!readableDate.equals(currentDate)){
             Log.w("readable",readableDate);
             Log.w("readable",currentDate);
             currentDate = readableDate;
+            editor.putString(SAVED_QUEST_DATE,readableDate);
+            editor.apply();
             UpdateQuestDate();
             ResetAllQuestProgress();
         }
@@ -1528,8 +1552,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         else if (v.getId()==R.id.OtworzSklep){
             setContentView(R.layout.sklep);
-            TextView iloschajsu = findViewById(R.id.crococoinyilosc);
-            iloschajsu.setText(String.valueOf(getMoney()));
+            updateCrococoinsInShop();
             aktualizujTextPrzyciskow();
             AddActions("sklep");
         }
@@ -1583,6 +1606,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         czypokazana = false;
         LoadData();
         Wibracje();
+    }
+    public void updateCrococoinsInShop(){
+        TextView iloschajsu = findViewById(R.id.crococoinyilosc);
+        iloschajsu.setText(String.valueOf(getMoney()));
     }
     public void ResetActions(){
         actions.clear();

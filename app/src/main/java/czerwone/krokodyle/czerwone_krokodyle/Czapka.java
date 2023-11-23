@@ -6,7 +6,9 @@ public class Czapka {
     private int id;
     private String plik;
     private String nazwa;
+    private String nazwaeng;
     private String opis;
+    private String opiseng;
     private int cena;
     private boolean czyZakupiona;
     private boolean czyZalozona;
@@ -34,13 +36,24 @@ public class Czapka {
     public String getPlik() {
         return plik;
     }
-
+    public void setNazwaeng(String nazw){
+        this.nazwaeng = nazw;
+    }
+    public void setOpiseng(String ops){
+        this.opiseng = ops;
+    }
     public String getNazwa() {
         return nazwa;
+    }
+    public String getNazwaEng() {
+        return nazwaeng;
     }
 
     public String getOpis() {
         return opis;
+    }
+    public String getOpisEng() {
+        return opiseng;
     }
 
 
