@@ -1820,7 +1820,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 e.printStackTrace();
             }
         }
-
     }
     public int CURRENT_INDEX;
     public void Resume_Question_Buttons(){
@@ -1885,14 +1884,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 btn_tests.setText(getString(R.string.pytanie)+" "+(i+1));
                 btn_tests.setTextSize(30);
                 btn_tests.setTag(ShuffledArray.get(i));
-                PytaniaDB pytanie = listaPytan.get(i);
-                char odp = pytanie.getOdpUzytkownika();
-                int get_id = ShuffledArray.get(i);
-                if(odp!=CorrectAnswerList.get(get_id).charAt(0)){
+                PytaniaDB pytanie = listaPytan.get(ShuffledArray.get(i));
+                if(pytanie.getOdpUzytkownika()!=pytanie.getPoprawnaOdp()){
                     btn_tests.setBackgroundColor(color_incorrect);
                 } else{
                     btn_tests.setBackgroundColor(color_correct);
                 }
+                if(pytanie.getOdpUzytkownika()=='-')
+                    btn_tests.setBackgroundColor(R.color.ckbez);
                 btn_tests.setTextColor(Color.parseColor("#000000"));
 
                 btn_tests.setOnClickListener(new View.OnClickListener() {
@@ -1977,12 +1976,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     boolean oneshot=true;
     public void Wyjasnij(View v){
-        PytaniaDB pytanie = listaPytan.get(ShuffledArray.get(CURRENT_INDEX));
+
         if(v.getId()==R.id.wyjasnienie){
             setContentView(R.layout.wyjasnienie);
             AddActions("wyjasnienie");
 
             try{
+                PytaniaDB pytanie = listaPytan.get(ShuffledArray.get(CURRENT_INDEX));
                 ImageView wyjasnienie = findViewById(R.id.wyjasnienie_main);
                 String wyjasnienie_tekst = pytanie.getWyjasnienie();
                 Test_Math_drawable=Math_syn.set_Math(wyjasnienie_tekst);
@@ -1994,6 +1994,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(v.getId()==R.id.wyjasnij_poj){
             if(oneshot==false){
                 try{
+                    PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
                     ImageView wyjasnienie = findViewById(R.id.tresc_pytania_i_wyjasnienie);
                     String wyjasnienie_tekst = pytanie.getWyjasnienie();
                     Test_Math_drawable=Math_syn.set_Math(wyjasnienie_tekst);
@@ -2010,7 +2011,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             numer_pytania.setText(getString(R.string.pytanie)+" "+(CURRENT_INDEX + 1));
             int i = SET_TEST_ID;
             String tresc,id;
-            PytaniaDB pytanie = listaPytan.get(i);
+            PytaniaDB pytanie = listaPytan.get(ShuffledArray.get(CURRENT_INDEX));
             String[] pytania = pytanie.getOdpowiedzi();
             ImageView tes = findViewById(R.id.tresc_pytania);
             try{
@@ -2058,6 +2059,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void Set_pytanie_Poj(){
+        Random r = new Random();
+        CURRENT_INDEX = r.nextInt(idList.size());
         try{
             oneshot=true;
             Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
@@ -2065,10 +2068,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             AnswerListPoj = 0;
             ShuffledArray = idList;
             Collections.shuffle(ShuffledArray);
-            Random r = new Random();
-            CURRENT_INDEX = r.nextInt(idList.size());
-            int i = ShuffledArray.get(CURRENT_INDEX);
-            PytaniaDB pytanie = listaPytan.get(i);
+            PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
             String[] pytania = pytanie.getOdpowiedzi();
             ImageView tes = findViewById(R.id.tresc_pytania_i_wyjasnienie);
             try{
@@ -2103,7 +2103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             int i = SET_TEST_ID;
             String tresc,id;
             id = idList.get(i).toString();
-            PytaniaDB pytanie = listaPytan.get(i);
+            PytaniaDB pytanie = listaPytan.get(ShuffledArray.get(CURRENT_INDEX));
             tresc = pytanie.getTresc();
             String[] pytania = pytanie.getOdpowiedzi();
             ImageView tes = findViewById(R.id.tresc_pytaniabledne);
@@ -2165,10 +2165,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     findViewById(R.id.odp_C_Poj),
                     findViewById(R.id.odp_D_Poj)
             };
-            char odp = returnAnswear(AnswerListPoj);
+            PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
+            char odp = pytanie.getOdpUzytkownika();
             int odpint=0;
-            int get_id = ShuffledArray.get(CURRENT_INDEX);
-            char correctansw = CorrectAnswerList.get(get_id).charAt(0);
+            char correctansw = pytanie.getPoprawnaOdp();
             switch (correctansw){
                 case 'A':
                     odpint=1;
@@ -2186,15 +2186,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     odpint=0;
                     break;
             }
-            boolean czy_poprawne=true;
-
             int current_color= 0x00ffffff;
             for(int j=0;j<4;j++){
                 current_color= 0x00ffffff;
                 if(AnswerListPoj==j+1){
-                    if(odp!=CorrectAnswerList.get(get_id).charAt(0)){
+                    if(pytanie.getOdpUzytkownika()!=pytanie.getPoprawnaOdp()){
                         current_color = color_incorrect;
-                        czy_poprawne=false;
                     }
                 }
                 CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],current_color,color_text_incorrect);
@@ -2204,7 +2201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 CurrentQuestion[odpint-1] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[odpint-1],color_correct,color_text_correct);
                 buttony[odpint-1].setBackground(CurrentQuestion[odpint-1]);
             }
-            if(czy_poprawne){
+            if(pytanie.getOdpUzytkownika()==pytanie.getPoprawnaOdp()){
                 addProgress(0);
             }
         } catch (Exception e){
@@ -2227,11 +2224,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             char odp;
             int odpint=0;
-            PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
+            PytaniaDB pytanie = listaPytan.get(ShuffledArray.get(CURRENT_INDEX));
             odp = pytanie.getOdpUzytkownika();
-            int get_id = ShuffledArray.get(CURRENT_INDEX);
-            PytaniaDB poprawne = listaPytan.get(get_id);
-            char correctansw = poprawne.getPoprawnaOdp();
+            char correctansw = pytanie.getPoprawnaOdp();
             switch (correctansw){
                 case 'A':
                     odpint=1;
@@ -2254,7 +2249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             for(int j=0;j<4;j++){
                 current_color= 0x00ffffff;
                 if(AnswerList.get(CURRENT_INDEX)==j+1){
-                    if(odp!=CorrectAnswerList.get(get_id).charAt(0)){
+                    if(pytanie.getOdpUzytkownika()!=pytanie.getPoprawnaOdp()){
                         current_color = color_incorrect;
                     }
                 }
@@ -2274,7 +2269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void setAnswer(View v){
         try{
-            PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
+            PytaniaDB pytanie = listaPytan.get(ShuffledArray.get(CURRENT_INDEX));
             if(v.getId()==R.id.odp_A){
                 AnswerList.set(CURRENT_INDEX,1);
                 pytanie.ZapiszOdpowiedz('A');
@@ -2298,19 +2293,25 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void setAnswerPoj(View v){
+        PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
         try{
             if(v.getId()==R.id.odp_A_Poj){
                 AnswerListPoj = 1;
+                pytanie.ZapiszOdpowiedz('A');
             }
             else if(v.getId()==R.id.odp_B_Poj){
                 AnswerListPoj = 2;
+                pytanie.ZapiszOdpowiedz('B');
             }
             else if(v.getId()==R.id.odp_C_Poj){
                 AnswerListPoj = 3;
+                pytanie.ZapiszOdpowiedz('C');
             }
             else if(v.getId()==R.id.odp_D_Poj){
                 AnswerListPoj = 4;
+                pytanie.ZapiszOdpowiedz('D');
             }
+            listaPytan.set(CURRENT_INDEX,pytanie);
             if(oneshot==true){
                 UpdateAnswer_Poj();
                 Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
@@ -2338,10 +2339,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         int npoprawne = 0;
         char odp;
         for(int i=0;i<q_num;i++){
-            odp = returnAnswear(AnswerList.get(i));
+            PytaniaDB pytanie = listaPytan.get(ShuffledArray.get(i));
+            odp = pytanie.getOdpUzytkownika();
             try{
                 int get_id = ShuffledArray.get(i);
-            if(CorrectAnswerList.get(get_id).charAt(0)!=odp) npoprawne++;
+            if(pytanie.getPoprawnaOdp()!=odp) npoprawne++;
                     else poprawne++;
             }catch (Exception e){
                 e.printStackTrace();
