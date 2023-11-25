@@ -88,7 +88,6 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
     Czapka czapka;
-    PytaniaDB pytaniaDB;
     private List<PytaniaDB> listaPytan = new ArrayList<>();
     private List<Czapka> listaCzapek = new ArrayList<>();
     private List<Quests> listaQuestow = new ArrayList<>();
@@ -218,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         database = FirebaseDatabase.getInstance();
         updateAccInfo();
         LoadData();
-        Log.w("DBBACKUP",loadJSONFromAssetVer2("DB.json"));
+        //Log.w("DBBACKUP",loadJSONFromAssetVer2("DB.json"));
         UpdateLocale();
         loadJSONFromAsset();
         loadQuestsFromAsset();
@@ -672,6 +671,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void ResetAllQuestProgress(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        Log.d("PROGRESSRESET","RESET");
         for (int i = 0; i < listaQuestow.size(); i++) {
             Quests quest = listaQuestow.get(i);
             quest.setProgress(0);
@@ -1077,7 +1077,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(!readableDate.equals(currentDate)){
             Log.w("readable",readableDate);
             Log.w("readable",currentDate);
-            currentDate = readableDate;
+            readableDate = currentDate;
             editor.putString(SAVED_QUEST_DATE,readableDate);
             editor.apply();
             UpdateQuestDate();
