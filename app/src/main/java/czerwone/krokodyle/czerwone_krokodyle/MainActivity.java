@@ -123,12 +123,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     List<Integer> AnswerList = new ArrayList<Integer>();
     int AnswerListPoj;
     List<String> CorrectAnswerList = new ArrayList<String>();
-    List<String> Tresci_PytaniaList = new ArrayList<String>();
-    List<String> Odpowiedzi_AList = new ArrayList<String>();
-    List<String> Odpowiedzi_BList = new ArrayList<String>();
-    List<String> Odpowiedzi_CList = new ArrayList<String>();
-    List<String> Odpowiedzi_DList = new ArrayList<String>();
-    List<String> WyjasnieniaList = new ArrayList<String>();
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     GoogleSignInAccount acct;
@@ -1789,12 +1783,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         D = jsonObject2.getString("D");
                         CorrectAnswerList.add(poprawne);
                         idList.add(Integer.valueOf(id));
-                        Tresci_PytaniaList.add(tresc);
-                        WyjasnieniaList.add(wyjasnienie);
-                        Odpowiedzi_AList.add(A);
-                        Odpowiedzi_BList.add(B);
-                        Odpowiedzi_CList.add(C);
-                        Odpowiedzi_DList.add(D);
                         PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria);
                         listaPytan.add(pytanie);
                     }
@@ -1824,12 +1812,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     kategoria = jsonObject2.getString("kategoria");
                     CorrectAnswerList.add(poprawne);
                     idList.add(Integer.valueOf(id));
-                    Tresci_PytaniaList.add(tresc);
-                    WyjasnieniaList.add(wyjasnienie);
-                    Odpowiedzi_AList.add(A);
-                    Odpowiedzi_BList.add(B);
-                    Odpowiedzi_CList.add(C);
-                    Odpowiedzi_DList.add(D);
                     PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria);
                     listaPytan.add(pytanie);
                     pytanie.Wypisz();
@@ -1903,7 +1885,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 btn_tests.setText(getString(R.string.pytanie)+" "+(i+1));
                 btn_tests.setTextSize(30);
                 btn_tests.setTag(ShuffledArray.get(i));
-                char odp = returnAnswear(AnswerList.get(i));
+                PytaniaDB pytanie = listaPytan.get(i);
+                char odp = pytanie.getOdpUzytkownika();
                 int get_id = ShuffledArray.get(i);
                 if(odp!=CorrectAnswerList.get(get_id).charAt(0)){
                     btn_tests.setBackgroundColor(color_incorrect);
@@ -1994,12 +1977,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     boolean oneshot=true;
     public void Wyjasnij(View v){
+        PytaniaDB pytanie = listaPytan.get(ShuffledArray.get(CURRENT_INDEX));
         if(v.getId()==R.id.wyjasnienie){
             setContentView(R.layout.wyjasnienie);
             AddActions("wyjasnienie");
+
             try{
                 ImageView wyjasnienie = findViewById(R.id.wyjasnienie_main);
-                String wyjasnienie_tekst = WyjasnieniaList.get(ShuffledArray.get(CURRENT_INDEX));
+                String wyjasnienie_tekst = pytanie.getWyjasnienie();
                 Test_Math_drawable=Math_syn.set_Math(wyjasnienie_tekst);
                 wyjasnienie.setBackground(Test_Math_drawable);
             } catch (Exception e){
@@ -2010,7 +1995,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             if(oneshot==false){
                 try{
                     ImageView wyjasnienie = findViewById(R.id.tresc_pytania_i_wyjasnienie);
-                    String wyjasnienie_tekst = WyjasnieniaList.get(ShuffledArray.get(CURRENT_INDEX));
+                    String wyjasnienie_tekst = pytanie.getWyjasnienie();
                     Test_Math_drawable=Math_syn.set_Math(wyjasnienie_tekst);
                     wyjasnienie.setBackground(Test_Math_drawable);
                 } catch (Exception e){
@@ -2118,13 +2103,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             int i = SET_TEST_ID;
             String tresc,id;
             id = idList.get(i).toString();
-            tresc = Tresci_PytaniaList.get(i);
-            String[] pytania = {
-                    Odpowiedzi_AList.get(i),
-                    Odpowiedzi_BList.get(i),
-                    Odpowiedzi_CList.get(i),
-                    Odpowiedzi_DList.get(i)
-            };
+            PytaniaDB pytanie = listaPytan.get(i);
+            tresc = pytanie.getTresc();
+            String[] pytania = pytanie.getOdpowiedzi();
             ImageView tes = findViewById(R.id.tresc_pytaniabledne);
             try{
                 Test_Math_drawable=Math_syn.set_Math(tresc);

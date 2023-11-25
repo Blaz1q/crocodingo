@@ -39,6 +39,10 @@ public class PytaniaDB {
         return PoprawnaOdp;
     }
 
+    public String getWyjasnienie() {
+        return Wyjasnienie;
+    }
+
     public char getOdpUzytkownika() {
         Log.d("dziala?",String.valueOf(this.OdpUzytkownika));
         return OdpUzytkownika;
