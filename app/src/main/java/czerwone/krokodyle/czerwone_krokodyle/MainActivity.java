@@ -88,6 +88,8 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
     Czapka czapka;
+    PytaniaDB pytaniaDB;
+    private List<PytaniaDB> listaPytan = new ArrayList<>();
     private List<Czapka> listaCzapek = new ArrayList<>();
     private List<Quests> listaQuestow = new ArrayList<>();
     private List<Integer> listaQuestowId = new ArrayList<>();
@@ -417,15 +419,21 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 nagroda = "Wystapil jakis blad";
                 break;
         }
-        Toast.makeText(this,String.valueOf(trueswitchvalue),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,String.valueOf(trueswitchvalue),Toast.LENGTH_SHORT).show();
         new Handler(getMainLooper()).postDelayed(() -> {
             kolopasy.animate().rotation(deg+12).setInterpolator(new DecelerateInterpolator()).setDuration(10000);
         },500);
         Log.d("deg/",String.valueOf(deg%10));
         new Handler(getMainLooper()).postDelayed(() -> {
             spinning = false;
-            TextView tekst_nagroda = myDialog.findViewById(R.id.nagroda);
-            tekst_nagroda.setText(nagroda);
+            try{
+                TextView tekst_nagroda = myDialog.findViewById(R.id.nagroda);
+                tekst_nagroda.setText(nagroda);
+            }catch (Exception e){
+                e.printStackTrace();
+                // #todo remove ability to go back when spinning the wheel
+            }
+
         },10500);
     }
     public void krec(View v){
@@ -435,8 +443,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
-
-
     void Uruchomienie_animajca(){
         RelativeLayout relativeLayout = findViewById(R.id.pierwsze_uruchomienie_animacja);
         relativeLayout.setVisibility(View.VISIBLE);
@@ -713,10 +719,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Log.w("cototjest","kup_czapka" + String.valueOf(i));
             Log.w("akcja",String.valueOf(akcja[i]));
                 if (i==current_item_index) {
-                    przycisk[i].setText("Zdejmij");
+                    przycisk[i].setText(getString(R.string.zdejmij));
                     akcja[i] = 2;
                 } else if (kupioneczapkibool.charAt(i)=='1') {
-                    przycisk[i].setText("Załóż");
+                    przycisk[i].setText(getString(R.string.zaloz));
                     akcja[i] = 1;
                 } else {
                     przycisk[i].setText(getString(R.string.kup));
@@ -1763,7 +1769,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void Set_Ids_List(String response){
         if(response.equals("")){
-            String id,poprawne,tresc,wyjasnienie,A,B,C,D;
+            String id,poprawne,tresc,wyjasnienie,A,B,C,D,kategoria;
             Log.w("WarningDBError","DBCONNECTIONFAILED");
             try{
                 zaladowanodb=true;
@@ -1776,6 +1782,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         poprawne = jsonObject2.getString("poprawna_odp");
                         tresc = jsonObject2.getString("tresc");
                         wyjasnienie = jsonObject2.getString("wyjasnienie");
+                        kategoria = jsonObject2.getString("kategoria");
                         A = jsonObject2.getString("A");
                         B = jsonObject2.getString("B");
                         C = jsonObject2.getString("C");
@@ -1788,6 +1795,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         Odpowiedzi_BList.add(B);
                         Odpowiedzi_CList.add(C);
                         Odpowiedzi_DList.add(D);
+                        PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria);
+                        listaPytan.add(pytanie);
                     }
                 }else{
                     Toast.makeText(getApplicationContext(), "Błąd połączenia z siecią i wczytania backupu", Toast.LENGTH_SHORT).show();
@@ -1800,7 +1809,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             try {
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray jsonArray = jsonObject.getJSONArray("API");
-                String id, poprawne, tresc, wyjasnienie, A, B, C, D;
+                String id, poprawne, tresc, wyjasnienie, A, B, C, D,kategoria;
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject2 = jsonArray.getJSONObject(i);
@@ -1812,6 +1821,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     B = jsonObject2.getString("B");
                     C = jsonObject2.getString("C");
                     D = jsonObject2.getString("D");
+                    kategoria = jsonObject2.getString("kategoria");
                     CorrectAnswerList.add(poprawne);
                     idList.add(Integer.valueOf(id));
                     Tresci_PytaniaList.add(tresc);
@@ -1820,11 +1830,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     Odpowiedzi_BList.add(B);
                     Odpowiedzi_CList.add(C);
                     Odpowiedzi_DList.add(D);
+                    PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria);
+                    listaPytan.add(pytanie);
+                    pytanie.Wypisz();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
     }
     public int CURRENT_INDEX;
     public void Resume_Question_Buttons(){
@@ -1925,9 +1939,17 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         for(int i=0;i<q_num;i++){
             AnswerList.add(0);
         }
+        ResetAllQuestions();
         ShuffledArray = idList;
         Collections.shuffle(ShuffledArray);
         Resume_Question_Buttons();
+    }
+    public void ResetAllQuestions(){
+        for(int i=0;i<listaPytan.size();i++){
+        PytaniaDB pytania = listaPytan.get(i);
+        pytania.ResetAnswer();
+        listaPytan.set(i,pytania);
+        }
     }
     boolean wywolajfunkcje=false;
     public void NextPytanie(View v){
@@ -2003,18 +2025,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             numer_pytania.setText(getString(R.string.pytanie)+" "+(CURRENT_INDEX + 1));
             int i = SET_TEST_ID;
             String tresc,id;
-
-            id = idList.get(i).toString();
-            tresc = Tresci_PytaniaList.get(i);
-            String[] pytania = {
-                    Odpowiedzi_AList.get(i),
-                    Odpowiedzi_BList.get(i),
-                    Odpowiedzi_CList.get(i),
-                    Odpowiedzi_DList.get(i)
-            }; //#todo odmałp to
+            PytaniaDB pytanie = listaPytan.get(i);
+            String[] pytania = pytanie.getOdpowiedzi();
             ImageView tes = findViewById(R.id.tresc_pytania);
             try{
-                Test_Math_drawable=Math_syn.set_Math(tresc);
+                Test_Math_drawable=Math_syn.set_Math(pytanie.getTresc());
                 tes.setBackground(Test_Math_drawable);
             } catch (Exception e){
                 e.printStackTrace();
@@ -2024,7 +2039,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     findViewById(R.id.odp_B),
                     findViewById(R.id.odp_C),
                     findViewById(R.id.odp_D)
-            };//#todo i to też
+            };//#todo odmałp to
             for(int j=0;j<4;j++){
                 try {
                     buttony[j].setText("");
@@ -2067,20 +2082,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Collections.shuffle(ShuffledArray);
             Random r = new Random();
             CURRENT_INDEX = r.nextInt(idList.size());
-            SET_TEST_ID = ShuffledArray.get(CURRENT_INDEX);
-            int i = SET_TEST_ID;
-            String tresc,id;
-            id = idList.get(i).toString();
-            tresc = Tresci_PytaniaList.get(i);
-            String[] pytania = {
-                    Odpowiedzi_AList.get(i),
-                    Odpowiedzi_BList.get(i),
-                    Odpowiedzi_CList.get(i),
-                    Odpowiedzi_DList.get(i)
-            };
+            int i = ShuffledArray.get(CURRENT_INDEX);
+            PytaniaDB pytanie = listaPytan.get(i);
+            String[] pytania = pytanie.getOdpowiedzi();
             ImageView tes = findViewById(R.id.tresc_pytania_i_wyjasnienie);
             try{
-                Test_Math_drawable=Math_syn.set_Math(tresc);
+                Test_Math_drawable=Math_syn.set_Math(pytanie.getTresc());
                 tes.setBackground(Test_Math_drawable);
             } catch (Exception e){
                 e.printStackTrace();
@@ -2239,9 +2246,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             char odp;
             int odpint=0;
-            odp = returnAnswear(AnswerList.get(CURRENT_INDEX));
+            PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
+            odp = pytanie.getOdpUzytkownika();
             int get_id = ShuffledArray.get(CURRENT_INDEX);
-            char correctansw = CorrectAnswerList.get(get_id).charAt(0);
+            PytaniaDB poprawne = listaPytan.get(get_id);
+            char correctansw = poprawne.getPoprawnaOdp();
             switch (correctansw){
                 case 'A':
                     odpint=1;
@@ -2284,18 +2293,24 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void setAnswer(View v){
         try{
+            PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
             if(v.getId()==R.id.odp_A){
                 AnswerList.set(CURRENT_INDEX,1);
+                pytanie.ZapiszOdpowiedz('A');
             }
             else if(v.getId()==R.id.odp_B){
                 AnswerList.set(CURRENT_INDEX,2);
+                pytanie.ZapiszOdpowiedz('B');
             }
             else if(v.getId()==R.id.odp_C){
                 AnswerList.set(CURRENT_INDEX,3);
+                pytanie.ZapiszOdpowiedz('C');
             }
             else if(v.getId()==R.id.odp_D){
                 AnswerList.set(CURRENT_INDEX,4);
+                pytanie.ZapiszOdpowiedz('D');
             }
+            listaPytan.set(CURRENT_INDEX,pytanie);
             UpdateAnswer();
         } catch (Exception e){
             e.printStackTrace();
@@ -2485,7 +2500,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     @Override
                     public void onResponse(String response) {
                         //Toast.makeText(getApplicationContext(), "Response: " + response,Toast.LENGTH_SHORT).show();
-                        Log.d("JSON_DATA",response);
+                        //Log.d("JSON_DATA",response);
                         switch (action){
                             case 0:
                                 Set_Ids_List(response);
