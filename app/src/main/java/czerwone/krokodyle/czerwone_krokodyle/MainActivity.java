@@ -1588,6 +1588,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         else if (v.getId()==R.id.Rozpocznij_test2){
             setContentView(R.layout.pojedyncze_pytanie);
+            CHALLENGE_MODE = false;
             Set_pytanie_Poj();
             ClosePopup();
             bgmusictesty();
@@ -1603,10 +1604,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             AddActions("testy_debug");
             fetchData(1);
         }//do testowania, nie będzie wspierane w późniejszych wersjach
+        else if(v.getId()==R.id.testychallenge){
+            setContentView(R.layout.pytanie_wyglad_challenge);
+            CHALLENGE_MODE = true;
+            Set_pytanie_Poj();
+            ClosePopup();
+            bgmusictesty();
+            AddActions("challenge_pytanie");
+        }
         czypokazana = false;
         LoadData();
         Wibracje();
     }
+    boolean CHALLENGE_MODE = false;
     public void updateCrococoinsInShop(){
         TextView iloschajsu = findViewById(R.id.crococoinyilosc);
         iloschajsu.setText(String.valueOf(getMoney()));
@@ -2063,8 +2073,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         CURRENT_INDEX = r.nextInt(idList.size());
         try{
             oneshot=true;
-            Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
-            wyjasnienie_button.setEnabled(false);
+            if(CHALLENGE_MODE!=true){
+                Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
+                wyjasnienie_button.setEnabled(false);
+            }
             AnswerListPoj = 0;
             ShuffledArray = idList;
             Collections.shuffle(ShuffledArray);
@@ -2202,7 +2214,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 buttony[odpint-1].setBackground(CurrentQuestion[odpint-1]);
             }
             if(pytanie.getOdpUzytkownika()==pytanie.getPoprawnaOdp()){
-                addProgress(0);
+                addProgress(0); //może progress do challenge?
+            }
+            if(CHALLENGE_MODE==true){
+                new Handler(getMainLooper()).postDelayed(() -> {
+                    Set_pytanie_Poj();
+                }, 2500);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -2314,8 +2331,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             listaPytan.set(CURRENT_INDEX,pytanie);
             if(oneshot==true){
                 UpdateAnswer_Poj();
-                Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
-                wyjasnienie_button.setEnabled(true);
+                if(CHALLENGE_MODE!=true){
+                    Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
+                    wyjasnienie_button.setEnabled(true);
+                }
+
             }
             oneshot=false;
         } catch (Exception e){
@@ -2323,18 +2343,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public float oblicz_percenty;
-    public char returnAnswear(int answ){
-        char odp = ' ';
-        switch(answ){
-            case 0: odp=' ';break;
-            case 1: odp = 'A';break;
-            case 2: odp = 'B';break;
-            case 3: odp = 'C';break;
-            case 4: odp = 'D';break;
-            default: odp=' ';break;
-        }
-        return odp;
-    }
     void Oblicz_Poprawne(){
         int npoprawne = 0;
         char odp;

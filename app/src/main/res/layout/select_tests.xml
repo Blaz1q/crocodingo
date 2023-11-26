@@ -26,46 +26,78 @@
         android:onClick="Zmien_widoki"
         android:text="@string/wroc_do_startu" />
 
-    <LinearLayout
-        android:layout_below="@id/wrocmenu"
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageButton
-            android:id="@+id/testy1"
+        android:layout_below="@id/wrocmenu"
+        android:layout_above="@id/hiddenbottom"
+        >
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="super"
-            android:onClick="PopupTestyRozpocznij"
-            android:scaleType="fitCenter"
-            android:background="@drawable/ckwklasie"
-             />
+            android:orientation="vertical"
+            >
+            <ImageButton
+                android:id="@+id/testy1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ckwklasie"
+                android:adjustViewBounds="true"
+                android:contentDescription="super"
+                android:backgroundTint="@android:color/transparent"
+                android:onClick="PopupTestyRozpocznij"
+                android:scaleType="centerCrop"
 
-        <ImageButton
-            android:id="@+id/testy2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="super"
-            android:scaleType="centerInside"
-            android:onClick="PopupTestyRozpocznij"
-            android:layout_weight="1"
-            android:background="@drawable/ckwdomu"
-            android:layout_marginTop="5dp"
-            />
+                />
 
-        <ImageButton
-            android:visibility="visible"
-            android:layout_marginTop="5dp"
-            android:id="@+id/testy3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="super"
-            android:scaleType="centerInside"
-            android:layout_weight="1"
-            android:background="@drawable/ckbudowa"
-        />
+            <ImageButton
+                android:id="@+id/testy2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ckwdomu"
+                android:adjustViewBounds="true"
+                android:contentDescription="super"
+                android:backgroundTint="@android:color/transparent"
+                android:onClick="PopupTestyRozpocznij"
+                android:scaleType="centerCrop"
+                />
+
+            <ImageButton
+                android:id="@+id/testy3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="super"
+                android:backgroundTint="@android:color/transparent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ckbudowa"
+                android:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/testychallenge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ckbudowa"
+                android:contentDescription="super"
+                android:backgroundTint="@android:color/transparent"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:visibility="visible"
+                android:onClick="Zmien_widoki"
+                />
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:id="@+id/hiddenbottom"
+        android:layout_alignParentBottom="true"
+        android:alwaysDrawnWithCache="false"
+        android:orientation="horizontal"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        >
     </LinearLayout>
-
 </RelativeLayout>
