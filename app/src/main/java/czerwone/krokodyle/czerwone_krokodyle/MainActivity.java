@@ -64,6 +64,7 @@ import com.google.android.gms.common.api.ApiException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import ru.noties.jlatexmath.JLatexMathDrawable;
 
@@ -1608,6 +1609,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             setContentView(R.layout.pytanie_wyglad_challenge);
             CHALLENGE_MODE = true;
             Set_pytanie_Poj();
+            ilosc_blednych=0;
             ClosePopup();
             bgmusictesty();
             AddActions("challenge_pytanie");
@@ -1749,6 +1751,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 q.setHadPlayedsound(true);
             }
         }
+    }
+    MediaPlayer GlobalPlaySound;
+    public void PlaySound(String filename,boolean isLooping){
+        int ID = getResources().getIdentifier(filename, "raw", getPackageName());
+        GlobalPlaySound = MediaPlayer.create(this,ID);
+        GlobalPlaySound.start();
+        GlobalPlaySound.setLooping(isLooping);
+        GlobalPlaySound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            };
+        });
+    }
+    public void StopSound(){
+        GlobalPlaySound.setLooping(false);
+        GlobalPlaySound.stop();
+        GlobalPlaySound.release();
     }
     // koniec sekcji
     // tutaj sekcja z testami #SECTEST
@@ -2015,6 +2034,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    int ilosc_blednych=0;
     public void Set_pytanie(){
         try{
             TextView numer_pytania = findViewById(R.id.numer_pytania);
@@ -2215,6 +2235,20 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             if(pytanie.getOdpUzytkownika()==pytanie.getPoprawnaOdp()){
                 addProgress(0); //może progress do challenge?
+            }else{
+                if(CHALLENGE_MODE==true){
+                    ilosc_blednych++;
+                    String japka = "zycie_";
+                        int resID = getResources().getIdentifier((japka+String.valueOf(3-ilosc_blednych+1)), "id", getPackageName());
+                        ImageView img = findViewById(resID);
+                        img.setImageResource(R.drawable.japkodead);
+                        PlaySound("life_lost",false);
+                }
+                if(ilosc_blednych>=3){
+                    new Handler(getMainLooper()).postDelayed(() -> {
+                        DefaultMainPageActions();
+                    }, 2500);
+                }
             }
             if(CHALLENGE_MODE==true){
                 new Handler(getMainLooper()).postDelayed(() -> {
@@ -2500,7 +2534,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                 parseJson(response);
                                 break;
                         }
-
                     }
                 }, new Response.ErrorListener() {
             @Override

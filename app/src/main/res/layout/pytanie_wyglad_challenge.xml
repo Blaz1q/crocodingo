@@ -31,15 +31,39 @@
             android:backgroundTint="#333333"
             />
 
-        <TextView
-            android:id="@+id/numer_pytania"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="Życia:X"
-            android:layout_marginLeft="3dp"
-            android:textSize="20sp" />
+            android:orientation="horizontal">
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/zycie_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:src="@drawable/japkofull" />
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/zycie_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:src="@drawable/japkofull" />
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/zycie_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:src="@drawable/japkofull" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
