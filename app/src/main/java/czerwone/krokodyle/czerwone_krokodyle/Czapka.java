@@ -42,21 +42,24 @@ public class Czapka {
     public void setOpiseng(String ops){
         this.opiseng = ops;
     }
-    public String getNazwa() {
+    public String getNazwa(String lang) {
+        switch (lang){
+            case "En":
+                return nazwaeng;
+            case "Pl":
+                return nazwa;
+        }
         return nazwa;
     }
-    public String getNazwaEng() {
-        return nazwaeng;
-    }
-
-    public String getOpis() {
+    public String getOpis(String lang) {
+        switch (lang){
+            case "En":
+                return opiseng;
+            case "Pl":
+                return opis;
+        }
         return opis;
     }
-    public String getOpisEng() {
-        return opiseng;
-    }
-
-
     public int getCena() {
         return cena;
     }

@@ -23,5 +23,7 @@
     <string name="Angielski">English (BETA)</string>
     <string name="Hiszpanski">Spanish (Not implemented!)</string>
     <string name="pytanie">Question</string>
+    <string name="language">Language</string>
+    <string name="sounds_and_vibrations">Sound and Vibrations</string>
 
 </resources>

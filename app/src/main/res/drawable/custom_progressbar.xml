@@ -12,14 +12,12 @@ android:shape="rectangle">
     <item android:id="@android:id/progress">
         <scale android:scaleWidth="100%">
             <shape>
-                <corners android:radius="6dp"></corners>
                 <solid android:color="@color/ckred" ></solid>
             </shape>
         </scale>
     </item>
     <item>
         <shape>
-            <corners android:radius="6dp"></corners>
         <stroke
             android:width="2dp"
             android:color="@android:color/black" />

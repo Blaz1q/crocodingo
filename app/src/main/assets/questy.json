@@ -1,7 +1,8 @@
 [
   {
     "id": 0,
-    "tresc": "Rozwiąż poprawnie pojedyncze testy",
+    "tresc": "Rozwiąż pojedyncze testy",
+    "trescENG": "Complete single tests",
     "Nagroda": 2150,
     "exp": 0,
     "przedzial_dolny": 10,
@@ -11,6 +12,7 @@
   {
     "id": 1,
     "tresc": "Rozwiąż testy",
+    "trescENG": "Complete tests",
     "Nagroda": 2150,
     "exp": 0,
     "przedzial_dolny": 1,
@@ -19,7 +21,8 @@
   },
   {
     "id": 2,
-    "tresc": "Nakarm croco",
+    "tresc": "Nakarm Croco",
+    "trescENG": "Feed Croco",
     "Nagroda": 2150,
     "exp": 0,
     "przedzial_dolny": 3,
@@ -29,6 +32,7 @@
   {
     "id": 3,
     "tresc": "Kup Czapke",
+    "trescENG": "Buy a hat",
     "Nagroda": 2150,
     "exp": 0,
     "przedzial_dolny": 1,
@@ -37,11 +41,12 @@
   },
   {
     "id": 4,
-    "tresc": "Zrób backflipa",
+    "tresc": "Pogłaszcz Croco",
+    "trescENG": "Pet Croco",
     "Nagroda": 2150,
     "exp": 0,
-    "przedzial_dolny": 7,
-    "przedzial_gorny": 64,
+    "przedzial_dolny": 15,
+    "przedzial_gorny": 40,
     "exception": 0
   }
 ]

@@ -25,13 +25,16 @@ public class Quests {
     private int GeneratedMax;
     private boolean isDone;
     private boolean hadPlayedsound=false;
+    private String TrescENG;
     public Quests(){
 
     }
     public void setId(int id) {
         this.Id = id;
     }
-
+    public void setTrescENG(String tresc){
+        this.TrescENG = tresc;
+    }
     public void setTresc(String tresc) {
         this.Tresc = tresc;
     }
@@ -48,7 +51,13 @@ public class Quests {
     public void setPrzedzial_Gorny(int przedzial_Gorny){
         this.Przedzial_Gorny = przedzial_Gorny;
     }
-    public String getTresc() {
+    public String getTresc(String lang) {
+        switch (lang){
+            case "En":
+                return TrescENG;
+            case "Pl":
+                return Tresc;
+        }
         return Tresc;
     }
     public int getPrzedzial_Dolny() {

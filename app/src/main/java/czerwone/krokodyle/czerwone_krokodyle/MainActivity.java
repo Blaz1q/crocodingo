@@ -311,6 +311,25 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         LoadData();
         Wibracje();
     }
+    public void Wyjdz(View v){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Czy chcesz wyjść?")
+                .setPositiveButton("Tak", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        System.exit(0);
+                    }
+                })
+                .setNegativeButton("Nie", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+        wyjscie = builder.create();
+        wyjscie.show();
+        //ShowPopup(R.layout.wyjscie); //#TODO
+    }
     public void ChangeLang(View v){
         if(v.getId()==R.id.radioLangPl){
             setLocale("Pl");
@@ -556,6 +575,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void KrokodylKlikaj(View v){
+        if(lastFeed>umiera_po){
+            addProgress(4);
+        }
         if(v.getId()==R.id.krokodyl){
             czerwony_krokodyl = findViewById(R.id.krokodyl);
             ImageView currentczapka = findViewById(R.id.current_czapka_image);
@@ -604,7 +626,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             zaladowano_czapki = true;
             for (Czapka czapka : listaCzapek) {
-                Log.d("MojaAplikacja", "ID: " + czapka.getId() + ", Nazwa: " + czapka.getNazwa() + ", Opis: " + czapka.getOpis());
+                Log.d("MojaAplikacja", "ID: " + czapka.getId() + ", Nazwa: " + czapka.getNazwa(getLang()) + ", Opis: " + czapka.getOpis(getLang()));
             }
             loadPurchasedCzapki();
             if(kupioneczapkibool==""){
@@ -622,7 +644,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             int i=0;
             daily_qnum_seed = new Random(Integer.valueOf(currentDate));
             for (Quests quest : listaQuestow) {
-                Log.d("MojaAplikacja", "ID: " + quest.getId() + ", Tresc: " + quest.getTresc());
+                Log.d("MojaAplikacja", "ID: " + quest.getId() + ", Tresc: " + quest.getTresc(getLang()));
                 int max = daily_qnum_seed.nextInt(quest.getPrzedzial_Gorny()-quest.getPrzedzial_Dolny()+1)+quest.getPrzedzial_Dolny();
                 quest.setGeneratedMax(max);
                 listaQuestowId.add(i);
@@ -647,6 +669,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 JSONObject questJson = jsonArray.getJSONObject(i);
                 int id = questJson.getInt("id");
                 String tresc = questJson.getString("tresc");
+                String trescENG = questJson.getString("trescENG");
                 int nagroda = questJson.getInt("Nagroda");
                 int przedzial_dolny = questJson.getInt("przedzial_dolny");
                 int przedzial_gorny = questJson.getInt("przedzial_gorny");
@@ -654,6 +677,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 Quests quest = new Quests();
                 quest.setId(id);
                 quest.setTresc(tresc);
+                quest.setTrescENG(trescENG);
                 quest.setHadPlayedsound(false);
                 quest.setNagroda(nagroda);
                 quest.setPrzedzial_Dolny(przedzial_dolny);
@@ -691,11 +715,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 czapkaimage.setVisibility(View.GONE);
             }
             else{
-                ImageView czapkaimage = findViewById(R.id.current_czapka_image);
-                czapkaimage.setVisibility(View.VISIBLE);
-                Context c = getApplicationContext();
-                czapkaimage.setImageResource(getResources().getIdentifier("drawable/basicczapa_" +String.valueOf(current_item_index+1) ,null,c.getPackageName()));
-            }
+                if(lastFeed>umiera_po){
+                    ImageView czapkaimage = findViewById(R.id.current_czapka_image);
+                    czapkaimage.setVisibility(View.VISIBLE);
+                    Context c = getApplicationContext();
+                    czapkaimage.setImageResource(getResources().getIdentifier("drawable/basicczapa_" +String.valueOf(current_item_index+1) ,null,c.getPackageName()));
+                    }
+                }
         }
     }
     public void aktualizujTextPrzyciskow() {
@@ -772,14 +798,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         } else {
                             czapaImage.setImageResource(R.drawable.circle);
                         }
-                        if(getLang().equals("Pl")){
-                            czapaNazwa.setText(czapka.getNazwa());
-                            czapaOpis.setText(czapka.getOpis());
-                        }
-                        else if(getLang().equals("En")){
-                            czapaNazwa.setText(czapka.getNazwaEng());
-                            czapaOpis.setText(czapka.getOpisEng());
-                        }
+                        czapaNazwa.setText(czapka.getNazwa(getLang()));
+                        czapaOpis.setText(czapka.getOpis(getLang()));
                         Log.w("akcjasuper",String.valueOf(akcja[czapka.getId()]));
                     kupCzapaButton.setOnClickListener(new View.OnClickListener() {
                      @Override
@@ -789,7 +809,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             savePurchasedCzapka(String.valueOf(czapka.getId()));
                             int noweHajsy = czapka.getCena()*-1;
                             SaveMoney(noweHajsy);
-                            Toast.makeText(MainActivity.this, "Zakupiono " + czapka.getNazwa(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Zakupiono " + czapka.getNazwa(getLang()), Toast.LENGTH_SHORT).show();
                             addProgress(3);
                             ClosePopup();
                             aktualizujTextPrzyciskow();
@@ -1498,40 +1518,45 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         else if(v.getId()==R.id.questy){
             if(!isPopupVisible){
+                if(zaladowano_questy){
             POPUP_RESOLUTION = 1;
             POPUP_EXCEPTION_MODE = 1;
             SaveQuestDate();
             ShowPopup(R.layout.popup_quest);
-            for(int i=0;i<3;i++){
-                Quests quest = listaQuestow.get(listaQuestowId.indexOf(i));
-                String progressName = "DailyQuest"+String.valueOf(i+1);
-                String questName = "quest"+String.valueOf(i+1);
-                String questValue = "quest"+String.valueOf(i+1)+"value";
-                String questMax = "questvalue"+String.valueOf(i+1)+"max";
-                String questProgressImgID = "questcomplete"+String.valueOf(i+1);
-                String questIcon = "questIcon"+String.valueOf(i+1);
-                int resIDprogress = getResources().getIdentifier(progressName, "id", getPackageName());
-                int resIDprogressImg = getResources().getIdentifier(questProgressImgID, "id", getPackageName());
-                int resIDquestname = getResources().getIdentifier(questName, "id", getPackageName());
-                int resIDquestvalue = getResources().getIdentifier(questValue, "id", getPackageName());
-                int resIDquestmax = getResources().getIdentifier(questMax, "id", getPackageName());
-                ProgressBar progress = (ProgressBar) myDialog.findViewById(resIDprogress);
-                ImageView questProgressImg = myDialog.findViewById(resIDprogressImg);
-                if(quest.getisDone()){
-                    questProgressImg.setImageResource(R.drawable.done);
-                }else questProgressImg.setImageResource(R.drawable.notdone);
-                TextView questtresc = myDialog.findViewById(resIDquestname);
-                questtresc.setText(quest.getTresc());
-                TextView progresstextval = myDialog.findViewById(resIDquestvalue);
-                progresstextval.setText(String.valueOf(quest.getProgress()));
-                progress.setMax(quest.getGeneratedMax());
-                progress.setProgress(quest.getProgress());
-                TextView progresstextmax = myDialog.findViewById(resIDquestmax);
-                progresstextmax.setText(String.valueOf(quest.getGeneratedMax()));
-            }
+                for(int i=0;i<3;i++){
+                    Quests quest = listaQuestow.get(listaQuestowId.indexOf(i));
+                    String progressName = "DailyQuest"+String.valueOf(i+1);
+                    String questName = "quest"+String.valueOf(i+1);
+                    String questProgress = "questcompletion"+String.valueOf(i+1);
+                    String questValue = "quest"+String.valueOf(i+1)+"value";
+                    String questMax = "questvalue"+String.valueOf(i+1)+"max";
+                    String questProgressImgID = "questcomplete"+String.valueOf(i+1);
+                    String questIcon = "questIcon"+String.valueOf(i+1);
+                    String questy_completion;
+                    int resIDprogress = getResources().getIdentifier(progressName, "id", getPackageName());
+                    int resIDprogressImg = getResources().getIdentifier(questProgressImgID, "id", getPackageName());
+                    int resIDquestname = getResources().getIdentifier(questName, "id", getPackageName());
+                    int resIDquestProgress = getResources().getIdentifier(questProgress, "id", getPackageName());
+                    ProgressBar progress = (ProgressBar) myDialog.findViewById(resIDprogress);
+                    ImageView questProgressImg = myDialog.findViewById(resIDprogressImg);
+                    if(quest.getisDone()){
+                        questy_completion = "(done)";
+                        //questProgressImg.setImageResource(R.drawable.done);
+                    }else{
+                        questy_completion = ("("+String.valueOf(quest.getProgress())+"/"+String.valueOf(quest.getGeneratedMax())+")");
+                    } //questProgressImg.setImageResource(R.drawable.notdone);
+                    TextView questtresc = myDialog.findViewById(resIDquestname);
+                    questtresc.setText(quest.getTresc(getLang()));
+                    TextView progresstextval = myDialog.findViewById(resIDquestProgress);
+                    progresstextval.setText(questy_completion);
+                    progress.setMax(quest.getGeneratedMax());
+                    progress.setProgress(quest.getProgress());
+                }
+
             POPUP_RESOLUTION = 0;
             POPUP_EXCEPTION_MODE = 0;
             myDialog.show();
+                }
             }
         }
         else if(v.getId()==R.id.user_profile){

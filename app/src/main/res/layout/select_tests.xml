@@ -74,7 +74,9 @@
                 android:backgroundTint="@android:color/transparent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ckbudowa"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:onClick="Zmien_widoki"
+                />
 
             <ImageButton
                 android:id="@+id/testychallenge"

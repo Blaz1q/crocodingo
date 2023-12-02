@@ -72,7 +72,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:text="Dźwięk i wibracje"
+        android:text="@string/sounds_and_vibrations"
         android:textColor="#494949"
         android:textSize="20sp" />
 
@@ -167,7 +167,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:text="Język"
+        android:text="@string/language"
         android:textColor="#494949"
         android:textSize="20sp" />
 

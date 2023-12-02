@@ -22,4 +22,6 @@
     <string name="Angielski">Angielski (BETA)</string>
     <string name="Hiszpanski">Hiszpański (Brak implementacji!)</string>
     <string name="pytanie">Pytanie</string>
+    <string name="language">Język</string>
+    <string name="sounds_and_vibrations">Dźwięk i wibracje</string>
 </resources>
