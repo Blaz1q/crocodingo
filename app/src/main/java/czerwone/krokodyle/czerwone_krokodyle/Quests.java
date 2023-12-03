@@ -26,6 +26,7 @@ public class Quests {
     private boolean isDone;
     private boolean hadPlayedsound=false;
     private String TrescENG;
+    private boolean isClaimed;
     public Quests(){
 
     }
@@ -44,6 +45,9 @@ public class Quests {
     }
     public void setNagroda(int nagroda) {
         this.Nagroda = nagroda;
+    }
+    public int getNagroda(){
+        return Nagroda;
     }
     public void setPrzedzial_Dolny(int przedzial_Dolny) {
         this.Przedzial_Dolny = przedzial_Dolny;
@@ -66,7 +70,15 @@ public class Quests {
     public int getPrzedzial_Gorny() {
         return Przedzial_Gorny;
     }
-
+    public void Claim(){
+        this.isClaimed = true;
+    }
+    public void overrideClaim(boolean claimstate){
+        this.isClaimed = claimstate;
+    }
+    public boolean getClaim(){
+        return isClaimed;
+    }
     public void setGeneratedMax(int generatedMax) {
         this.GeneratedMax = generatedMax;
     }

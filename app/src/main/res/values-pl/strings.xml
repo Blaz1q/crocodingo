@@ -24,4 +24,6 @@
     <string name="pytanie">Pytanie</string>
     <string name="language">Język</string>
     <string name="sounds_and_vibrations">Dźwięk i wibracje</string>
+    <string name="claim">odbierz</string>
+    <string name="done">(Ukończone)</string>
 </resources>

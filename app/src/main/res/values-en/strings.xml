@@ -25,5 +25,6 @@
     <string name="pytanie">Question</string>
     <string name="language">Language</string>
     <string name="sounds_and_vibrations">Sound and Vibrations</string>
-
+    <string name="claim">claim</string>
+    <string name="done">(Done)</string>
 </resources>

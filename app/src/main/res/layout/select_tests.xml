@@ -25,6 +25,27 @@
         android:backgroundTint="#333333"
         android:onClick="Zmien_widoki"
         android:text="@string/wroc_do_startu" />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dbloaded"
+        android:layout_toRightOf="@id/wrocmenu"
+        android:layout_below="@id/hiddentop"
+        android:layout_alignBottom="@id/wrocmenu"
+        android:layout_alignTop="@id/wrocmenu"
+        android:visibility="visible"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ladowanie_tekst"
+        android:text="Trwa ładowanie pytań.."
+        android:layout_toRightOf="@id/dbloaded"
+        android:layout_below="@id/hiddentop"
+        android:layout_alignBaseline="@id/wrocmenu"
+        android:visibility="visible"
+        android:textAlignment="center"
+        />
 
 
     <ScrollView

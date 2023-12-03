@@ -8,47 +8,78 @@
     >
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="10dp"
         android:background="@android:drawable/dialog_holo_light_frame"
+        android:orientation="vertical"
         android:padding="15dp">
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/logo" />
+
+
         <RelativeLayout
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@id/imageView3"
-            android:background="@drawable/custom_quest_bg"
-            >
-                <RelativeLayout
-                    android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+
+                android:id="@+id/container1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_quest_bg"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/nagrodaimg1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/crococoin" />
+
+                <TextView
+                    android:id="@+id/nagroda1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/container1"
-                    android:padding="10dp"
-                    >
+                    android:layout_below="@+id/nagrodaimg1"
+                    android:fontFamily="@font/londrina_solid"
+                    android:text="+2000"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/nagrodashadow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nagrodaimg1"
+                    android:fontFamily="@font/londrina_shadow"
+                    android:text="+2000"
+                    android:textAlignment="center"
+                    android:textColor="@color/ckbez"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/quest1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginTop="10dp"
+                    android:layout_toLeftOf="@id/claim1"
+                    android:layout_toRightOf="@id/nagrodaimg1"
                     android:padding="10dp"
                     android:paddingEnd="5dp"
                     android:text="quest1"
                     android:textColor="@color/black"
-                    android:textSize="14dp" />
+                    android:textSize="14sp" />
+
                 <ImageView
                     android:id="@+id/questcomplete1"
                     android:layout_width="wrap_content"
@@ -56,65 +87,107 @@
                     android:layout_alignBottom="@+id/claim1"
                     android:scaleType="fitEnd"
                     android:src="@drawable/done"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/questcompletion1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/quest1"
-                    android:text="(1/10)"
-                    android:layout_alignBaseline="@id/quest1"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
+
                 <Button
                     android:id="@+id/claim1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/gray_active"
-                    android:layout_alignBaseline="@id/quest1"
-                    android:text="claim"
                     android:layout_alignParentRight="true"
-                    />
+                    android:layout_centerVertical="true"
+                    android:backgroundTint="@color/gray_active"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:text="@string/claim" />
 
-                </RelativeLayout>
-                <ProgressBar
-                    android:id="@+id/DailyQuest1"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="10"
-                    android:progress="6"
-                    android:layout_below="@id/container1"
-                    android:progressDrawable="@drawable/custom_progressbar"
-                    android:progressTint="@color/ckred" />
+
             </RelativeLayout>
-        <RelativeLayout
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/custom_quest_bg"
-            >
 
-            <RelativeLayout
+            <TextView
+                android:id="@+id/questcompletion1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="5dp"
+                android:text="(1/10)"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
+
+            <ProgressBar
+                android:id="@+id/DailyQuest1"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/container1"
+                android:max="10"
+                android:minHeight="14dp"
+                android:progress="6"
+                android:progressDrawable="@drawable/custom_progressbar"
+                android:progressTint="@color/ckred" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:orientation="horizontal">
+
+            <RelativeLayout
+
                 android:id="@+id/container2"
-                android:padding="10dp"
-                >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_quest_bg"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/nagrodaimg2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/crococoin" />
+
+                <TextView
+                    android:id="@+id/nagroda2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nagrodaimg2"
+                    android:fontFamily="@font/londrina_solid"
+                    android:text="+2000"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/nagrodashadow2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nagrodaimg2"
+
+                    android:fontFamily="@font/londrina_shadow"
+                    android:text="+2000"
+                    android:textAlignment="center"
+                    android:textColor="@color/ckbez"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/quest2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginTop="10dp"
+                    android:layout_toLeftOf="@id/claim2"
+                    android:layout_toRightOf="@id/nagrodaimg2"
                     android:padding="10dp"
                     android:paddingEnd="5dp"
                     android:text="quest1"
                     android:textColor="@color/black"
-                    android:textSize="14dp" />
+                    android:textSize="14sp" />
+
                 <ImageView
                     android:id="@+id/questcomplete2"
                     android:layout_width="wrap_content"
@@ -122,66 +195,107 @@
                     android:layout_alignBottom="@+id/claim2"
                     android:scaleType="fitEnd"
                     android:src="@drawable/done"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/questcompletion2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/quest2"
-                    android:text="(1/10)"
-                    android:layout_alignBaseline="@id/quest2"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
+
                 <Button
                     android:id="@+id/claim2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/gray_active"
-                    android:layout_alignBaseline="@id/quest2"
                     android:layout_alignParentRight="true"
-                    android:text="claim" />
-                />
+                    android:layout_centerVertical="true"
+                    android:backgroundTint="@color/gray_active"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:text="@string/claim" />
+
 
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/questcompletion2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="5dp"
+                android:text="(1/10)"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
+
             <ProgressBar
                 android:id="@+id/DailyQuest2"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="10"
-                android:progress="6"
                 android:layout_below="@id/container2"
+                android:max="10"
+                android:minHeight="14dp"
+                android:progress="6"
                 android:progressDrawable="@drawable/custom_progressbar"
                 android:progressTint="@color/ckred" />
         </RelativeLayout>
+
         <RelativeLayout
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@id/imageView3"
-            android:background="@drawable/custom_quest_bg"
-            >
+            android:layout_marginTop="10dp"
+
+            android:orientation="horizontal">
 
             <RelativeLayout
+
+                android:id="@+id/container3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/container3"
-                android:padding="10dp"
-                >
+                android:background="@drawable/custom_quest_bg"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/nagrodaimg3"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/crococoin" />
+
+                <TextView
+                    android:id="@+id/nagroda3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nagrodaimg3"
+                    android:fontFamily="@font/londrina_solid"
+                    android:text="+2000"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/nagrodashadow3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nagrodaimg3"
+
+                    android:fontFamily="@font/londrina_shadow"
+                    android:text="+2000"
+                    android:textAlignment="center"
+                    android:textColor="@color/ckbez"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/quest3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginTop="10dp"
+                    android:layout_toLeftOf="@id/claim3"
+                    android:layout_toRightOf="@id/nagrodaimg3"
                     android:padding="10dp"
                     android:paddingEnd="5dp"
-                    android:text="quest3"
+                    android:text="quest1"
                     android:textColor="@color/black"
-                    android:textSize="14dp" />
+                    android:textSize="14sp" />
+
                 <ImageView
                     android:id="@+id/questcomplete3"
                     android:layout_width="wrap_content"
@@ -189,38 +303,42 @@
                     android:layout_alignBottom="@+id/claim3"
                     android:scaleType="fitEnd"
                     android:src="@drawable/done"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/questcompletion3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/quest3"
-                    android:text="(1/10)"
-                    android:layout_alignBaseline="@id/quest3"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
+
                 <Button
                     android:id="@+id/claim3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/gray_active"
                     android:layout_alignParentRight="true"
-                    android:layout_alignBaseline="@id/quest3"
-                    android:text="claim" />
-                />
+                    android:layout_centerVertical="true"
+                    android:backgroundTint="@color/gray_active"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:text="@string/claim" />
+
 
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/questcompletion3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="5dp"
+                android:text="(1/10)"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
+
             <ProgressBar
                 android:id="@+id/DailyQuest3"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="10"
-                android:progress="6"
                 android:layout_below="@id/container3"
+                android:max="10"
+                android:minHeight="14dp"
+                android:progress="6"
                 android:progressDrawable="@drawable/custom_progressbar"
                 android:progressTint="@color/ckred" />
         </RelativeLayout>
@@ -233,7 +351,6 @@
             android:backgroundTint="#333333"
             android:onClick="Zamknij_Popup"
             android:text="Zaczynajmy!" />
-
 
 
     </LinearLayout>

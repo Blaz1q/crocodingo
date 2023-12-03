@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public static final String LAST_FEED = "Feeding_time";
     public static final String SAVED_QUEST_DATE = "QUEST_DATE";
     public static final String QUEST_PROGRESS = "QUEST_PROGGRES_"; //tutaj 3 zmienne int
+    public static final String QUEST_CLAIM = "QUEST_CLAIM_"; //tutaj 3 zmienne int
     public static final String SAVED_DATE = "Date";
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String SWITCH = "switch1";
@@ -665,6 +666,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Log.d("Questy", "Prawidłowo wczytano JSON: " + json);
             JSONArray jsonArray = new JSONArray(json);
             listaQuestow.clear();
+            SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject questJson = jsonArray.getJSONObject(i);
                 int id = questJson.getInt("id");
@@ -685,6 +687,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 quest.setProgress(0);
                 quest.setExp(exp);
                 quest.checkifDone();
+                quest.overrideClaim(sharedPreferences.getBoolean(QUEST_CLAIM+String.valueOf(i),false));
                 listaQuestow.add(quest);
             }
             zaladowano_questy = true;
@@ -703,6 +706,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             quest.setHadPlayedsound(false);
             quest.overrideProgress(0);
             quest.checkifDone();
+            editor.putBoolean(QUEST_CLAIM+String.valueOf(i),false);
+            quest.overrideClaim(sharedPreferences.getBoolean(QUEST_CLAIM+String.valueOf(i),false));
             editor.putInt(QUEST_PROGRESS+String.valueOf(i),0);
         }
         editor.apply();
@@ -1532,20 +1537,46 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     String questMax = "questvalue"+String.valueOf(i+1)+"max";
                     String questProgressImgID = "questcomplete"+String.valueOf(i+1);
                     String questIcon = "questIcon"+String.valueOf(i+1);
+                    String questNagroda = "nagroda"+String.valueOf(i+1);
+                    String questNagrodashadow = "nagrodashadow"+String.valueOf(i+1);
+                    String claim = "claim"+String.valueOf(i+1);
                     String questy_completion;
+                    int resIDnagroda = getResources().getIdentifier(questNagroda, "id", getPackageName());
                     int resIDprogress = getResources().getIdentifier(progressName, "id", getPackageName());
                     int resIDprogressImg = getResources().getIdentifier(questProgressImgID, "id", getPackageName());
                     int resIDquestname = getResources().getIdentifier(questName, "id", getPackageName());
                     int resIDquestProgress = getResources().getIdentifier(questProgress, "id", getPackageName());
+                    int resIDnagrodashadow = getResources().getIdentifier(questNagrodashadow, "id", getPackageName());
+                    int resIDclaim = getResources().getIdentifier(claim, "id", getPackageName());
                     ProgressBar progress = (ProgressBar) myDialog.findViewById(resIDprogress);
                     ImageView questProgressImg = myDialog.findViewById(resIDprogressImg);
+                    Button claimbutton = myDialog.findViewById(resIDclaim);
                     if(quest.getisDone()){
                         questy_completion = "(done)";
+                        int finalI = i;
+                        if(quest.getClaim()!=true){
+                            claimbutton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Claim(listaQuestowId.indexOf(finalI));
+                                    claimbutton.setEnabled(false);
+                                    claimbutton.setVisibility(View.GONE);
+                                }
+                            });
+                        }else{
+                            claimbutton.setVisibility(View.GONE);
+                            claimbutton.setEnabled(false);
+                        }
                         //questProgressImg.setImageResource(R.drawable.done);
                     }else{
+                        claimbutton.setEnabled(false);
                         questy_completion = ("("+String.valueOf(quest.getProgress())+"/"+String.valueOf(quest.getGeneratedMax())+")");
                     } //questProgressImg.setImageResource(R.drawable.notdone);
                     TextView questtresc = myDialog.findViewById(resIDquestname);
+                    TextView nagroda = myDialog.findViewById(resIDnagroda);
+                    TextView nagrodashadow = myDialog.findViewById(resIDnagrodashadow);
+                    nagroda.setText("+"+String.valueOf(quest.getNagroda()));
+                    nagrodashadow.setText("+"+String.valueOf(quest.getNagroda()));
                     questtresc.setText(quest.getTresc(getLang()));
                     TextView progresstextval = myDialog.findViewById(resIDquestProgress);
                     progresstextval.setText(questy_completion);
@@ -1643,6 +1674,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         LoadData();
         Wibracje();
     }
+
     boolean CHALLENGE_MODE = false;
     public void updateCrococoinsInShop(){
         TextView iloschajsu = findViewById(R.id.crococoinyilosc);
@@ -1760,6 +1792,18 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
         editor.apply();
     }
+    public void Claim(int id){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        boolean claim = sharedPreferences.getBoolean(QUEST_CLAIM+String.valueOf(id),false);
+        Quests quest = listaQuestow.get(id);
+        if(quest.getClaim()!=true){
+            quest.Claim();
+            SaveMoney(quest.getNagroda());
+            editor.putBoolean(QUEST_CLAIM+String.valueOf(id),true);
+        }
+        editor.apply();
+    }
     public void questPlaySound(Quests q){
         Log.w("qsound","1");
         if(q.getisDone()){
@@ -1815,15 +1859,18 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             fetchData(1);
         }
     }
+    public void updateLoader(){
+        if(zaladowanodb){
+            Toast.makeText(this,"Załadowano DB",Toast.LENGTH_SHORT).show();
+        }
+    }
     public void Set_Ids_List(String response){
         if(response.equals("")){
             String id,poprawne,tresc,wyjasnienie,A,B,C,D,kategoria;
             Log.w("WarningDBError","DBCONNECTIONFAILED");
             try{
-                zaladowanodb=true;
                 JSONObject jsonObject = new JSONObject(loadJSONFromAssetVer2("DB.json"));
                 JSONArray jsonArray = jsonObject.getJSONArray("API");
-                if(zaladowanodb){
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject jsonObject2 = jsonArray.getJSONObject(i);
                         id = jsonObject2.getString("id");
@@ -1839,12 +1886,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         idList.add(Integer.valueOf(id));
                         PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria);
                         listaPytan.add(pytanie);
+                        zaladowanodb=true;
                     }
-                }else{
-                    Toast.makeText(getApplicationContext(), "Błąd połączenia z siecią i wczytania backupu", Toast.LENGTH_SHORT).show();
-                }
+                updateLoader();
             }catch (Exception ee){
+                zaladowanodb=false;
                 ee.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Błąd połączenia z siecią i wczytania backupu", Toast.LENGTH_SHORT).show();
             }
         }
         else {
@@ -1869,9 +1917,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria);
                     listaPytan.add(pytanie);
                     pytanie.Wypisz();
+                    zaladowanodb=true;
                 }
+                updateLoader();
             } catch (JSONException e) {
                 e.printStackTrace();
+                zaladowanodb=false;
             }
         }
     }
