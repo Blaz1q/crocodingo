@@ -69,7 +69,6 @@
                 android:backgroundTint="@android:color/transparent"
                 android:onClick="PopupTestyRozpocznij"
                 android:scaleType="centerCrop"
-
                 />
 
             <ImageButton

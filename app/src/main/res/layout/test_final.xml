@@ -23,65 +23,232 @@
         android:backgroundTint="#333333"
         android:onClick="Zmien_widoki"
         android:text="@string/wroc_do_startu" />
+
     <TextView
-        android:id="@+id/Wynik_testu_powitanie"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/wrocmenu"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_reusable_box"
+        android:padding="10dp"
         android:text="Gratulacje"
+        android:textColor="@color/black"
         android:textAlignment="center"
         android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/wynik_procentowy"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/wynikbox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="%"
-        android:layout_below="@+id/Wynik_testu_powitanie"
-        android:layout_centerHorizontal="true"
-        android:textSize="32sp"
-        />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wynik_procentowy"
-        android:orientation="horizontal"
-        android:layout_centerHorizontal="true"
+        android:background="@drawable/custom_reusable_box"
+        android:layout_below="@+id/Gratulacje"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="15dp"
         >
-
         <TextView
-            android:id="@+id/poprawneodpilosc"
+            android:id="@+id/wynik_procentowy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="x"
-            android:textAlignment="center"
-            android:textSize="32sp"/>
+            android:text="49,5%"
+            android:layout_centerHorizontal="true"
+            android:textSize="98sp"
+            android:textColor="@color/black"
+            />
+            <TextView
+                android:layout_below="@id/wynik_procentowy"
+                android:id="@+id/wynik_punktowy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(10/22)"
+                android:textAlignment="center"
+                android:textSize="32sp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                />
 
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_below="@id/wynikbox"
+        android:id="@+id/wynik_chart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        >
         <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="/"
+            android:id="@+id/chart_negatywne"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".50"
+            android:text="5"
+            android:background="@drawable/custom_reusable_box"
+            android:backgroundTint="@color/ckpink"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
             android:textAlignment="center"
-            android:textSize="32sp"/>
-
+            />
         <TextView
-            android:id="@+id/iloscpytan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="y"
+            android:id="@+id/chart_pominiete"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".30"
+            android:text="3"
+            android:background="@drawable/custom_reusable_box"
+            android:backgroundTint="@color/cklightgray"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
             android:textAlignment="center"
-            android:textSize="32sp"/>
+            />
+        <TextView
+            android:id="@+id/chart_pozytywne"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".20"
+            android:text="2"
+            android:background="@drawable/custom_reusable_box"
+            android:backgroundTint="#00ff00"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
+            android:textAlignment="center"
+            />
     </LinearLayout>
+    <TextView
+        android:id="@+id/Gratulacje"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wrocmenu"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_reusable_box"
+        android:padding="10dp"
+        android:text="Gratulacje"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+    <TextView
+        android:id="@+id/opisWyniku"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wynik_chart"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_reusable_box"
+        android:text="tutaj wynik"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+    <LinearLayout
+        android:id="@+id/nagrodybox"
+        android:layout_below="@id/opisWyniku"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="10dp"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_reusable_box"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            >
+            <ImageView
+                android:id="@+id/nagrodaimg1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/crococoin"
+                android:padding="3dp"
+                />
+
+            <TextView
+                android:id="@+id/nagroda1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/nagrodaimg1"
+                android:layout_alignBottom="@id/nagrodaimg1"
+                android:fontFamily="@font/londrina_solid"
+                android:text="+200"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                />
+
+            <TextView
+                android:id="@+id/nagrodashadow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/nagrodaimg1"
+                android:layout_alignBottom="@id/nagrodaimg1"
+                android:fontFamily="@font/londrina_outline"
+                android:text="+200"
+                android:textColor="@color/ckbez"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/nagrodamultiplier1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/nagrodaimg1"
+                android:fontFamily="@font/londrina_solid"
+                android:textAlignment="center"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="100%"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_reusable_box"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            >
+            <ImageView
+                android:id="@+id/nagrodaimg2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/srodekkolopuste"
+                android:padding="3dp"
+                />
+            <TextView
+                android:id="@+id/nagroda2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/nagrodaimg2"
+                android:layout_alignBottom="@id/nagrodaimg2"
+                android:fontFamily="@font/londrina_solid"
+                android:text="zakrec"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                />
+
+            <TextView
+                android:id="@+id/nagrodashadow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/nagrodaimg2"
+                android:layout_alignBottom="@id/nagrodaimg2"
+                android:fontFamily="@font/londrina_outline"
+                android:text="zakrec"
+                android:textColor="@color/ckbez"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </LinearLayout>
+
 
 
         <Button
@@ -90,7 +257,7 @@
             android:layout_height="wrap_content"
             android:text="@string/zobacz_bledne"
             android:onClick="Zmien_widoki"
-            android:layout_above="@id/hiddenbottom"
+            android:layout_below="@id/nagrodybox"
             android:layout_centerHorizontal="true"
             android:backgroundTint="@color/gray_active"
             />

@@ -2452,17 +2452,22 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             e.printStackTrace();
         }
     }
-    public float oblicz_percenty;
+    public double oblicz_percenty;
+    public int brak_odp=0;
     void Oblicz_Poprawne(){
         int npoprawne = 0;
+        brak_odp=0;
         char odp;
         for(int i=0;i<q_num;i++){
             PytaniaDB pytanie = listaPytan.get(ShuffledArray.get(i));
             odp = pytanie.getOdpUzytkownika();
             try{
                 int get_id = ShuffledArray.get(i);
-            if(pytanie.getPoprawnaOdp()!=odp) npoprawne++;
-                    else poprawne++;
+            if(pytanie.getPoprawnaOdp()!=odp){
+                npoprawne++;
+                if(odp=='-') brak_odp++;
+            }
+            else poprawne++;
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -2470,6 +2475,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(poprawne!=0){
             oblicz_percenty = poprawne*100/q_num;
         }else oblicz_percenty = 0;
+    }
+    public static String fmt(double d)
+    {
+        if(d == (long) d)
+            return String.format("%d",(long)d);
+        else
+            return String.format("%s",d);
     }
     public void Zakoncz_test(View v){
         if(v.getId()==R.id.Zakoncz_test_popup){
@@ -2480,16 +2492,36 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             addProgress(1);
             AddActions("test_final");
             try{
-                TextView poprawneodp = findViewById(R.id.poprawneodpilosc);
+
+                TextView wynik_pkt = findViewById(R.id.wynik_punktowy);
                 TextView ilosc_pytan = findViewById(R.id.iloscpytan);
-                TextView msg_text = findViewById(R.id.Wynik_testu_powitanie);
-                TextView textView = findViewById(R.id.wynik_procentowy);
-                textView.setText(String.valueOf(oblicz_percenty) +"%");
-                poprawneodp.setText(String.valueOf(poprawne));
-                ilosc_pytan.setText(String.valueOf(q_num));
+                TextView msg_text = findViewById(R.id.opisWyniku);
+                TextView procenty = findViewById(R.id.wynik_procentowy);
+                TextView poprawne_chart = findViewById(R.id.chart_pozytywne);
+                TextView negatywne_chart = findViewById(R.id.chart_negatywne);
+                TextView pominiete_chart = findViewById(R.id.chart_pominiete);
+                TextView nagroda1 = findViewById(R.id.nagroda1);
+                TextView nagrodashadow1 = findViewById(R.id.nagrodashadow1);
+
+                LinearLayout.LayoutParams poprawneWeight = (LinearLayout.LayoutParams) poprawne_chart.getLayoutParams();
+                LinearLayout.LayoutParams negatywneWeight = (LinearLayout.LayoutParams) negatywne_chart.getLayoutParams();
+                LinearLayout.LayoutParams pominieteWeight = (LinearLayout.LayoutParams) pominiete_chart.getLayoutParams();
+
+                poprawne_chart.setText(String.valueOf(poprawne));
+                negatywne_chart.setText(String.valueOf(q_num-poprawne-brak_odp));
+                pominiete_chart.setText(String.valueOf(brak_odp));
+
+                poprawneWeight.weight = (float) poprawne/q_num;
+                negatywneWeight.weight = (float) (q_num-poprawne-brak_odp)/q_num;
+                pominieteWeight.weight = (float) brak_odp/q_num;
+
+                procenty.setText(fmt(oblicz_percenty) +"%");
+                wynik_pkt.setText("("+String.valueOf(poprawne)+"/"+String.valueOf(q_num)+")");
                 if(oblicz_percenty>20&&oblicz_percenty<30){
                     SaveFood(1);
                     SaveMoney(100);
+                    nagroda1.setText("100");
+                    nagrodashadow1.setText("100");
                 }
                 if(oblicz_percenty>=30){
                     SavePassedTest();
@@ -2503,18 +2535,26 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     msg_text.setText(Wynik_msg[1]);
                     SaveFood(3);
                     SaveMoney(300);
+                    nagroda1.setText("300");
+                    nagrodashadow1.setText("300");
                 } else if (oblicz_percenty>=60&&oblicz_percenty<80) {
                     msg_text.setText(Wynik_msg[2]);
                     SaveFood(5);
                     SaveMoney(500);
+                    nagroda1.setText("500");
+                    nagrodashadow1.setText("500");
                 } else if (oblicz_percenty>=80&&oblicz_percenty<100) {
                     msg_text.setText(Wynik_msg[3]);
                     SaveFood(7);
                     SaveMoney(700);
+                    nagroda1.setText("700");
+                    nagrodashadow1.setText("700");
                 } else if (oblicz_percenty==100) {
                     msg_text.setText(Wynik_msg[4]);
                     SaveFood(10);
                     SaveMoney(1000);
+                    nagroda1.setText("1000");
+                    nagrodashadow1.setText("1000");
                 }
                 if(czyZalogowany==true){
                     updateFirebaseData(acct.getIdToken());

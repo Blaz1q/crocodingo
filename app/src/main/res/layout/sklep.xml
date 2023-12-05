@@ -9,12 +9,16 @@
         android:id="@+id/hiddentop"
         android:orientation="horizontal"
         ></LinearLayout>
-
+<RelativeLayout
+    android:id="@+id/topcontainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/hiddentop"
+    >
     <Button
         android:id="@+id/wrocmenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/hiddentop"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
@@ -26,11 +30,12 @@
         android:id="@+id/crococoiny_napis"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_above="@id/scroll_container_sklep"
+
         android:text="Crococoiny:"
         android:layout_toRightOf="@id/wrocmenu"
-        android:layout_below="@id/hiddentop"
         android:layout_marginTop="10dp"
+        android:layout_alignTop="@id/wrocmenu"
+        android:layout_alignBottom="@id/wrocmenu"
         android:gravity="center"
         />
     <TextView
@@ -39,8 +44,8 @@
         android:layout_height="wrap_content"
         android:text="x"
         android:layout_toRightOf="@id/crococoiny_napis"
-        android:layout_above="@id/scroll_container_sklep"
-        android:layout_below="@id/hiddentop"
+        android:layout_alignTop="@id/wrocmenu"
+        android:layout_alignBottom="@id/wrocmenu"
         android:layout_marginTop="10dp"
         android:gravity="center"
         />
@@ -50,29 +55,79 @@
         android:id="@+id/crococoinimg"
         android:src="@drawable/crococoin"
         android:layout_toRightOf="@id/crococoinyilosc"
-        android:layout_above="@id/scroll_container_sklep"
-        android:layout_below="@id/hiddentop"
+        android:layout_alignTop="@id/wrocmenu"
+        android:layout_alignBottom="@id/wrocmenu"
         android:layout_marginTop="10dp"/>
+</RelativeLayout>
+    <HorizontalScrollView
+        android:id="@+id/scroll_container_kategoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topcontainer"
+        android:scrollbars="none"
+        android:layout_margin="10dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="czapki"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="potki"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="akcesoria"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="premium"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+    </HorizontalScrollView>
+
     <ScrollView
         android:id="@+id/scroll_container_sklep"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/wrocmenu"
+        android:layout_below="@id/scroll_container_kategoria"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/sklep_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/custom_quest_bg"
+                >
 
                 <ImageView
                     android:id="@+id/ciastka"
@@ -107,16 +162,19 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:backgroundTint="#333333"
-                        android:text="@string/kup"
-                        android:onClick="KupCiastka"/>
+                        android:onClick="KupCiastka"
+                        android:text="@string/kup" />
                 </LinearLayout>
 
 
             </RelativeLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/custom_quest_bg"
+                >
 
                 <ImageView
                     android:id="@+id/a"
@@ -151,18 +209,20 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:backgroundTint="#333333"
-                        android:text="@string/kup"
-                        android:onClick="pokazPopupZakupuCzapek"/>
+                        android:onClick="pokazPopupZakupuCzapek"
+                        android:text="@string/kup" />
                 </LinearLayout>
 
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/custom_quest_bg"
                 >
+
                 <ImageView
                     android:id="@+id/b"
                     android:layout_width="200dp"
@@ -195,17 +255,18 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:backgroundTint="#333333"
-                        android:text="Kup"
-                        android:onClick="pokazPopupZakupuCzapek"/>
+                        android:onClick="pokazPopupZakupuCzapek"
+                        android:text="Kup" />
                 </LinearLayout>
 
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/custom_quest_bg"
                 >
 
                 <ImageView
@@ -240,18 +301,17 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:backgroundTint="#333333"
-                        android:text="Kup"
-                        android:onClick="pokazPopupZakupuCzapek"/>
+                        android:onClick="pokazPopupZakupuCzapek"
+                        android:text="Kup" />
                 </LinearLayout>
 
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                >
+                android:layout_marginBottom="5dp">
 
                 <ImageView
                     android:id="@+id/d"
@@ -285,17 +345,17 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:backgroundTint="#333333"
-                        android:text="Kup"
-                        android:onClick="pokazPopupZakupuCzapek"/>
+                        android:onClick="pokazPopupZakupuCzapek"
+                        android:text="Kup" />
                 </LinearLayout>
 
 
             </RelativeLayout>
+
             <RelativeLayout
-                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                >
+                android:layout_marginBottom="5dp">
 
                 <ImageView
                     android:id="@+id/e"
@@ -329,17 +389,17 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:backgroundTint="#333333"
-                        android:text="Kup"
-                        android:onClick="pokazPopupZakupuCzapek"/>
+                        android:onClick="pokazPopupZakupuCzapek"
+                        android:text="Kup" />
                 </LinearLayout>
 
 
             </RelativeLayout>
+
             <RelativeLayout
-                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                >
+                android:layout_marginBottom="5dp">
 
                 <ImageView
                     android:id="@+id/f"
@@ -373,17 +433,17 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:backgroundTint="#333333"
-                        android:text="Kup"
-                        android:onClick="pokazPopupZakupuCzapek"/>
+                        android:onClick="pokazPopupZakupuCzapek"
+                        android:text="Kup" />
                 </LinearLayout>
 
 
             </RelativeLayout>
+
             <RelativeLayout
-                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                >
+                android:layout_marginBottom="5dp">
 
                 <ImageView
                     android:id="@+id/g"
@@ -417,17 +477,17 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:backgroundTint="#333333"
-                        android:text="Kup"
-                        android:onClick="pokazPopupZakupuCzapek"/>
+                        android:onClick="pokazPopupZakupuCzapek"
+                        android:text="Kup" />
                 </LinearLayout>
 
 
             </RelativeLayout>
+
             <RelativeLayout
-                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                >
+                android:layout_marginBottom="5dp">
 
                 <ImageView
                     android:id="@+id/h"
@@ -461,8 +521,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:backgroundTint="#333333"
-                        android:text="Kup"
-                        android:onClick="pokazPopupZakupuCzapek"/>
+                        android:onClick="pokazPopupZakupuCzapek"
+                        android:text="Kup" />
                 </LinearLayout>
 
 
