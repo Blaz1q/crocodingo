@@ -2517,17 +2517,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
                 procenty.setText(fmt(oblicz_percenty) +"%");
                 wynik_pkt.setText("("+String.valueOf(poprawne)+"/"+String.valueOf(q_num)+")");
-                if(oblicz_percenty>20&&oblicz_percenty<30){
-                    SaveFood(1);
-                    SaveMoney(100);
-                    nagroda1.setText("100");
-                    nagrodashadow1.setText("100");
-                }
                 if(oblicz_percenty>=30){
                     SavePassedTest();
                     AddStreak();
                 }
                 if(oblicz_percenty<30){
+                    nagroda1.setText("0");
+                    nagrodashadow1.setText("0");
+                    if(oblicz_percenty>20){
+                        SaveFood(1);
+                        SaveMoney(100);
+                        nagroda1.setText("100");
+                        nagrodashadow1.setText("100");
+                    }
                     msg_text.setText(Wynik_msg[0]);
                     SaveFailedTest();
                     ResetStreak();

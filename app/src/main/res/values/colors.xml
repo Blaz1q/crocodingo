@@ -11,5 +11,8 @@
     <color name="cklightgray">#FF4F5D75</color>
     <color name="ckbez">#F6DEA2</color>
     <color name="ckpink">#FE686A</color>
+    <color name="ckcorrect">#ff88D18A</color>
+    <color name="ckcorrecttext">#ff0D1B15</color>
+    <color name="ckincorrecttext">#ffF52720</color>
 
 </resources>
