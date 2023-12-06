@@ -652,6 +652,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 i++;
             }
             Collections.shuffle(listaQuestowId,new Random(Integer.valueOf(currentDate)));
+            for(int j=0;j<3;j++){
+                Quests quest = listaQuestow.get(listaQuestowId.indexOf(j));
+                quest.setCzyWylosowano();
+                listaQuestow.set(listaQuestowId.indexOf(j),quest);
+            }
+        }else{
+            loadQuestsFromAsset();
         }
         Log.d("QID",String.valueOf(listaQuestowId));
     }
@@ -705,6 +712,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             quest.setProgress(0);
             quest.setHadPlayedsound(false);
             quest.overrideProgress(0);
+            quest.resetCzyWylosowano();
             quest.checkifDone();
             editor.putBoolean(QUEST_CLAIM+String.valueOf(i),false);
             quest.overrideClaim(sharedPreferences.getBoolean(QUEST_CLAIM+String.valueOf(i),false));
@@ -1106,8 +1114,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             readableDate = currentDate;
             editor.putString(SAVED_QUEST_DATE,readableDate);
             editor.apply();
-            UpdateQuestDate();
             ResetAllQuestProgress();
+            UpdateQuestDate();
         }
     }
     public void UpdateQuestProgress(int number,int value){
@@ -1807,17 +1815,17 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void questPlaySound(Quests q){
         Log.w("qsound","1");
         if(q.getisDone()){
-            Log.w("qsound","2");
-            if(!q.gethadPlayedsound()){
-                Log.w("qsound","3");
-                MediaPlayer playComplete = MediaPlayer.create(this,R.raw.questcomplete);
-                playComplete.start();
-                playComplete.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    public void onCompletion(MediaPlayer mp) {
-                        mp.release();
-                    };
-                });
-                q.setHadPlayedsound(true);
+            if(q.getCzyWylosowano()){
+                if(!q.gethadPlayedsound()){
+                    MediaPlayer playComplete = MediaPlayer.create(this,R.raw.questcomplete);
+                    playComplete.start();
+                    playComplete.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        public void onCompletion(MediaPlayer mp) {
+                            mp.release();
+                        };
+                    });
+                    q.setHadPlayedsound(true);
+                }
             }
         }
     }

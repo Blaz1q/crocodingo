@@ -24,6 +24,7 @@ public class Quests {
     private int Progress;
     private int GeneratedMax;
     private boolean isDone;
+    private boolean czyWylosowano=false;
     private boolean hadPlayedsound=false;
     private String TrescENG;
     private boolean isClaimed;
@@ -63,6 +64,15 @@ public class Quests {
                 return Tresc;
         }
         return Tresc;
+    }
+    public void setCzyWylosowano(){
+        czyWylosowano=true;
+    }
+    public boolean getCzyWylosowano(){
+        return czyWylosowano;
+    }
+    public void resetCzyWylosowano(){
+        czyWylosowano=false;
     }
     public int getPrzedzial_Dolny() {
         return Przedzial_Dolny;
