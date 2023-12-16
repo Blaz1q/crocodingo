@@ -6,7 +6,9 @@
     "nazwa": "Żółta Czapa",
     "nazwaeng": "Yellow Hat",
     "opis": "Interesujący wybór. Croco powiedział że ten kolor kojarzy mu się ze słońcem. Ciekawe czemu...",
-    "opiseng": "Interesting choise, Croco said that this color reminds him of sun. I wonder why.."
+    "opiseng": "Interesting choise, Croco said that this color reminds him of sun. I wonder why..",
+    "waluta": "Crococoin",
+    "CzyMoznaKupic": true
   },
   {
     "id": 1,

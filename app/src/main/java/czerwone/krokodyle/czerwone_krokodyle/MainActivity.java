@@ -12,6 +12,7 @@ import android.app.Dialog;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +21,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -41,6 +44,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -633,11 +637,26 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             if(kupioneczapkibool==""){
                 kupioneczapkibool=czapkiilosc;
             }
+
+
+            loadAkcja();
             loadCurrentCzapka();
-            aktualizujTextPrzyciskow();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    public void loadAkcja(){
+        akcja = new int[listaCzapek.size()];
+        for(int i=0;i<akcja.length;i++){
+            if (i==current_item_index) {
+                akcja[i] = 2;
+            } else if (kupioneczapkibool.charAt(i)=='1') {
+                akcja[i] = 1;
+            } else {
+                akcja[i] = 0;
+            }
+        }
+
     }
     public void UpdateQuestDate(){
         listaQuestowId.clear();
@@ -728,41 +747,39 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 czapkaimage.setVisibility(View.GONE);
             }
             else{
-                if(lastFeed>umiera_po){
+                if(lastFeed>umiera_po) {
                     ImageView czapkaimage = findViewById(R.id.current_czapka_image);
                     czapkaimage.setVisibility(View.VISIBLE);
                     Context c = getApplicationContext();
-                    czapkaimage.setImageResource(getResources().getIdentifier("drawable/basicczapa_" +String.valueOf(current_item_index+1) ,null,c.getPackageName()));
+                    czapkaimage.setImageResource(getResources().getIdentifier("drawable/basicczapa_" + String.valueOf(current_item_index + 1), null, c.getPackageName()));
                     }
+                else{
+                    ImageView czapkaimage = findViewById(R.id.current_czapka_image);
+                    czapkaimage.setVisibility(View.GONE);
+                }
                 }
         }
     }
-    public void aktualizujTextPrzyciskow() {
-        Button[] przycisk = new Button[listaCzapek.size()];
-        for(int i=0;i<listaCzapek.size();i++){
-            String przyciskId = "kup_czapka"+String.valueOf(i);
-            int resID = getResources().getIdentifier(przyciskId, "id", getPackageName());
-            przycisk[i] = findViewById(resID);
-        } //odmałpiłem kod
-        Log.w("kurwa",String.valueOf(przycisk.length));
-        akcja = new int[przycisk.length];
+    public void aktualizujTextPrzyciskow(Button[] button) {
+
         Log.w("kurwaw",String.valueOf(akcja.length));
         Log.w("kurwawa",String.valueOf(kupioneczapkibool.length())); //XDDDD
-        for (int i = 0; i < przycisk.length; i++) {
-            Czapka czapka = listaCzapek.get(i);
-            Log.w("cototjest","kup_czapka" + String.valueOf(i));
-            Log.w("akcja",String.valueOf(akcja[i]));
-                if (i==current_item_index) {
-                    przycisk[i].setText(getString(R.string.zdejmij));
-                    akcja[i] = 2;
-                } else if (kupioneczapkibool.charAt(i)=='1') {
-                    przycisk[i].setText(getString(R.string.zaloz));
-                    akcja[i] = 1;
-                } else {
-                    przycisk[i].setText(getString(R.string.kup));
-                    akcja[i] = 0;
+                for(int i=0;i<button.length;i++){
+                    Log.w("cototjest","kup_czapka" + String.valueOf(i));
+                    if (i==current_item_index) {
+                        button[i].setText(getString(R.string.zdejmij));
+                        akcja[i] = 2;
+                    } else if (kupioneczapkibool.charAt(i)=='1') {
+                        button[i].setText(getString(R.string.zaloz));
+                        akcja[i] = 1;
+                    } else {
+                        button[i].setText(getString(R.string.kup));
+                        akcja[i] = 0;
+                    }
+                    Log.w("akcja",String.valueOf(akcja[i]));
                 }
-        }
+
+
     }
     public String loadJSONFromAssetVer2(String filename) {
         String json = null;
@@ -780,6 +797,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         return json;
     }
     int przyciskNumer=0;
+    /* stara funkcja, jest dalej używana
     public void pokazPopupZakupuCzapek(View view) {
         String buttonId = getResources().getResourceEntryName(view.getId());
         if (buttonId.startsWith("kup_czapka")) {
@@ -854,6 +872,201 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             Log.w("CURRENT_INDEX_CAZAPA",String.valueOf(current_item_index));
         }
+    }
+    */
+    public void Generuj_Sklep(){
+        LinearLayout parentLayout = findViewById(R.id.sklep_scroll);
+        Button[] listaButtonow = new Button[listaCzapek.size()];
+        for(int i=0;i<listaCzapek.size();i++){
+            Czapka czapa = listaCzapek.get(i);
+            RelativeLayout mainRelativeLayout = new RelativeLayout(this);
+            RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+            mainParams.setMargins(0,0,0,dpToPx(5));
+            mainRelativeLayout.setLayoutParams(mainParams);
+            mainRelativeLayout.setPadding(13, 13, 13, 13);
+
+            mainRelativeLayout.setBackgroundResource(R.drawable.custom_czapka_container);
+            mainRelativeLayout.setClickable(true);
+
+            parentLayout.addView(mainRelativeLayout);
+            TextView cena = new TextView(this);
+            TextView nazwa = new TextView(this);
+            ImageView waluta = new ImageView(this);
+            Button kupButton = new Button(this);
+
+            ImageView czapkaImageView = new ImageView(this);
+            czapkaImageView.setId(View.generateViewId());
+            czapkaImageView.setLayoutParams(new RelativeLayout.LayoutParams(
+                    dpToPx(90),
+                    dpToPx(90)
+            ));
+            czapkaImageView.setBackgroundResource(R.drawable.custom_czapka_container);
+            czapkaImageView.setBackgroundTintList(getResources().getColorStateList(R.color.ckdarkbez));
+            int obrazResId = getResources().getIdentifier(czapa.getPlik(), "drawable", getPackageName());
+            czapkaImageView.setImageResource(obrazResId);
+            czapkaImageView.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
+
+            mainRelativeLayout.addView(czapkaImageView);
+
+            RelativeLayout nestedRelativeLayout = new RelativeLayout(this);
+            RelativeLayout.LayoutParams nestedParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+            nestedParams.addRule(RelativeLayout.RIGHT_OF, czapkaImageView.getId());
+            nestedParams.addRule(RelativeLayout.ALIGN_TOP, czapkaImageView.getId());
+            nestedParams.addRule(RelativeLayout.ALIGN_BOTTOM, czapkaImageView.getId());
+
+            nestedParams.setMargins(dpToPx(20), 0, 0, 0);
+            mainRelativeLayout.addView(nestedRelativeLayout, nestedParams);
+
+
+            nazwa.setLayoutParams(new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            ));
+            nazwa.setId(View.generateViewId());
+            nazwa.setText(czapa.getNazwa(getLang()));
+            nestedRelativeLayout.addView(nazwa);
+
+            waluta.setLayoutParams(new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            ));
+            waluta.setId(View.generateViewId());
+            waluta.setImageResource(R.drawable.crococoin);
+            RelativeLayout.LayoutParams walutaParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+            walutaParams.addRule(RelativeLayout.ALIGN_BASELINE, nazwa.getId());
+            walutaParams.addRule(RelativeLayout.ALIGN_END, cena.getId());
+            walutaParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+            waluta.setScaleType(ImageView.ScaleType.FIT_START);
+            nestedRelativeLayout.addView(waluta, walutaParams);
+
+
+            cena.setLayoutParams(new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            ));
+            cena.setId(View.generateViewId());
+            cena.setText(String.valueOf(czapa.getCena()));
+            Typeface typeface = ResourcesCompat.getFont(this, R.font.londrina_solid);
+            cena.setTypeface(typeface);
+            cena.setTextColor(getResources().getColor(R.color.ckblack));
+            cena.setPadding(dpToPx(30), 0, 0, 0);
+            cena.setTextSize(32);
+            RelativeLayout.LayoutParams cenaParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+            cenaParams.addRule(RelativeLayout.ALIGN_BOTTOM, waluta.getId());
+            cenaParams.addRule(RelativeLayout.BELOW,nazwa.getId());
+            nestedRelativeLayout.addView(cena, cenaParams);
+
+
+            kupButton.setLayoutParams(new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            ));
+            kupButton.setId(View.generateViewId());
+            listaButtonow[i]=kupButton;
+            int finalI = i;
+            kupButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int przyciskNumer = finalI;
+                    kupCzapka(przyciskNumer,listaButtonow);
+                }
+            });
+            RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+            buttonParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            nestedRelativeLayout.addView(kupButton, buttonParams);
+        }
+        aktualizujTextPrzyciskow(listaButtonow);
+    }
+    public void kupCzapka(int przyciskNumer,Button[] kupButton){
+            int obrazResId = 0;
+            final String nazwaCzapki;
+            final String opisCzapki;
+            final String idCzapki;
+            if (zaladowano_czapki && przyciskNumer < listaCzapek.size()) {
+                czapka = listaCzapek.get(przyciskNumer);
+                obrazResId = getResources().getIdentifier(czapka.getPlik(), "drawable", getPackageName());
+            } else {
+                Log.w("MojaAplikacja", "Brak czapki dla przycisku numer: " + przyciskNumer);
+                nazwaCzapki = "Nazwa czapki";
+                opisCzapki = "Opis czapki";
+                idCzapki = String.valueOf(przyciskNumer);
+            }
+            Log.w("POPUP_VISIBLE",String.valueOf(isPopupVisible));
+            if(akcja[czapka.getId()]==0){
+                if(isPopupVisible==false){
+                    POPUP_EXCEPTION_MODE = 1;
+                    ShowPopup(R.layout.popup_layout);
+                    ImageView czapaImage = myDialog.findViewById(R.id.czapa_image);
+                    TextView czapaNazwa = myDialog.findViewById(R.id.czapa_nazwa);
+                    TextView czapaOpis = myDialog.findViewById(R.id.czapa_opis);
+                    Button kupCzapaButton = myDialog.findViewById(R.id.kup_czapa);
+                    if (obrazResId != 0) {
+                        czapaImage.setImageResource(obrazResId);
+                    } else {
+                        czapaImage.setImageResource(R.drawable.circle);
+                    }
+                    czapaNazwa.setText(czapka.getNazwa(getLang()));
+                    czapaOpis.setText(czapka.getOpis(getLang()));
+                    Log.w("akcjasuper",String.valueOf(akcja[czapka.getId()]));
+                    kupCzapaButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            int dostepneHajsy = getMoney();
+                            if (dostepneHajsy >= czapka.getCena()) {
+                                savePurchasedCzapka(String.valueOf(czapka.getId()));
+                                int noweHajsy = czapka.getCena()*-1;
+                                SaveMoney(noweHajsy);
+                                Toast.makeText(MainActivity.this, "Zakupiono " + czapka.getNazwa(getLang()), Toast.LENGTH_SHORT).show();
+                                addProgress(3);
+                                ClosePopup();
+                                aktualizujTextPrzyciskow(kupButton);
+                                updateCrococoinsInShop();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Nie masz wystarczająco crococoinów na zakup", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    myDialog.show();
+                    POPUP_EXCEPTION_MODE = 0;
+                }
+            }
+            else if(akcja[czapka.getId()]==1){
+                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(CURRENT_ITEM_ID,czapka.getId());
+                editor.apply();
+                current_item_index = sharedPreferences.getInt(CURRENT_ITEM_ID,-1);
+                aktualizujTextPrzyciskow(kupButton);
+            }
+            else if(akcja[czapka.getId()]==2){
+                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(CURRENT_ITEM_ID,-1);
+                editor.apply();
+                current_item_index = sharedPreferences.getInt(CURRENT_ITEM_ID,-1);
+                aktualizujTextPrzyciskow(kupButton);
+            }
+            Log.w("CURRENT_INDEX_CAZAPA",String.valueOf(current_item_index));
+        }
+    public int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
     public void KupCiastka(View v){
         if(getMoney()>=200){
@@ -994,6 +1207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     }catch (Exception e){
 
                     }
+                    ustawCzapke();
                 }
                 else{
                     try{
@@ -1017,6 +1231,32 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void loadPurchasedCzapki(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         kupioneczapkibool = sharedPreferences.getString(PURCHASED_CZAPKI, czapkiilosc);
+        saveNewCzapka();
+        Log.w("JAPIERDOLE",kupioneczapkibool);
+    }
+    public void saveNewCzapka(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if(kupioneczapkibool.length()<listaCzapek.size()){
+            Log.d("zabij_mnie",String.valueOf(listaCzapek.size()-kupioneczapkibool.length()+1));
+            while(kupioneczapkibool.length()!=listaCzapek.size()){
+                kupioneczapkibool+="0";
+                Log.w("JAPIERDOLE",kupioneczapkibool);
+            }
+            editor.putString(PURCHASED_CZAPKI,kupioneczapkibool);
+            editor.apply();
+        }
+        if(kupioneczapkibool.length()>listaCzapek.size()){
+            String newstring="";
+            int h=0;
+            while(newstring.length()<listaCzapek.size()){
+                newstring += kupioneczapkibool.charAt(h);
+                h++;
+            }
+            kupioneczapkibool = newstring;
+            editor.putString(PURCHASED_CZAPKI,kupioneczapkibool);
+            editor.apply();
+        }
     }
     public void loadCurrentCzapka(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -1618,7 +1858,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         else if (v.getId()==R.id.OtworzSklep){
             setContentView(R.layout.sklep);
             updateCrococoinsInShop();
-            aktualizujTextPrzyciskow();
+            Generuj_Sklep();
             AddActions("sklep");
         }
         else if(v.getId()==R.id.wroc_do_pytan_bledne){

@@ -136,6 +136,7 @@
         android:textColor="@color/black"
         android:textAlignment="center"
         android:textSize="24sp" />
+
     <TextView
         android:id="@+id/opisWyniku"
         android:layout_width="match_parent"
@@ -143,14 +144,16 @@
         android:layout_below="@id/wynik_chart"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/custom_reusable_box"
-        android:text="tutaj wynik"
         android:padding="10dp"
-        android:textColor="@color/black"
+        android:text="wynik"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="18sp" />
+
     <LinearLayout
         android:id="@+id/nagrodybox"
         android:layout_below="@id/opisWyniku"

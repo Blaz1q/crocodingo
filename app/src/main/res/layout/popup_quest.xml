@@ -37,8 +37,8 @@
 
                 <ImageView
                     android:id="@+id/nagrodaimg1"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/crococoin" />
@@ -144,8 +144,8 @@
 
                 <ImageView
                     android:id="@+id/nagrodaimg2"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/crococoin" />
@@ -252,8 +252,8 @@
 
                 <ImageView
                     android:id="@+id/nagrodaimg3"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/crococoin" />

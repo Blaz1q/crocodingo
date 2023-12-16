@@ -14,5 +14,7 @@
     <color name="ckcorrect">#ff88D18A</color>
     <color name="ckcorrecttext">#ff0D1B15</color>
     <color name="ckincorrecttext">#ffF52720</color>
+    <color name="ckdarkbez">#ffD7BF84</color>
+    <color name="ckblack">#0B0900</color>
 
 </resources>

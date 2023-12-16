@@ -12,6 +12,8 @@ public class Czapka {
     private int cena;
     private boolean czyZakupiona;
     private boolean czyZalozona;
+    private boolean czyDostepna;
+    private String waluta;
 
     public Czapka(int id, String plik, String nazwa, String opis, int cena) {
         this.id = id;
@@ -24,7 +26,12 @@ public class Czapka {
     }
 
     // Gettery i settery dla pól
-
+    public void setWaluta(String wal){
+        this.waluta = wal;
+    }
+    public String getWaluta(){
+        return waluta;
+    }
     public int getId() {
         return id;
     }
