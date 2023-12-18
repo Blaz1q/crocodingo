@@ -6,7 +6,7 @@
     <string name="ustawienia" translatable="false">ustawienia</string>
     <string name="google_storage_bucket" translatable="false">czerwone-krokodyle.appspot.com</string>
     <string name="project_id" translatable="false">czerwone-krokodyle</string>
-    <string name="version" translatable="false">DEVELOPMENT 1.3.0D</string>
+    <string name="version" translatable="false">DEVELOPMENT 1.3.1D</string>
     <string name="Credits">Realizacja</string>
     <string name="wroc_do_startu">Wróć do startu</string>
     <string name="special_thanks">Specjalne\npodziękowania:</string>
@@ -25,9 +25,9 @@
     <string name="wyloguj">wyloguj</string>
     <string name="zaloguj_sie">Zaloguj się przez google</string>
     <string name="wroc">wróc</string>
-    <string name="Polski">Polski</string>
-    <string name="Angielski">Angielski (BETA)</string>
-    <string name="Hiszpanski">Hiszpański (Brak implementacji!)</string>
+    <string name="Polski" translatable="false">Polski</string>
+    <string name="Angielski" translatable="false">English (BETA)</string>
+    <string name="Hiszpanski" translatable="false">Espanol</string>
     <string name="pytanie">Pytanie</string>
     <string name="language">Język</string>
     <string name="sounds_and_vibrations">Dźwięk i wibracje</string>
