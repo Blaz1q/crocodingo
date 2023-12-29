@@ -1,6 +1,7 @@
 [
   {
     "id": 0,
+    "plik": "potka",
     "nazwa": ["potka życia","life potion"],
     "opis": ["Ożywia Croco, jeśli Croco żyje, dodaje dodatkowe życie do wyzwania"],
     "cena": 1000

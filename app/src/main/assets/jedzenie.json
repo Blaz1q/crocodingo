@@ -1,7 +1,18 @@
 [
     {
         "id": 0,
+        "plik": "czapa_1",
         "nazwa": ["ciastko"],
-        "nasycenie": 7000
+        "opis": ["Przysmak Croco"],
+        "nasycenie": 7000,
+        "cena": 300
+    },
+    {
+        "id": 1,
+        "plik": "czapa_7",
+        "nazwa": ["mięso"],
+        "opis": ["Croco bardzo lubi wszamać dobre mięsko"],
+        "nasycenie": 14000,
+        "cena": 600
     }
 ]

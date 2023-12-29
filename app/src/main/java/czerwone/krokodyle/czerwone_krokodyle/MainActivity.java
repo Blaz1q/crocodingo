@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     Czapka czapka;
     private List<PytaniaDB> listaPytan = new ArrayList<>();
     private List<Czapka> listaCzapek = new ArrayList<>();
+    private List<Jedzenie> listaZarcia = new ArrayList<>();
+    private List<Potka> listaPotek = new ArrayList<>();
     private List<Quests> listaQuestow = new ArrayList<>();
     private List<Integer> listaQuestowId = new ArrayList<>();
     // zmienne do akcji
@@ -115,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     //zabezpieczenia
     boolean zaladowano_czapki = false;
     boolean zaladowano_questy = false;
+    boolean zaladowano_jedzenie = false;
     boolean isPopupVisible = false;
     boolean zaladowanodb = false; //tylko w przypadku gdy nie ma połączenia z bazą
     String[] LitABCD = {"A","B","C","D"};
@@ -230,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         loadQuestsFromAsset();
         SaveQuestDate();
         loadQuestProgress();
+        loadJedzenieFromAsset();
         fetchData(0);
         //DebugSetGlodny();
         ResumeOnLongListener();
@@ -609,7 +613,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             is.read(buffer);
             is.close();
             String json = new String(buffer, "UTF-8");
-            Log.d("MojaAplikacja", "Prawidłowo wczytano JSON: " + json);
+            //Log.d("MojaAplikacja", "Prawidłowo wczytano JSON: " + json);
             JSONArray jsonArray = new JSONArray(json);
             listaCzapek.clear();
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -662,6 +666,44 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             ex.printStackTrace();
         }
     }
+    public void loadJedzenieFromAsset(){
+        try {
+            InputStream is = getAssets().open("jedzenie.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+            //Log.d("MojaAplikacja", "Prawidłowo wczytano JSON: " + json);
+            JSONArray jsonArray = new JSONArray(json);
+            listaZarcia.clear();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jedzenieJson = jsonArray.getJSONObject(i);
+                int id = jedzenieJson.getInt("id");
+                String plik = jedzenieJson.getString("plik");
+                JSONArray nazwa = jedzenieJson.getJSONArray("nazwa");
+                String[] nazwaArr = new String[nazwa.length()];
+                JSONArray opis = jedzenieJson.getJSONArray("opis");
+                String[] opisArr = new String[opis.length()];
+                for(int j=0;j<nazwa.length();j++){
+                    nazwaArr[j] = nazwa.getString(j);
+                }
+                for(int j=0;j<opis.length();j++){
+                    opisArr[j] = opis.getString(j);
+                }
+                int nasycenie = jedzenieJson.getInt("nasycenie");
+                int cena = jedzenieJson.getInt("cena"); // Pobierz cenę czapki
+                Jedzenie jedzenie = new Jedzenie(id, plik,nazwaArr,opisArr, cena,nasycenie); // Zaktualizuj obiekt Czapka
+                listaZarcia.add(jedzenie);
+            }
+            zaladowano_jedzenie = true;
+            for (Jedzenie jedzenie : listaZarcia) {
+                Log.d("MojaAplikacja", "ID: " + jedzenie.getId() + ", Nazwa: " + jedzenie.getNazwa(getLang()) + ", Opis: " + jedzenie.getOpis(getLang()));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     public void loadAkcja(){
         akcja = new int[listaCzapek.size()];
         for(int i=0;i<akcja.length;i++){
@@ -706,7 +748,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             is.read(buffer);
             is.close();
             String json = new String(buffer, "UTF-8");
-            Log.d("Questy", "Prawidłowo wczytano JSON: " + json);
+            //Log.d("Questy", "Prawidłowo wczytano JSON: " + json);
             JSONArray jsonArray = new JSONArray(json);
             listaQuestow.clear();
             SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
@@ -895,145 +937,172 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     */
-    public void Generuj_Sklep(){
+    public Button Generuj_Przedmiot(LinearLayout parent,int PlikResID,String TytulText,int CenaText,boolean premium){
+        RelativeLayout mainRelativeLayout = new RelativeLayout(this);
+        RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        mainParams.setMargins(0,0,0,dpToPx(5));
+        mainRelativeLayout.setLayoutParams(mainParams);
+        mainRelativeLayout.setPadding(13, 13, 13, 13);
+
+        mainRelativeLayout.setBackgroundResource(R.drawable.custom_czapka_container);
+        if(premium) mainRelativeLayout.setBackgroundResource(R.drawable.custom_czapka_premium_container);
+        mainRelativeLayout.setClickable(true);
+        parent.addView(mainRelativeLayout);
+        TextView cena = new TextView(this);
+        TextView cenashadow = new TextView(this);
+        TextView nazwa = new TextView(this);
+        ImageView waluta = new ImageView(this);
+        Button kupButton = new Button(this);
+        Typeface typeface = ResourcesCompat.getFont(this, R.font.londrina_solid);
+        Typeface typefaceoutline = ResourcesCompat.getFont(this, R.font.londrina_outline);
+        kupButton.setId(View.generateViewId());
+        ImageView czapkaImageView = new ImageView(this);
+        czapkaImageView.setId(View.generateViewId());
+        RelativeLayout.LayoutParams czapkaParams = new RelativeLayout.LayoutParams(
+                dpToPx(90),
+                dpToPx(90)
+        );
+        czapkaImageView.setBackgroundResource(R.drawable.custom_czapka_container);
+        czapkaImageView.setBackgroundTintList(getResources().getColorStateList(R.color.ckdarkbez));
+        czapkaImageView.setImageResource(PlikResID);
+        czapkaImageView.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
+        czapkaParams.setMargins(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
+        mainRelativeLayout.addView(czapkaImageView,czapkaParams);
+
+        RelativeLayout nestedRelativeLayout = new RelativeLayout(this);
+        RelativeLayout.LayoutParams nestedParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        nestedParams.addRule(RelativeLayout.RIGHT_OF, czapkaImageView.getId());
+        nestedParams.addRule(RelativeLayout.ALIGN_TOP, czapkaImageView.getId());
+        nestedParams.addRule(RelativeLayout.ALIGN_BOTTOM, czapkaImageView.getId());
+
+        nestedParams.setMargins(dpToPx(20), 0, 0, 0);
+        mainRelativeLayout.addView(nestedRelativeLayout, nestedParams);
+
+
+        nazwa.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        ));
+        nazwa.setId(View.generateViewId());
+        nazwa.setText(TytulText);
+        nazwa.setTextSize(16);
+        nazwa.setTextColor(getResources().getColor(R.color.ckblack));
+        nestedRelativeLayout.addView(nazwa);
+
+        waluta.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        ));
+        waluta.setId(View.generateViewId());
+        waluta.setImageResource(R.drawable.crococoin);
+        RelativeLayout.LayoutParams walutaParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        walutaParams.addRule(RelativeLayout.ALIGN_END, cena.getId());
+        walutaParams.addRule(RelativeLayout.ALIGN_TOP, kupButton.getId());
+        walutaParams.addRule(RelativeLayout.ALIGN_BOTTOM, kupButton.getId());
+        walutaParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+        waluta.setScaleType(ImageView.ScaleType.FIT_START);
+        nestedRelativeLayout.addView(waluta, walutaParams);
+        cena.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        ));
+        cena.setId(View.generateViewId());
+        cena.setText(String.valueOf(CenaText));
+        cena.setTypeface(typeface);
+        cena.setTextColor(getResources().getColor(R.color.ckblack));
+        cena.setPadding(dpToPx(20), 0, 0, 0);
+        cena.setTextSize(32);
+        RelativeLayout.LayoutParams cenaParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        cenaParams.addRule(RelativeLayout.ALIGN_BOTTOM, waluta.getId());
+        nestedRelativeLayout.addView(cena, cenaParams);
+
+        RelativeLayout.LayoutParams cenashadowParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        cenashadow.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        ));
+        cenashadow.setId(View.generateViewId());
+        cenashadow.setText(String.valueOf(CenaText));
+        cenashadow.setTypeface(typefaceoutline,Typeface.BOLD);
+        cenashadow.setTextColor(getResources().getColor(R.color.ckblack));
+        cenashadow.setPadding(dpToPx(20), 0, 0, 0);
+        cenashadow.setTextSize(32);
+        cenashadow.setTextColor(getResources().getColorStateList(R.color.ckbez));
+        cenashadowParams.addRule(RelativeLayout.ALIGN_BOTTOM, waluta.getId());
+        nestedRelativeLayout.addView(cenashadow, cenashadowParams);
+
+        kupButton.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        ));
+        kupButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gray_active)));
+        kupButton.setTextColor(getResources().getColor(R.color.white));
+
+        RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        nestedRelativeLayout.addView(kupButton, buttonParams);
+        return kupButton;
+    }
+    public void Generuj_Sklep(String kategoria){
         LinearLayout parentLayout = findViewById(R.id.sklep_scroll);
-        Button[] listaButtonow = new Button[listaCzapek.size()];
-        for(int i=0;i<listaCzapek.size();i++){
-            Czapka czapa = listaCzapek.get(i);
-            RelativeLayout mainRelativeLayout = new RelativeLayout(this);
-            RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            mainParams.setMargins(0,0,0,dpToPx(5));
-            mainRelativeLayout.setLayoutParams(mainParams);
-            mainRelativeLayout.setPadding(13, 13, 13, 13);
-
-            mainRelativeLayout.setBackgroundResource(R.drawable.custom_czapka_container);
-            if(czapa.getCzyPremium()) mainRelativeLayout.setBackgroundResource(R.drawable.custom_czapka_premium_container);
-            mainRelativeLayout.setClickable(true);
-
-            parentLayout.addView(mainRelativeLayout);
-            TextView cena = new TextView(this);
-            TextView cenashadow = new TextView(this);
-            TextView nazwa = new TextView(this);
-            ImageView waluta = new ImageView(this);
-            Button kupButton = new Button(this);
-            Typeface typeface = ResourcesCompat.getFont(this, R.font.londrina_solid);
-            Typeface typefaceoutline = ResourcesCompat.getFont(this, R.font.londrina_outline);
-            kupButton.setId(View.generateViewId());
-            ImageView czapkaImageView = new ImageView(this);
-            czapkaImageView.setId(View.generateViewId());
-            RelativeLayout.LayoutParams czapkaParams = new RelativeLayout.LayoutParams(
-                    dpToPx(90),
-                    dpToPx(90)
-            );
-            czapkaImageView.setBackgroundResource(R.drawable.custom_czapka_container);
-            czapkaImageView.setBackgroundTintList(getResources().getColorStateList(R.color.ckdarkbez));
-            int obrazResId = getResources().getIdentifier(czapa.getPlik(), "drawable", getPackageName());
-            czapkaImageView.setImageResource(obrazResId);
-            czapkaImageView.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
-            czapkaParams.setMargins(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
-            mainRelativeLayout.addView(czapkaImageView,czapkaParams);
-
-            RelativeLayout nestedRelativeLayout = new RelativeLayout(this);
-            RelativeLayout.LayoutParams nestedParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            nestedParams.addRule(RelativeLayout.RIGHT_OF, czapkaImageView.getId());
-            nestedParams.addRule(RelativeLayout.ALIGN_TOP, czapkaImageView.getId());
-            nestedParams.addRule(RelativeLayout.ALIGN_BOTTOM, czapkaImageView.getId());
-
-            nestedParams.setMargins(dpToPx(20), 0, 0, 0);
-            mainRelativeLayout.addView(nestedRelativeLayout, nestedParams);
-
-
-            nazwa.setLayoutParams(new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            ));
-            nazwa.setId(View.generateViewId());
-            nazwa.setText(czapa.getNazwa(getLang()));
-            nazwa.setTextSize(16);
-            nazwa.setTextColor(getResources().getColor(R.color.ckblack));
-            nestedRelativeLayout.addView(nazwa);
-
-            waluta.setLayoutParams(new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            ));
-            waluta.setId(View.generateViewId());
-            waluta.setImageResource(R.drawable.crococoin);
-            RelativeLayout.LayoutParams walutaParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            walutaParams.addRule(RelativeLayout.ALIGN_END, cena.getId());
-            walutaParams.addRule(RelativeLayout.ALIGN_TOP, kupButton.getId());
-            walutaParams.addRule(RelativeLayout.ALIGN_BOTTOM, kupButton.getId());
-            walutaParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-            waluta.setScaleType(ImageView.ScaleType.FIT_START);
-            nestedRelativeLayout.addView(waluta, walutaParams);
-            cena.setLayoutParams(new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            ));
-            cena.setId(View.generateViewId());
-            cena.setText(String.valueOf(czapa.getCena()));
-            cena.setTypeface(typeface);
-            cena.setTextColor(getResources().getColor(R.color.ckblack));
-            cena.setPadding(dpToPx(20), 0, 0, 0);
-            cena.setTextSize(32);
-            RelativeLayout.LayoutParams cenaParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            cenaParams.addRule(RelativeLayout.ALIGN_BOTTOM, waluta.getId());
-            nestedRelativeLayout.addView(cena, cenaParams);
-
-            RelativeLayout.LayoutParams cenashadowParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            cenashadow.setLayoutParams(new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            ));
-            cenashadow.setId(View.generateViewId());
-            cenashadow.setText(String.valueOf(czapa.getCena()));
-            cenashadow.setTypeface(typefaceoutline,Typeface.BOLD);
-            cenashadow.setTextColor(getResources().getColor(R.color.ckblack));
-            cenashadow.setPadding(dpToPx(20), 0, 0, 0);
-            cenashadow.setTextSize(32);
-            cenashadow.setTextColor(getResources().getColorStateList(R.color.ckbez));
-            cenashadowParams.addRule(RelativeLayout.ALIGN_BOTTOM, waluta.getId());
-            nestedRelativeLayout.addView(cenashadow, cenashadowParams);
-
-            kupButton.setLayoutParams(new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            ));
-            kupButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gray_active)));
-            kupButton.setTextColor(getResources().getColor(R.color.white));
-            listaButtonow[i]=kupButton;
-            int finalI = i;
-            kupButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int przyciskNumer = finalI;
-                    kupCzapka(przyciskNumer,listaButtonow);
+        parentLayout.removeAllViewsInLayout();
+        switch (kategoria){
+            case "czapki":
+            {
+                Button[] listaButtonow = new Button[listaCzapek.size()];
+                for(int i=0;i<listaCzapek.size();i++){
+                    Czapka czapa = listaCzapek.get(i);
+                    int obrazResId = getResources().getIdentifier(czapa.getPlik(), "drawable", getPackageName());
+                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,czapa.getNazwa(getLang()),czapa.getCena(),czapa.getCzyPremium());
+                    int finalI = i;
+                    listaButtonow[i]=kupButton;
+                    kupButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            int przyciskNumer = finalI;
+                            kupCzapka(przyciskNumer,listaButtonow);
+                        }
+                    });
                 }
-            });
-            RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            buttonParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            nestedRelativeLayout.addView(kupButton, buttonParams);
+                aktualizujTextPrzyciskow(listaButtonow);
+            }
+            break;
+            case "jedzenie":
+            {
+                for(int i=0;i<listaZarcia.size();i++){
+                    Jedzenie jedzenie = listaZarcia.get(i);
+                    int obrazResId = getResources().getIdentifier(jedzenie.getPlik(), "drawable", getPackageName());
+                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,jedzenie.getNazwa(getLang()),jedzenie.getCena(),jedzenie.getCzyPremium());
+                    kupButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            KupCiastka(v);
+                        }
+                    });
+                }
+            }
+            break;
         }
-        aktualizujTextPrzyciskow(listaButtonow);
+
     }
     public void kupCzapka(int przyciskNumer,Button[] kupButton){
             int obrazResId = 0;
@@ -1900,7 +1969,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         else if (v.getId()==R.id.OtworzSklep){
             setContentView(R.layout.sklep);
             updateCrococoinsInShop();
-            Generuj_Sklep();
+            Generuj_Sklep("jedzenie");
             AddActions("sklep");
         }
         else if(v.getId()==R.id.wroc_do_pytan_bledne){
