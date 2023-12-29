@@ -16,17 +16,15 @@ import java.io.InputStream;
 public class Quests {
 
     private int Id;
-    private String Tresc;
+    private String[] Tresc;
     private int Nagroda;
     private int Exp;
-    private int Przedzial_Dolny;
-    private int Przedzial_Gorny;
+    private int[] Przedzial;
     private int Progress;
     private int GeneratedMax;
     private boolean isDone;
     private boolean czyWylosowano=false;
     private boolean hadPlayedsound=false;
-    private String TrescENG;
     private boolean isClaimed;
     public Quests(){
 
@@ -34,11 +32,13 @@ public class Quests {
     public void setId(int id) {
         this.Id = id;
     }
-    public void setTrescENG(String tresc){
-        this.TrescENG = tresc;
-    }
-    public void setTresc(String tresc) {
-        this.Tresc = tresc;
+    public void setTresc(String[] dane){
+        int i=0;
+        this.Tresc = new String[dane.length];
+        while(i<dane.length){
+            this.Tresc[i] = dane[i];
+            i++;
+        }
     }
 
     public void setExp(int exp) {
@@ -50,20 +50,21 @@ public class Quests {
     public int getNagroda(){
         return Nagroda;
     }
-    public void setPrzedzial_Dolny(int przedzial_Dolny) {
-        this.Przedzial_Dolny = przedzial_Dolny;
-    }
-    public void setPrzedzial_Gorny(int przedzial_Gorny){
-        this.Przedzial_Gorny = przedzial_Gorny;
+    public void setPrzedzial(int[] dane){
+        Przedzial = new int[dane.length];
+        this.Przedzial[0] = dane[0];
+        this.Przedzial[1] = dane[1];
     }
     public String getTresc(String lang) {
         switch (lang){
             case "En":
-                return TrescENG;
+                if(Tresc.length<2) return "N/A";
+                return Tresc[1];
             case "Pl":
-                return Tresc;
+                if(Tresc.length<1) return "N/A";
+                return Tresc[0];
         }
-        return Tresc;
+        return Tresc[0];
     }
     public void setCzyWylosowano(){
         czyWylosowano=true;
@@ -75,10 +76,10 @@ public class Quests {
         czyWylosowano=false;
     }
     public int getPrzedzial_Dolny() {
-        return Przedzial_Dolny;
+        return Przedzial[0];
     }
     public int getPrzedzial_Gorny() {
-        return Przedzial_Gorny;
+        return Przedzial[1];
     }
     public void Claim(){
         this.isClaimed = true;

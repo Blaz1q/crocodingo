@@ -1,0 +1,22 @@
+[
+  {
+    "id": 0,
+    "nazwa": ["potka życia","life potion"],
+    "opis": ["Ożywia Croco, jeśli Croco żyje, dodaje dodatkowe życie do wyzwania"],
+    "cena": 1000
+  },
+  {
+    "id": 1,
+    "nazwa": ["potka exp","exp potion"],
+    "opis": ["Podwaja exp, trwa 15 minut"],
+    "cena": 1500,
+    "czas_trwania": 900000
+  },
+  {
+    "id": 2,
+    "nazwa": ["potka passy","streak potion"],
+    "opis": ["Nie resetuje passy, pozwala na stracenie -1 passy"],
+    "cena": 1500,
+    "czy_odblokowana": false
+  }
+]

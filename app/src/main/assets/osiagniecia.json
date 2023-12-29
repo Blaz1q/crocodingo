@@ -1,0 +1,13 @@
+[
+  {
+    "id": 0,
+    "tytul": ["Perfekcjonista","Perfectionist"],
+    "podtytul": ["Zrób test na 100%","Take the test for 100%"],
+    "komentarz": ["Gratulacje!","Congratulations!"],
+    "MaxProgress": 15,
+    "MaxStage": 1,
+    "CzyWidoczne": false,
+    "Nagroda": 1000,
+    "Exp": 200
+  }
+]

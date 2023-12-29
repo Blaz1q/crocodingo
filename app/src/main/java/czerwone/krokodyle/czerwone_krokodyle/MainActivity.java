@@ -713,20 +713,24 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject questJson = jsonArray.getJSONObject(i);
                 int id = questJson.getInt("id");
-                String tresc = questJson.getString("tresc");
-                String trescENG = questJson.getString("trescENG");
+                JSONArray jsonTresc = questJson.getJSONArray("tresc");
+                String TrescArr[] = new String[jsonTresc.length()];
+                JSONArray jsonPrzedzial = questJson.getJSONArray("przedzial");
+                int PrzedzialArr[] = new int[jsonPrzedzial.length()];
+                for(int j=0;j<jsonTresc.length();j++){
+                    TrescArr[j] = jsonTresc.getString(j);
+                }
+                for(int j=0;j<jsonPrzedzial.length();j++){
+                    PrzedzialArr[j] = jsonPrzedzial.getInt(j);
+                }
                 int nagroda = questJson.getInt("Nagroda");
-                int przedzial_dolny = questJson.getInt("przedzial_dolny");
-                int przedzial_gorny = questJson.getInt("przedzial_gorny");
                 int exp = questJson.getInt("exp");
                 Quests quest = new Quests();
                 quest.setId(id);
-                quest.setTresc(tresc);
-                quest.setTrescENG(trescENG);
+                quest.setTresc(TrescArr);
                 quest.setHadPlayedsound(false);
                 quest.setNagroda(nagroda);
-                quest.setPrzedzial_Dolny(przedzial_dolny);
-                quest.setPrzedzial_Gorny(przedzial_gorny);
+                quest.setPrzedzial(PrzedzialArr);
                 quest.setProgress(0);
                 quest.setExp(exp);
                 quest.checkifDone();
@@ -774,7 +778,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     ImageView czapkaimage = findViewById(R.id.current_czapka_image);
                     czapkaimage.setVisibility(View.GONE);
                 }
-                }
+            }
         }
     }
     public void aktualizujTextPrzyciskow(Button[] button) {
@@ -895,7 +899,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         LinearLayout parentLayout = findViewById(R.id.sklep_scroll);
         Button[] listaButtonow = new Button[listaCzapek.size()];
         for(int i=0;i<listaCzapek.size();i++){
-
             Czapka czapa = listaCzapek.get(i);
             RelativeLayout mainRelativeLayout = new RelativeLayout(this);
             RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
@@ -972,8 +975,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             walutaParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             waluta.setScaleType(ImageView.ScaleType.FIT_START);
             nestedRelativeLayout.addView(waluta, walutaParams);
-
-
             cena.setLayoutParams(new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT
@@ -1249,7 +1250,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     }catch (Exception e){
 
                     }
-                    ustawCzapke();
                 }
                 else{
                     try{
@@ -1264,7 +1264,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 Animacja_Jedzenia();
                 SaveFood(-1);
                 ustawMiche();
-
+                ustawCzapke();
             }else{
                 Toast.makeText(getApplicationContext(),"brak ciasteczek :(",Toast.LENGTH_SHORT).show();
             }

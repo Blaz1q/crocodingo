@@ -1,52 +1,42 @@
 [
   {
     "id": 0,
-    "tresc": "Rozwiąż pojedyncze testy",
-    "trescENG": "Complete single tests",
+    "tresc": ["Rozwiąż pojedyncze testy","Complete single tests"],
     "Nagroda": 500,
     "exp": 0,
-    "przedzial_dolny": 10,
-    "przedzial_gorny": 25,
+    "przedzial": [10,25],
     "exception": 0
   },
   {
     "id": 1,
-    "tresc": "Rozwiąż testy",
-    "trescENG": "Complete tests",
+    "tresc": ["Rozwiąż testy","Complete tests"],
     "Nagroda": 500,
     "exp": 0,
-    "przedzial_dolny": 1,
-    "przedzial_gorny": 2,
+    "przedzial": [1,2],
     "exception": 0
   },
   {
     "id": 2,
-    "tresc": "Nakarm Croco",
-    "trescENG": "Feed Croco",
+    "tresc": ["Nakarm Croco","Feed Croco"],
     "Nagroda": 300,
     "exp": 0,
-    "przedzial_dolny": 3,
-    "przedzial_gorny": 12,
+    "przedzial": [3,12],
     "exception": 0
   },
   {
     "id": 3,
-    "tresc": "Kup Czapke",
-    "trescENG": "Buy a hat",
+    "tresc": ["Kup Czapke","Buy a hat"],
     "Nagroda": 1000,
     "exp": 0,
-    "przedzial_dolny": 1,
-    "przedzial_gorny": 1,
+    "przedzial": [1,1],
     "exception": 0
   },
   {
     "id": 4,
-    "tresc": "Pogłaszcz Croco",
-    "trescENG": "Pet Croco",
+    "tresc": ["Pogłaszcz Croco","Pet Croco"],
     "Nagroda": 200,
     "exp": 0,
-    "przedzial_dolny": 15,
-    "przedzial_gorny": 40,
+    "przedzial": [15,40],
     "exception": 0
   }
 ]
