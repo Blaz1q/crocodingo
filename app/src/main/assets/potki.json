@@ -1,13 +1,14 @@
 [
   {
     "id": 0,
-    "plik": "potka",
+    "plik": "potkazycias",
     "nazwa": ["potka życia","life potion"],
     "opis": ["Ożywia Croco, jeśli Croco żyje, dodaje dodatkowe życie do wyzwania"],
     "cena": 1000
   },
   {
     "id": 1,
+    "plik": "potkaexps",
     "nazwa": ["potka exp","exp potion"],
     "opis": ["Podwaja exp, trwa 15 minut"],
     "cena": 1500,
@@ -15,9 +16,10 @@
   },
   {
     "id": 2,
+    "plik": "potkapassys",
     "nazwa": ["potka passy","streak potion"],
     "opis": ["Nie resetuje passy, pozwala na stracenie -1 passy"],
     "cena": 1500,
-    "czy_odblokowana": false
+    "czyDostepne": false
   }
 ]

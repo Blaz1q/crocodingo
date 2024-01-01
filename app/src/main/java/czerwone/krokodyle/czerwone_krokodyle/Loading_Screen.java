@@ -26,7 +26,6 @@ public class Loading_Screen extends AppCompatActivity {
         setContentView(R.layout.activity_loading_screen);
         bgimg = findViewById(R.id.MAIN_LOADING_BG);
         ckrkdl = findViewById(R.id.krokodyl_loading);
-
         try{
             YoYo.with(Techniques.Shake).duration(1000).repeat(2).playOn(ckrkdl);
             new Handler(getMainLooper()).postDelayed(() -> {

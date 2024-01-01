@@ -1,7 +1,7 @@
 [
     {
         "id": 0,
-        "plik": "czapa_1",
+        "plik": "ciastko",
         "nazwa": ["ciastko"],
         "opis": ["Przysmak Croco"],
         "nasycenie": 7000,
@@ -9,7 +9,7 @@
     },
     {
         "id": 1,
-        "plik": "czapa_7",
+        "plik": "ciastko",
         "nazwa": ["mięso"],
         "opis": ["Croco bardzo lubi wszamać dobre mięsko"],
         "nasycenie": 14000,

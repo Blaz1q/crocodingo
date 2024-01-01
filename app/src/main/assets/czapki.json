@@ -74,11 +74,10 @@
   },
   {
     "id": 8,
-    "plik": "czapa_7",
+    "plik": "czapkabudowa",
     "cena": 4300,
-    "nazwa": ["Niedostępna Czapka","Unavilable Hat"],
-    "opis": ["Tej czapki nie da się kupić"],
-    "waluta": "Crococoin",
-    "czyDostepne": false
+    "nazwa": ["Czapka Budowlańca","Work Hat"],
+    "opis": ["Twardsza niż się wydaje"],
+    "waluta": "Crococoin"
   }
 ]

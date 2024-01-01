@@ -106,6 +106,11 @@ public class Quests {
         overrideProgress(progress);
         }
     }
+
+    public int getExp() {
+        return Exp;
+    }
+
     public boolean gethadPlayedsound(){
         return this.hadPlayedsound;
     }

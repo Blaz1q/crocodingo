@@ -1,13 +1,238 @@
 [
   {
-    "id": 0,
-    "tytul": ["Perfekcjonista","Perfectionist"],
-    "podtytul": ["Zrób test na 100%","Take the test for 100%"],
-    "komentarz": ["Gratulacje!","Congratulations!"],
-    "MaxProgress": 15,
+    "Id": 0,
+    "Tytul": ["Perfekcjonista"],
+    "Podtytul": ["Uzyskaj 100% z testu"],
+    "Komentarz": ["Gratulacje!"],
+    "MaxProgress": 1,
     "MaxStage": 1,
-    "CzyWidoczne": false,
-    "Nagroda": 1000,
+    "Exp": 500
+  },
+  {
+    "Id": 1,
+    "Tytul": ["Zabójczy apetyt"],
+    "Podtytul": ["Przekarm Croco"],
+    "Komentarz": ["To jest straszne że Croco potrafi tyle zjeść"],
+    "MaxProgress": 1,
+    "MaxStage": 1,
+    "Exp": 500
+  },
+  {
+    "Id": 2,
+    "Tytul": ["Pierwsze kroki"],
+    "Podtytul": ["Zdobądź 1 Lvl"],
+    "Komentarz": ["Jak te dzieci szybko dorastają.."],
+    "MaxProgress": 1,
+    "MaxStage": 1,
+    "Exp": 500
+  },
+  {
+    "Id": 3,
+    "Tytul": ["Poznaj naszą drużynę"],
+    "Podtytul": ["Przejdź do realizacji"],
+    "Komentarz": ["Hej to my!"],
+    "MaxProgress": 1,
+    "MaxStage": 1,
+    "Exp": 500
+  },
+  {
+    "Id": 4,
+    "Tytul": ["Morderca"],
+    "Podtytul": ["Pozwól Croco umrzeć."],
+    "Komentarz": [":("],
+    "MaxProgress": 1,
+    "MaxStage": 1,
+    "Exp": 500
+  },
+  {
+    "Id": 5,
+    "Tytul": ["Stylowy look"],
+    "Podtytul": ["Kup i załóż Czapke"],
+    "Komentarz": ["B)"],
+    "MaxProgress": 1,
+    "MaxStage": 1,
+    "Exp": 500
+  },
+  {
+    "Id": 6,
+    "Tytul": ["Alchemik"],
+    "Podtytul": ["Kup Miksturę"],
+    "Komentarz": ["Jeremiaszu, musimy gotować"],
+    "MaxProgress": 1,
+    "MaxStage": 1,
+    "Exp": 500
+  },
+  {
+    "Id": 7,
+    "Tytul": ["DJ Adison"],
+    "Podtytul": ["Wyłącz soundtrack"],
+    "Komentarz": ["Aha"],
+    "MaxProgress": 1,
+    "MaxStage": 1,
+    "Exp": 500,
+    "CzyWidoczne": false
+  },
+  {
+    "Id": 8,
+    "Tytul": ["Bass Boosted"],
+    "Podtytul": ["Ustaw głośność na fulla"],
+    "Komentarz": ["Bardzo ci się podoba co?"],
+    "MaxProgress": 1,
+    "MaxStage": 1,
+    "Exp": 500,
+    "CzyWidoczne": false
+  },
+  {
+    "Id": 9,
+    "Tytul": ["Miłośnik Croco"],
+    "Podtytul": ["Pogłaszcz Croco 10 razy"],
+    "Komentarz": ["Aww to słodkie"],
+    "MaxProgress": 10,
+    "MaxStage": 3,
     "Exp": 200
+  },
+  {
+    "Id": 9,
+    "Tytul": ["Miłośnik Croco"],
+    "Podtytul": ["Pogłaszcz Croco 1000 razy"],
+    "Komentarz": ["Chyba naprawde kochasz Croco.."],
+    "MaxProgress": 1000,
+    "MaxStage": 3,
+    "Exp": 1000
+  },
+  {
+    "Id": 9,
+    "Tytul": ["Miłośnik Croco"],
+    "Podtytul": ["Pogłaszcz Croco 10000 razy"],
+    "Komentarz": ["Wystarczy."],
+    "MaxProgress": 10000,
+    "MaxStage": 3,
+    "Exp": 3500
+  },
+  {
+    "Id": 10,
+    "Tytul": ["Crocolandia"],
+    "Podtytul": ["Zrób 5 questów"],
+    "Komentarz": ["Aby te zadania dobrze ci poszły jak te maturalne.."],
+    "MaxProgress": 5,
+    "MaxStage": 3,
+    "Exp": 600
+  },
+  {
+    "Id": 10,
+    "Tytul": ["Crocolandia"],
+    "Podtytul": ["Zrób 20 questów"],
+    "Komentarz": ["Oby tak dalej!"],
+    "MaxProgress": 20,
+    "MaxStage": 3,
+    "Exp": 2000
+  },
+  {
+    "Id": 10,
+    "Tytul": ["Crocolandia"],
+    "Podtytul": ["Zrób 100 questów"],
+    "Komentarz": ["Musiało ci to trochę zająć co?"],
+    "MaxProgress": 100,
+    "MaxStage": 3,
+    "Exp": 8000
+  },
+  {
+    "Id": 11,
+    "Tytul": ["Testoholik"],
+    "Podtytul": ["Zdaj 10 testów"],
+    "Komentarz": ["Grzeczne grupy nie chcą ze mną chodzić"],
+    "MaxProgress": 10,
+    "MaxStage": 4,
+    "Exp": 2000
+  },
+  {
+    "Id": 11,
+    "Tytul": ["Testoholik"],
+    "Podtytul": ["Zdaj 100 testów"],
+    "Komentarz": ["Niegrzeczne grupy chcą się nieszkolić"],
+    "MaxProgress": 100,
+    "MaxStage": 4,
+    "Exp": 10000
+  },
+  {
+    "Id": 11,
+    "Tytul": ["Testoholik"],
+    "Podtytul": ["Zdaj 500 testów"],
+    "Komentarz": ["Ona chce się uczyć nie po to żeby wynik zrobić"],
+    "MaxProgress": 500,
+    "MaxStage": 4,
+    "Exp": 50000
+  },
+  {
+    "Id": 11,
+    "Tytul": ["Testoholik"],
+    "Podtytul": ["Zdaj 1000 testów"],
+    "Komentarz": ["Ona chce się uczyć by być jak z testoholii"],
+    "MaxProgress": 1000,
+    "MaxStage": 4,
+    "Exp": 100000
+  },
+  {
+    "Id": 12,
+    "Tytul": ["Metoda na głoda"],
+    "Podtytul": ["Nakram Croco 5 razy"],
+    "Komentarz": ["To i tak mało.."],
+    "MaxProgress": 5,
+    "MaxStage": 3,
+    "Exp": 500
+  },
+  {
+    "Id": 12,
+    "Tytul": ["Metoda na głoda"],
+    "Podtytul": ["Nakram Croco 50 razy"],
+    "Komentarz": ["Rewolucyjne ciastka Croco sprawiają, że nigdy się nie przejedzą"],
+    "MaxProgress": 50,
+    "MaxStage": 3,
+    "Exp": 2000
+  },
+  {
+    "Id": 12,
+    "Tytul": ["Metoda na głoda"],
+    "Podtytul": ["Nakram Croco 500 razy"],
+    "Komentarz": ["500 ciastek to zaledwie 2 paczki!"],
+    "MaxProgress": 500,
+    "MaxStage": 3,
+    "Exp": 8000
+  },
+  {
+    "Id": 13,
+    "Tytul": ["Do 3 razy sztuka"],
+    "Podtytul": ["Uzyskaj 3x passy"],
+    "Komentarz": ["Dobrze ci idzie!"],
+    "MaxProgress": 3,
+    "MaxStage": 3,
+    "Exp": 2000
+  },
+  {
+    "Id": 13,
+    "Tytul": ["Do 5 razy sztuka"],
+    "Podtytul": ["Uzyskaj 5x passy"],
+    "Komentarz": ["Croco jest dumny."],
+    "MaxProgress": 5,
+    "MaxStage": 3,
+    "Exp": 10000
+  },
+  {
+    "Id": 13,
+    "Tytul": ["Do 12 razy sztuka"],
+    "Podtytul": ["Uzyskaj 12x passy"],
+    "Komentarz": ["Miejmy nadzieję że było warto"],
+    "MaxProgress": 5,
+    "MaxStage": 3,
+    "Exp": 30000
+  },
+  {
+    "Id": 14,
+    "Tytul": ["Wyjątkowy zbieracz"],
+    "Podtytul": ["Dostań ekskulyzwną czapke"],
+    "Komentarz": ["Dawno tej czapki nie widzieliśmy, skąd ją masz?"],
+    "MaxProgress": 1,
+    "MaxStage": 1,
+    "Exp": 10000
   }
 ]

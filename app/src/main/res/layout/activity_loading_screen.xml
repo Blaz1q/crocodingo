@@ -27,6 +27,14 @@
         android:text="Loading..."
         android:textSize="34sp" />
     <TextView
+        android:layout_below="@id/text_loading"
+        android:id="@+id/cosiedzieje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="28sp"
+        android:text="TextView" />
+    <TextView
         android:id="@+id/Version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,6 +47,8 @@
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
         />
+
+
 
 
 </RelativeLayout>

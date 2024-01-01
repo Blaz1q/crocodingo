@@ -61,6 +61,9 @@ public class PytaniaDB {
     public String[] getOdpowiedzi() {
         return Odpowiedzi;
     }
+    public String getJednaOdpowiedz(int index){
+        return Odpowiedzi[index];
+    }
 
     public String getTresc() {
         return Tresc;

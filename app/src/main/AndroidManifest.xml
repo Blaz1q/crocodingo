@@ -20,11 +20,8 @@
         >
         <activity android:name="czerwone.krokodyle.czerwone_krokodyle.MainActivity"
             android:screenOrientation="portrait"
+            android:exported="true"
             >
-
-        </activity>
-        <activity   android:name="czerwone.krokodyle.czerwone_krokodyle.Loading_Screen"
-            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
