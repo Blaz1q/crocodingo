@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:orientation="horizontal"></LinearLayout>
-
     <Button
         android:id="@+id/wroc_z_creditsow"
         style="@style/Widget.MaterialComponents.Button"

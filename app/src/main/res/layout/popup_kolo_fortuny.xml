@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#7f000000"
     >
-
     <ImageView
         android:id="@+id/kolopaski"
         android:layout_width="wrap_content"

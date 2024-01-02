@@ -35,7 +35,9 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
@@ -204,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     String kupioneczapkibool="";
     Dialog dialog;
     Dialog myDialog;
+    Dialog TopBar;
     Boolean showonce = false;
     final int[] sectors = {1,2,3,4,5,6,7,8,9,10};
     final int[] sectorDegrees = new int[sectors.length];
@@ -254,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         cosiedzieje.setText("Uruchamianie");
                         new Handler(getMainLooper()).postDelayed(() -> {
                             setContentView(R.layout.main_page);
+                            UstawKrokodyla();
                             Math_syn.set_Math("\\text{rozruch}");
                             updateAccInfo();
                             ResumeOnLongListener();
@@ -418,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private void spin(){
         ImageView kolopasy = (ImageView) myDialog.findViewById(R.id.kolopaski);
         spinning = true;
-        String nagroda;
+        int nagroda;
         int truedeg = 0;
         kolopasy.animate().rotation(deg-12).setInterpolator(new DecelerateInterpolator()).setDuration(500);
         deg+=generateRandomDegreeToSpin();
@@ -440,50 +444,51 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         int trueswitchvalue = 10-switchvalue-1;
         switch(trueswitchvalue) {
             case 0:
-                nagroda = "100 coinow";
+                nagroda = 100;
                 SaveMoney(100);
                 break;
             case 1:
-                nagroda = "200 coinow";
+                nagroda = 200;
                 SaveMoney(200);
                 break;
             case 2:
-                nagroda = "1000 coinow";
+                nagroda = 1000;
                 SaveMoney(1000);
                 break;
             case 3:
-                nagroda = "500 coinow";
+                nagroda = 500;
                 SaveMoney(500);
                 break;
             case 4:
-                nagroda = "5000 coinow";
+                nagroda = 5000;
                 SaveMoney(5000);
                 break;
             case 5:
-                nagroda = "300 coinow";
+                nagroda = 300;
                 SaveMoney(300);
                 break;
             case 6:
-                nagroda = "400 coinow";
+                nagroda = 400;
                 SaveMoney(400);
                 break;
             case 7:
-                nagroda = "10 coinow";
+                nagroda = 10;
                 SaveMoney(10);
                 break;
             case 8:
-                nagroda = "0 coinow";
+                nagroda = 0;
                 break;
             case 9:
-                nagroda = "700 coinow";
+                nagroda = 700;
+
                 SaveMoney(700);
                 break;
 
             default:
-                nagroda = "Wystapil jakis blad";
+                nagroda = 0;
                 break;
         }
-        AddExp(10000);
+
         //Toast.makeText(this,String.valueOf(trueswitchvalue),Toast.LENGTH_SHORT).show();
         new Handler(getMainLooper()).postDelayed(() -> {
             kolopasy.animate().rotation(deg+12).setInterpolator(new DecelerateInterpolator()).setDuration(10000);
@@ -493,7 +498,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             spinning = false;
             try{
                 TextView tekst_nagroda = myDialog.findViewById(R.id.nagroda);
-                tekst_nagroda.setText(nagroda);
+                tekst_nagroda.setText(String.valueOf(nagroda));
+                Pokaz_Topbar();
+                Aktualizuj_Hajs(getMoney()-nagroda,getMoney());
+                Aktualizuj_Exp(getExp(),getExp()+10000);
+                Ukryj_Topbar();
+                AddExp(10000);
+
             }catch (Exception e){
                 e.printStackTrace();
                 // #todo remove ability to go back when spinning the wheel
@@ -1187,6 +1198,73 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Generuj_Sklep("potki");
         }
     }
+    public void Pokaz_Topbar(){
+        TopBar = new Dialog(this);
+        TopBar.setContentView(R.layout.topbar);
+        TopBar.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        TopBar.setCanceledOnTouchOutside(false);
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.gravity = Gravity.TOP;
+        layoutParams.y = 0;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        TopBar.getWindow().setAttributes(layoutParams);
+        RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
+        TextView topbarhajs = topbar.findViewById(R.id.topbartext1);
+        TextView topbarhajsshadow = topbar.findViewById(R.id.topbartextshadow1);
+        topbarhajs.setText(String.valueOf(getMoney()));
+        topbarhajsshadow.setText(String.valueOf(getMoney()));
+        TextView topbarexp = topbar.findViewById(R.id.topbartext2);
+        TextView topbarexpshadow = topbar.findViewById(R.id.topbartextshadow2);
+        topbarexp.setText(String.valueOf(getExp()));
+        topbarexpshadow.setText(String.valueOf(getExp()));
+        TopBar.show();
+        YoYo.with(Techniques.FadeInDown).duration(500).playOn(topbar);
+    }
+    public void Ukryj_Topbar(){
+        RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
+        new Handler(getMainLooper()).postDelayed(() -> {
+            YoYo.with(Techniques.FadeOutUp).duration(500).playOn(topbar);
+            new Handler(getMainLooper()).postDelayed(() -> {
+                TopBar.dismiss();
+            }, 500);
+        }, 2000);
+    }
+    public void Aktualizuj_Hajs(int hajs,int nowyhajs){
+        Log.d("hajs",String.valueOf(hajs));
+        Log.d("nowyhajs",String.valueOf(nowyhajs));
+        if(hajs!=nowyhajs){
+            RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
+            TextView topbarhajs = topbar.findViewById(R.id.topbartext1);
+            TextView topbarhajsshadow = topbar.findViewById(R.id.topbartextshadow1);
+            topbarhajs.setText(String.valueOf(hajs));
+            topbarhajsshadow.setText(String.valueOf(hajs));
+            Log.d("mega","mega");
+            new Handler(getMainLooper()).postDelayed(() -> {
+                topbarhajs.setText(String.valueOf(nowyhajs));
+                topbarhajsshadow.setText(String.valueOf(nowyhajs));
+                YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajs);
+                YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajsshadow);
+            }, 500);
+        }
+    }
+    public void Aktualizuj_Exp(int Exp,int nowyExp){
+        Log.d("hajs",String.valueOf(Exp));
+        Log.d("nowyhajs",String.valueOf(nowyExp));
+        if(Exp!=nowyExp){
+            RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
+            TextView topbarhajs = topbar.findViewById(R.id.topbartext2);
+            TextView topbarhajsshadow = topbar.findViewById(R.id.topbartextshadow2);
+            topbarhajs.setText(String.valueOf(Exp));
+            topbarhajsshadow.setText(String.valueOf(Exp));
+            Log.d("mega","mega");
+            new Handler(getMainLooper()).postDelayed(() -> {
+                topbarhajs.setText(String.valueOf(nowyExp));
+                topbarhajsshadow.setText(String.valueOf(nowyExp));
+                YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajs);
+                YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajsshadow);
+            }, 500);
+        }
+    }
     public void Generuj_Sklep(String kategoria){
         LinearLayout parentLayout = findViewById(R.id.sklep_scroll);
         parentLayout.removeAllViewsInLayout();
@@ -1526,6 +1604,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         editor.apply();
         Log.w("kupione_czapy",kupioneczapkibool);
     }
+    void UstawKrokodyla(){
+        czerwony_krokodyl = findViewById(R.id.krokodyl);
+        if(lastFeed>gloduje_co&&lastFeed>umiera_po){
+           czerwony_krokodyl.setImageResource(R.drawable.logo);
+        } else if(lastFeed>umiera_po&&lastFeed<gloduje_co){
+            czerwony_krokodyl.setImageResource(R.drawable.glodnykroko);
+        }else{
+            czerwony_krokodyl.setImageResource(R.drawable.ripcroco);
+        }
+    }
     void Mrugnij(){
         try{
             czerwony_krokodyl = findViewById(R.id.krokodyl);
@@ -1584,6 +1672,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             xp-=CalcExp(LevelEq(getLevel()));
             AddLevel();
         }
+    }
+    public int getExp(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        return sharedPreferences.getInt(SAVED_EXP,0);
     }
     public int CalcExp(int val){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
@@ -2340,6 +2432,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             quest.Claim();
             SaveMoney(quest.getNagroda());
             AddExp(quest.getExp());
+            Pokaz_Topbar();
+            Aktualizuj_Hajs(getMoney()-quest.getNagroda(),getMoney());
+            Aktualizuj_Exp(getExp()-quest.getExp(),getExp());
+            Ukryj_Topbar();
             editor.putBoolean(QUEST_CLAIM+String.valueOf(id),true);
         }
         editor.apply();
@@ -3074,10 +3170,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     nagroda1.setText("0");
                     nagrodashadow1.setText("0");
                     if(oblicz_percenty>20){
+
                         SaveFood(1);
                         SaveMoney(100);
                         nagroda1.setText("100");
                         nagrodashadow1.setText("100");
+                        Pokaz_Topbar();
+                        Aktualizuj_Hajs(getMoney()-100,getMoney());
+                        Ukryj_Topbar();
                     }
                     msg_text.setText(Wynik_msg[0]);
                     SaveFailedTest();
@@ -3088,24 +3188,36 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     SaveMoney(300);
                     nagroda1.setText("300");
                     nagrodashadow1.setText("300");
+                    Pokaz_Topbar();
+                    Aktualizuj_Hajs(getMoney()-300,getMoney());
+                    Ukryj_Topbar();
                 } else if (oblicz_percenty>=60&&oblicz_percenty<80) {
                     msg_text.setText(Wynik_msg[2]);
                     SaveFood(5);
                     SaveMoney(500);
                     nagroda1.setText("500");
                     nagrodashadow1.setText("500");
+                    Pokaz_Topbar();
+                    Aktualizuj_Hajs(getMoney()-500,getMoney());
+                    Ukryj_Topbar();
                 } else if (oblicz_percenty>=80&&oblicz_percenty<100) {
                     msg_text.setText(Wynik_msg[3]);
                     SaveFood(7);
                     SaveMoney(700);
                     nagroda1.setText("700");
                     nagrodashadow1.setText("700");
+                    Pokaz_Topbar();
+                    Aktualizuj_Hajs(getMoney()-700,getMoney());
+                    Ukryj_Topbar();
                 } else if (oblicz_percenty==100) {
                     msg_text.setText(Wynik_msg[4]);
                     SaveFood(10);
                     SaveMoney(1000);
                     nagroda1.setText("1000");
                     nagrodashadow1.setText("1000");
+                    Pokaz_Topbar();
+                    Aktualizuj_Hajs(getMoney()-1000,getMoney());
+                    Ukryj_Topbar();
                 }
                 if(czyZalogowany==true){
                     updateFirebaseData(acct.getIdToken());
