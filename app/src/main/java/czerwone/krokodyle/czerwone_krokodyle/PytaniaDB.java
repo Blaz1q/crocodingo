@@ -47,7 +47,6 @@ public class PytaniaDB {
         Log.d("dziala?",String.valueOf(this.OdpUzytkownika));
         return OdpUzytkownika;
     }
-
     public void Wypisz(){
         Log.d("Id",String.valueOf(this.Id));
         Log.d("Tresc",this.Tresc);

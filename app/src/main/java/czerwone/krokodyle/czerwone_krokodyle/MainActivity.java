@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private List<Potka> listaPotek = new ArrayList<>();
     private List<Quests> listaQuestow = new ArrayList<>();
     private List<Integer> listaQuestowId = new ArrayList<>();
+    private List<Achievements> listaOsiagniec = new ArrayList<>();
     // zmienne do akcji
     private List<String> actions = new ArrayList<>();
     int actionsindex = 0;
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean zaladowano_czapki = false;
     boolean zaladowano_questy = false;
     boolean zaladowano_jedzenie = false;
+    boolean zaladowano_osiagniecia = false;
     boolean isPopupVisible = false;
     boolean zaladowanodb = false; //tylko w przypadku gdy nie ma połączenia z bazą
     String[] LitABCD = {"A","B","C","D"};
@@ -147,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     Handler handler2 = new Handler();
     Handler handler3 = new Handler();
     boolean czyZalogowany = false;
+    boolean isExitEnabled = true;
     Switch sw1;
     Switch sw2;
     int radioButtonChecked = 0;
@@ -175,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     Random daily_qnum_seed;
     long lastFeed = 0;
     long savedTime = 0;
-    int exp;
 
     public static final String FAILED_TESTS = "FAILED_TESTS";
     public static final String PASSED_TESTS = "PASSED_TESTS";
@@ -240,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         loadQuestProgress();
         loadJedzenieFromAsset();
         loadPotkiFromAsset();
+        loadOsiagnieciaFromAsset();
         fetchData(0);
         RelativeLayout bgimg = findViewById(R.id.MAIN_LOADING_BG);
         ImageView ckrkdl = findViewById(R.id.krokodyl_loading);
@@ -296,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     @Override
     public void onBackPressed() {
         canplayanimations = false;
+        if(isExitEnabled){
         if(actionsindex!=0){
             switch (actions.get(actionsindex-1)){
                 case "select_tests":
@@ -354,13 +358,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }else{
             wyjscie.show();
         }
-        czypokazana = false;
+        }
         LoadData();
         Wibracje();
     }
     public int LevelEq(int x){
         int val = (int) Math.floor(x*50*x*1.5);
-        Log.d("level",String.valueOf(x)+" : "+String.valueOf(val));
+        //Log.d("level",String.valueOf(x)+" : "+String.valueOf(val));
         if(x>=0){
             return val;
         }
@@ -422,6 +426,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private void spin(){
         ImageView kolopasy = (ImageView) myDialog.findViewById(R.id.kolopaski);
         spinning = true;
+        isExitEnabled = false;
         int nagroda;
         int truedeg = 0;
         kolopasy.animate().rotation(deg-12).setInterpolator(new DecelerateInterpolator()).setDuration(500);
@@ -480,10 +485,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 break;
             case 9:
                 nagroda = 700;
-
                 SaveMoney(700);
                 break;
-
             default:
                 nagroda = 0;
                 break;
@@ -496,6 +499,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Log.d("deg/",String.valueOf(deg%10));
         new Handler(getMainLooper()).postDelayed(() -> {
             spinning = false;
+            isExitEnabled = true;
             try{
                 TextView tekst_nagroda = myDialog.findViewById(R.id.nagroda);
                 tekst_nagroda.setText(String.valueOf(nagroda));
@@ -507,7 +511,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
             }catch (Exception e){
                 e.printStackTrace();
-                // #todo remove ability to go back when spinning the wheel
             }
 
         },10500);
@@ -532,7 +535,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void PierwszeUruchomienie() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
         if (sharedPreferences.getBoolean(TUTORIAL, true)) {
         editor.putBoolean(TUTORIAL, false);
         editor.apply();
@@ -544,7 +546,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void PierwszeUruchomienieTesty() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
         if (sharedPreferences.getBoolean(TUTORIALTESTY, true)) {
             editor.putBoolean(TUTORIALTESTY, false);
             editor.apply();
@@ -779,6 +780,69 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             ex.printStackTrace();
         }
     }
+    public void loadOsiagnieciaFromAsset() {
+        TextView cosiedzieje = findViewById(R.id.cosiedzieje);
+        cosiedzieje.setText("Ładowanie Osiągnięć..");
+        try {
+            InputStream is = getAssets().open("osiagniecia.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+            //Log.d("MojaAplikacja", "Prawidłowo wczytano JSON: " + json);
+            JSONArray jsonArray = new JSONArray(json);
+            int stagecounter=0;
+            listaOsiagniec.clear();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject osiagnieciaJSON = jsonArray.getJSONObject(i);
+                int Id = osiagnieciaJSON.getInt("Id");
+                //String plik = jedzenieJson.getString("plik"); później
+                JSONArray Tytul = osiagnieciaJSON.getJSONArray("Tytul");
+                JSONArray Podtytul = osiagnieciaJSON.getJSONArray("Podtytul");
+                JSONArray Komentarz = osiagnieciaJSON.getJSONArray("Komentarz");
+                boolean czyWidoczne = true;
+                String[] Tytularr = new String[Tytul.length()];
+                String[] Podtytularr = new String[Podtytul.length()];
+                String[] Komentarzarr = new String[Komentarz.length()];
+                for (int j = 0; j < Tytul.length(); j++) {
+                    Tytularr[j] = Tytul.getString(j);
+                }
+                for (int j = 0; j < Podtytul.length(); j++) {
+                    Podtytularr[j] = Podtytul.getString(j);
+                }
+                for (int j = 0; j < Komentarz.length(); j++) {
+                    Komentarzarr[j] = Komentarz.getString(j);
+                }
+                int MaxProgress = osiagnieciaJSON.getInt("MaxProgress");
+                boolean hasNextStage = osiagnieciaJSON.getBoolean("hasNextStage");
+
+                int Exp = osiagnieciaJSON.getInt("Exp");
+                Achievements osiagniecie = new Achievements(Id, Tytularr, Podtytularr, Komentarzarr, MaxProgress, hasNextStage, Exp);
+                if (osiagnieciaJSON.has("CzyWidoczne")) {
+                    czyWidoczne = osiagnieciaJSON.getBoolean("CzyWidoczne");
+                    osiagniecie.setCzyWidoczne(czyWidoczne);
+                }
+
+                osiagniecie.setCurrentProgress(loadOsiagnieciaProgressFromMemo(osiagniecie.getId(),stagecounter));
+                if(hasNextStage)stagecounter++;
+                else stagecounter=0;
+                osiagniecie.checkComplete();
+                listaOsiagniec.add(osiagniecie);
+            }
+            zaladowano_osiagniecia = true;
+            for (Achievements achievements : listaOsiagniec) {
+                Log.d("MojaAplikacja", "ID: " + achievements.getId() + ", Nazwa: " + achievements.getTresc(getLang()) + ", Opis: " + achievements.getKomentarz(getLang())+", Progress: "+ achievements.getCurrentProgress()+", CzyWidoczne: "+achievements.getCzyWidoczne());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    public int loadOsiagnieciaProgressFromMemo(int id,int stage){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        Log.d("ACHIEVE_MEMORY","OsiagniecieID"+String.valueOf(id)+"STAGE"+String.valueOf(stage));
+        return sharedPreferences.getInt("OsiagniecieID"+String.valueOf(id)+"STAGE"+String.valueOf(stage),0);
+    }
     public void loadPotkiFromAsset(){
         TextView cosiedzieje = findViewById(R.id.cosiedzieje);
         cosiedzieje.setText("Ładowanie Mikstur..");
@@ -966,8 +1030,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     }
                     Log.w("akcja",String.valueOf(akcja[i]));
                 }
-
-
     }
     public String loadJSONFromAssetVer2(String filename) {
         String json = null;
@@ -1062,6 +1124,56 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     */
+    public void Generuj_Achievementy(LinearLayout parent,Achievements osiagniecie){
+        RelativeLayout mainRelativeLayout = new RelativeLayout(this);
+        RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        mainParams.setMargins(0,0,0,dpToPx(5));
+        mainRelativeLayout.setLayoutParams(mainParams);
+        mainRelativeLayout.setPadding(13, 13, 13, 13);
+        mainRelativeLayout.setBackgroundResource(R.drawable.custom_quest_bg);
+
+        TextView Nazwa = new TextView(this);
+        TextView Podtytul = new TextView(this);
+        TextView Komentarz = new TextView(this);
+        Nazwa.setId(View.generateViewId());
+        Podtytul.setId(View.generateViewId());
+        Komentarz.setId(View.generateViewId());
+
+        Nazwa.setText(osiagniecie.getTresc(getLang()));
+        Komentarz.setText(osiagniecie.getKomentarz(getLang()));
+        Podtytul.setText(osiagniecie.getPodtytul(getLang()));
+
+        // Ustawienie layout params dla wszystkich TextView
+        RelativeLayout.LayoutParams nazwaParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        RelativeLayout.LayoutParams podtytulParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        RelativeLayout.LayoutParams komentarzParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        // Dodanie reguł dla Podtytulu i Komentarza
+        podtytulParams.addRule(RelativeLayout.BELOW, Nazwa.getId());
+        komentarzParams.addRule(RelativeLayout.BELOW, Podtytul.getId());
+
+        // Ustawienie layout params dla Podtytulu i Komentarza
+        Podtytul.setLayoutParams(podtytulParams);
+        Komentarz.setLayoutParams(komentarzParams);
+
+        // Dodanie TextView do RelativeLayout
+        mainRelativeLayout.addView(Nazwa, nazwaParams);
+        mainRelativeLayout.addView(Podtytul);
+        mainRelativeLayout.addView(Komentarz);
+        parent.addView(mainRelativeLayout);
+    }
     public Button Generuj_Przedmiot(LinearLayout parent,int PlikResID,String TytulText,int CenaText,boolean premium){
         RelativeLayout mainRelativeLayout = new RelativeLayout(this);
         RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
@@ -1198,27 +1310,31 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Generuj_Sklep("potki");
         }
     }
+    boolean isTopbarVisible=false;
     public void Pokaz_Topbar(){
-        TopBar = new Dialog(this);
-        TopBar.setContentView(R.layout.topbar);
-        TopBar.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        TopBar.setCanceledOnTouchOutside(false);
-        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        layoutParams.gravity = Gravity.TOP;
-        layoutParams.y = 0;
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        TopBar.getWindow().setAttributes(layoutParams);
-        RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
-        TextView topbarhajs = topbar.findViewById(R.id.topbartext1);
-        TextView topbarhajsshadow = topbar.findViewById(R.id.topbartextshadow1);
-        topbarhajs.setText(String.valueOf(getMoney()));
-        topbarhajsshadow.setText(String.valueOf(getMoney()));
-        TextView topbarexp = topbar.findViewById(R.id.topbartext2);
-        TextView topbarexpshadow = topbar.findViewById(R.id.topbartextshadow2);
-        topbarexp.setText(String.valueOf(getExp()));
-        topbarexpshadow.setText(String.valueOf(getExp()));
-        TopBar.show();
-        YoYo.with(Techniques.FadeInDown).duration(500).playOn(topbar);
+        if(!isTopbarVisible){
+            isTopbarVisible=true;
+            TopBar = new Dialog(this);
+            TopBar.setContentView(R.layout.topbar);
+            TopBar.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            TopBar.setCanceledOnTouchOutside(false);
+            WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+            layoutParams.gravity = Gravity.TOP;
+            layoutParams.y = 0;
+            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            TopBar.getWindow().setAttributes(layoutParams);
+            RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
+            TextView topbarhajs = topbar.findViewById(R.id.topbartext1);
+            TextView topbarhajsshadow = topbar.findViewById(R.id.topbartextshadow1);
+            topbarhajs.setText(String.valueOf(getMoney()));
+            topbarhajsshadow.setText(String.valueOf(getMoney()));
+            TextView topbarexp = topbar.findViewById(R.id.topbartext2);
+            TextView topbarexpshadow = topbar.findViewById(R.id.topbartextshadow2);
+            topbarexp.setText(String.valueOf(getExp()));
+            topbarexpshadow.setText(String.valueOf(getExp()));
+            TopBar.show();
+            YoYo.with(Techniques.FadeInDown).duration(500).playOn(topbar);
+        }
     }
     public void Ukryj_Topbar(){
         RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
@@ -1226,43 +1342,48 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             YoYo.with(Techniques.FadeOutUp).duration(500).playOn(topbar);
             new Handler(getMainLooper()).postDelayed(() -> {
                 TopBar.dismiss();
+                isTopbarVisible=false;
             }, 500);
         }, 2000);
     }
     public void Aktualizuj_Hajs(int hajs,int nowyhajs){
         Log.d("hajs",String.valueOf(hajs));
         Log.d("nowyhajs",String.valueOf(nowyhajs));
-        if(hajs!=nowyhajs){
-            RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
-            TextView topbarhajs = topbar.findViewById(R.id.topbartext1);
-            TextView topbarhajsshadow = topbar.findViewById(R.id.topbartextshadow1);
-            topbarhajs.setText(String.valueOf(hajs));
-            topbarhajsshadow.setText(String.valueOf(hajs));
-            Log.d("mega","mega");
-            new Handler(getMainLooper()).postDelayed(() -> {
-                topbarhajs.setText(String.valueOf(nowyhajs));
-                topbarhajsshadow.setText(String.valueOf(nowyhajs));
-                YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajs);
-                YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajsshadow);
-            }, 500);
+        if(isTopbarVisible){
+            if(hajs!=nowyhajs){
+                RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
+                TextView topbarhajs = topbar.findViewById(R.id.topbartext1);
+                TextView topbarhajsshadow = topbar.findViewById(R.id.topbartextshadow1);
+                topbarhajs.setText(String.valueOf(hajs));
+                topbarhajsshadow.setText(String.valueOf(hajs));
+                Log.d("mega","mega");
+                new Handler(getMainLooper()).postDelayed(() -> {
+                    topbarhajs.setText(String.valueOf(nowyhajs));
+                    topbarhajsshadow.setText(String.valueOf(nowyhajs));
+                    YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajs);
+                    YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajsshadow);
+                }, 500);
+            }
         }
     }
     public void Aktualizuj_Exp(int Exp,int nowyExp){
         Log.d("hajs",String.valueOf(Exp));
         Log.d("nowyhajs",String.valueOf(nowyExp));
-        if(Exp!=nowyExp){
-            RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
-            TextView topbarhajs = topbar.findViewById(R.id.topbartext2);
-            TextView topbarhajsshadow = topbar.findViewById(R.id.topbartextshadow2);
-            topbarhajs.setText(String.valueOf(Exp));
-            topbarhajsshadow.setText(String.valueOf(Exp));
-            Log.d("mega","mega");
-            new Handler(getMainLooper()).postDelayed(() -> {
-                topbarhajs.setText(String.valueOf(nowyExp));
-                topbarhajsshadow.setText(String.valueOf(nowyExp));
-                YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajs);
-                YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajsshadow);
-            }, 500);
+        if(isTopbarVisible){
+            if(Exp!=nowyExp){
+                RelativeLayout topbar = TopBar.findViewById(R.id.topbar);
+                TextView topbarhajs = topbar.findViewById(R.id.topbartext2);
+                TextView topbarhajsshadow = topbar.findViewById(R.id.topbartextshadow2);
+                topbarhajs.setText(String.valueOf(Exp));
+                topbarhajsshadow.setText(String.valueOf(Exp));
+                Log.d("mega","mega");
+                new Handler(getMainLooper()).postDelayed(() -> {
+                    topbarhajs.setText(String.valueOf(nowyExp));
+                    topbarhajsshadow.setText(String.valueOf(nowyExp));
+                    YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajs);
+                    YoYo.with(Techniques.RubberBand).duration(250).playOn(topbarhajsshadow);
+                }, 500);
+            }
         }
     }
     public void Generuj_Sklep(String kategoria){
@@ -2142,6 +2263,30 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Set_pytanie_bledne();
             RemoveAction();
         }
+        else if(v.getId()==R.id.Osiagniecia){
+            setContentView(R.layout.osiagniecia);
+            LinearLayout lin = findViewById(R.id.osiagniecia_scroll);
+            int acID=-1;
+            boolean prevshown=false;
+            for(int i=0;i<listaOsiagniec.size();i++){
+                Achievements ac = listaOsiagniec.get(i);
+                if(acID!=-1){
+                    if(acID!=ac.getId()) prevshown=false;
+                }
+                if(!prevshown) {
+                    acID = ac.getId();
+                    prevshown = true;
+                    if(ac.getCzyWidoczne()){
+                        Generuj_Achievementy(lin, ac);
+                    }else{
+                        if(ac.getIsComplete()){
+                            Generuj_Achievementy(lin, ac);
+                        }
+                    }
+                }
+            }
+            AddActions("Osiagniecia");
+        }
         else if(v.getId()==R.id.kolo_fortuny){
             if(isPopupVisible==false){
                 POPUP_RESOLUTION = 1;
@@ -2240,7 +2385,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         else if (v.getId()==R.id.OtworzSklep){
             setContentView(R.layout.sklep);
             updateCrococoinsInShop();
-            Generuj_Sklep("jedzenie");
+            Generuj_Sklep("czapki");
             AddActions("sklep");
         }
         else if(v.getId()==R.id.wroc_do_pytan_bledne){

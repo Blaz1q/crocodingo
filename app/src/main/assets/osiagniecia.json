@@ -5,7 +5,7 @@
     "Podtytul": ["Uzyskaj 100% z testu"],
     "Komentarz": ["Gratulacje!"],
     "MaxProgress": 1,
-    "MaxStage": 1,
+    "hasNextStage": false,
     "Exp": 500
   },
   {
@@ -14,7 +14,7 @@
     "Podtytul": ["Przekarm Croco"],
     "Komentarz": ["To jest straszne że Croco potrafi tyle zjeść"],
     "MaxProgress": 1,
-    "MaxStage": 1,
+    "hasNextStage": false,
     "Exp": 500
   },
   {
@@ -23,7 +23,7 @@
     "Podtytul": ["Zdobądź 1 Lvl"],
     "Komentarz": ["Jak te dzieci szybko dorastają.."],
     "MaxProgress": 1,
-    "MaxStage": 1,
+    "hasNextStage": false,
     "Exp": 500
   },
   {
@@ -32,7 +32,7 @@
     "Podtytul": ["Przejdź do realizacji"],
     "Komentarz": ["Hej to my!"],
     "MaxProgress": 1,
-    "MaxStage": 1,
+    "hasNextStage": false,
     "Exp": 500
   },
   {
@@ -41,7 +41,7 @@
     "Podtytul": ["Pozwól Croco umrzeć."],
     "Komentarz": [":("],
     "MaxProgress": 1,
-    "MaxStage": 1,
+    "hasNextStage": false,
     "Exp": 500
   },
   {
@@ -50,7 +50,7 @@
     "Podtytul": ["Kup i załóż Czapke"],
     "Komentarz": ["B)"],
     "MaxProgress": 1,
-    "MaxStage": 1,
+    "hasNextStage": false,
     "Exp": 500
   },
   {
@@ -59,7 +59,7 @@
     "Podtytul": ["Kup Miksturę"],
     "Komentarz": ["Jeremiaszu, musimy gotować"],
     "MaxProgress": 1,
-    "MaxStage": 1,
+    "hasNextStage": false,
     "Exp": 500
   },
   {
@@ -68,7 +68,7 @@
     "Podtytul": ["Wyłącz soundtrack"],
     "Komentarz": ["Aha"],
     "MaxProgress": 1,
-    "MaxStage": 1,
+    "hasNextStage": false,
     "Exp": 500,
     "CzyWidoczne": false
   },
@@ -78,7 +78,7 @@
     "Podtytul": ["Ustaw głośność na fulla"],
     "Komentarz": ["Bardzo ci się podoba co?"],
     "MaxProgress": 1,
-    "MaxStage": 1,
+    "hasNextStage": false,
     "Exp": 500,
     "CzyWidoczne": false
   },
@@ -88,7 +88,7 @@
     "Podtytul": ["Pogłaszcz Croco 10 razy"],
     "Komentarz": ["Aww to słodkie"],
     "MaxProgress": 10,
-    "MaxStage": 3,
+    "hasNextStage": true,
     "Exp": 200
   },
   {
@@ -97,7 +97,7 @@
     "Podtytul": ["Pogłaszcz Croco 1000 razy"],
     "Komentarz": ["Chyba naprawde kochasz Croco.."],
     "MaxProgress": 1000,
-    "MaxStage": 3,
+    "hasNextStage": true,
     "Exp": 1000
   },
   {
@@ -106,7 +106,7 @@
     "Podtytul": ["Pogłaszcz Croco 10000 razy"],
     "Komentarz": ["Wystarczy."],
     "MaxProgress": 10000,
-    "MaxStage": 3,
+    "hasNextStage": false,
     "Exp": 3500
   },
   {
@@ -115,7 +115,7 @@
     "Podtytul": ["Zrób 5 questów"],
     "Komentarz": ["Aby te zadania dobrze ci poszły jak te maturalne.."],
     "MaxProgress": 5,
-    "MaxStage": 3,
+    "hasNextStage": true,
     "Exp": 600
   },
   {
@@ -124,7 +124,7 @@
     "Podtytul": ["Zrób 20 questów"],
     "Komentarz": ["Oby tak dalej!"],
     "MaxProgress": 20,
-    "MaxStage": 3,
+    "hasNextStage": true,
     "Exp": 2000
   },
   {
@@ -133,7 +133,7 @@
     "Podtytul": ["Zrób 100 questów"],
     "Komentarz": ["Musiało ci to trochę zająć co?"],
     "MaxProgress": 100,
-    "MaxStage": 3,
+    "hasNextStage": false,
     "Exp": 8000
   },
   {
@@ -142,7 +142,7 @@
     "Podtytul": ["Zdaj 10 testów"],
     "Komentarz": ["Grzeczne grupy nie chcą ze mną chodzić"],
     "MaxProgress": 10,
-    "MaxStage": 4,
+    "hasNextStage": true,
     "Exp": 2000
   },
   {
@@ -151,7 +151,7 @@
     "Podtytul": ["Zdaj 100 testów"],
     "Komentarz": ["Niegrzeczne grupy chcą się nieszkolić"],
     "MaxProgress": 100,
-    "MaxStage": 4,
+    "hasNextStage": true,
     "Exp": 10000
   },
   {
@@ -160,7 +160,7 @@
     "Podtytul": ["Zdaj 500 testów"],
     "Komentarz": ["Ona chce się uczyć nie po to żeby wynik zrobić"],
     "MaxProgress": 500,
-    "MaxStage": 4,
+    "hasNextStage": true,
     "Exp": 50000
   },
   {
@@ -169,7 +169,7 @@
     "Podtytul": ["Zdaj 1000 testów"],
     "Komentarz": ["Ona chce się uczyć by być jak z testoholii"],
     "MaxProgress": 1000,
-    "MaxStage": 4,
+    "hasNextStage": false,
     "Exp": 100000
   },
   {
@@ -178,7 +178,7 @@
     "Podtytul": ["Nakram Croco 5 razy"],
     "Komentarz": ["To i tak mało.."],
     "MaxProgress": 5,
-    "MaxStage": 3,
+    "hasNextStage": true,
     "Exp": 500
   },
   {
@@ -187,7 +187,7 @@
     "Podtytul": ["Nakram Croco 50 razy"],
     "Komentarz": ["Rewolucyjne ciastka Croco sprawiają, że nigdy się nie przejedzą"],
     "MaxProgress": 50,
-    "MaxStage": 3,
+    "hasNextStage": true,
     "Exp": 2000
   },
   {
@@ -196,7 +196,7 @@
     "Podtytul": ["Nakram Croco 500 razy"],
     "Komentarz": ["500 ciastek to zaledwie 2 paczki!"],
     "MaxProgress": 500,
-    "MaxStage": 3,
+    "hasNextStage": false,
     "Exp": 8000
   },
   {
@@ -205,7 +205,7 @@
     "Podtytul": ["Uzyskaj 3x passy"],
     "Komentarz": ["Dobrze ci idzie!"],
     "MaxProgress": 3,
-    "MaxStage": 3,
+    "hasNextStage": true,
     "Exp": 2000
   },
   {
@@ -214,7 +214,7 @@
     "Podtytul": ["Uzyskaj 5x passy"],
     "Komentarz": ["Croco jest dumny."],
     "MaxProgress": 5,
-    "MaxStage": 3,
+    "hasNextStage": true,
     "Exp": 10000
   },
   {
@@ -223,7 +223,7 @@
     "Podtytul": ["Uzyskaj 12x passy"],
     "Komentarz": ["Miejmy nadzieję że było warto"],
     "MaxProgress": 5,
-    "MaxStage": 3,
+    "hasNextStage": false,
     "Exp": 30000
   },
   {
@@ -232,7 +232,7 @@
     "Podtytul": ["Dostań ekskulyzwną czapke"],
     "Komentarz": ["Dawno tej czapki nie widzieliśmy, skąd ją masz?"],
     "MaxProgress": 1,
-    "MaxStage": 1,
+    "hasNextStage": false,
     "Exp": 10000
   }
 ]
