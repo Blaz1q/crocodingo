@@ -146,7 +146,7 @@
         android:src="@drawable/srodekkolopuste"
         android:text="@string/ustawienia"
         tools:ignore="DuplicateSpeakableTextCheck"
-        android:visibility="visible"
+        android:visibility="gone"
         />
     <LinearLayout
         android:id="@+id/menu_sub"
@@ -156,8 +156,6 @@
         android:alwaysDrawnWithCache="false"
         android:background="#8DFFFFFF"
         android:orientation="horizontal"
-
-
         ></LinearLayout>
 
     <TextView

@@ -28,9 +28,6 @@ public class Czapka extends Przedmiot {
     public Boolean getCzyDostepna(){
         return czyDostepna;
     }
-
-
-
     public boolean isCzyZakupiona() {
         return czyZakupiona;
     }
