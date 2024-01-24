@@ -4,7 +4,8 @@
     "plik": "potkazycias",
     "nazwa": ["potka życia","life potion"],
     "opis": ["Ożywia Croco, jeśli Croco żyje, dodaje dodatkowe życie do wyzwania"],
-    "cena": 1000
+    "cena": 1000,
+    "czyDostepne": false
   },
   {
     "id": 1,
@@ -12,7 +13,8 @@
     "nazwa": ["potka exp","exp potion"],
     "opis": ["Podwaja exp, trwa 15 minut"],
     "cena": 1500,
-    "czas_trwania": 900000
+    "czas_trwania": 900000,
+    "czyDostepne": false
   },
   {
     "id": 2,

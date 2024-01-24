@@ -7,6 +7,7 @@ public class Jedzenie extends Przedmiot{
         this.plik = plik;
         this.cena = cena;
         this.nasycenie = nasycenieval;
+        this.czyDostepna = true;
         setNazwa(NazwaDane);
         setOpis(OpisDane);
     }

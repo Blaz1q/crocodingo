@@ -78,6 +78,7 @@
     "cena": 4300,
     "nazwa": ["Czapka Budowlańca","Work Hat"],
     "opis": ["Twardsza niż się wydaje"],
-    "waluta": "Crococoin"
+    "waluta": "Crococoin",
+    "czyDostepne": false
   }
 ]

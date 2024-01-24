@@ -25,7 +25,7 @@ public class Czapka extends Przedmiot {
     public void setCzyDostepna(Boolean CzyJestDostepna){
         this.czyDostepna = CzyJestDostepna;
     }
-    public Boolean getCzyDostepna(){
+    public boolean getCzyDostepna(){
         return czyDostepna;
     }
     public boolean isCzyZakupiona() {

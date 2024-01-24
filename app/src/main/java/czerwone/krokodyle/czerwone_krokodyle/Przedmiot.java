@@ -6,6 +6,7 @@ public class Przedmiot{
     protected String[] Nazwa;
     protected String[] Opis;
     protected int cena;
+    protected boolean czyDostepna;
     protected boolean czyPremium;
     protected void setNazwa(String[] dane){
         int i=0;
@@ -28,6 +29,12 @@ public class Przedmiot{
     }
     public int getCena() {
         return cena;
+    }
+    public void setCzyDostepna(Boolean CzyJestDostepna){
+        this.czyDostepna = CzyJestDostepna;
+    }
+    public boolean getCzyDostepna(){
+        return this.czyDostepna;
     }
 
     public void setId(int id) {

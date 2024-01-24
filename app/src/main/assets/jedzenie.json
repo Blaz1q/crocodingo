@@ -5,7 +5,7 @@
         "nazwa": ["ciastko"],
         "opis": ["Przysmak Croco"],
         "nasycenie": 7000,
-        "cena": 300
+        "cena": 200
     },
     {
         "id": 1,
@@ -13,6 +13,7 @@
         "nazwa": ["mięso"],
         "opis": ["Croco bardzo lubi wszamać dobre mięsko"],
         "nasycenie": 14000,
-        "cena": 600
+        "cena": 600,
+        "czyDostepne": false
     }
 ]

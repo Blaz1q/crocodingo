@@ -516,8 +516,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void krec(View v){
         if(v.getId()==R.id.obramowanie){
-            if(!spinning){
-                spin();
+            if(!User.getCzy_zakrencil()){
+                if(!spinning){
+                    spin();
+                    User.Zakrec();
+                }
+            }else{
+                Toast.makeText(this, "Limit jeden na dzień!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -766,9 +771,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int j=0;j<opis.length();j++){
                     opisArr[j] = opis.getString(j);
                 }
+
                 int nasycenie = jedzenieJson.getInt("nasycenie");
                 int cena = jedzenieJson.getInt("cena"); // Pobierz cenę czapki
                 Jedzenie jedzenie = new Jedzenie(id, plik,nazwaArr,opisArr, cena,nasycenie); // Zaktualizuj obiekt Czapka
+                if(jedzenieJson.has("czyDostepne")){
+                    jedzenie.setCzyDostepna(jedzenieJson.getBoolean("czyDostepne"));
+                }
                 listaZarcia.add(jedzenie);
             }
             zaladowano_jedzenie = true;
@@ -879,6 +888,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 }
                 int cena = potkiJSON.getInt("cena"); // Pobierz cenę czapki
                 Potka potka = new Potka(id, plik,nazwaArr,opisArr, cena,czasTrwania); // Zaktualizuj obiekt Czapka
+                if(potkiJSON.has("czyDostepne")){
+                    potka.setCzyDostepna(potkiJSON.getBoolean("czyDostepne"));
+                }
                 listaPotek.add(potka);
             }
             zaladowano_jedzenie = true;
@@ -903,27 +915,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     }
     public void UpdateQuestDate(){
-        listaQuestowId.clear();
-        if(zaladowano_questy){
-            int i=0;
-            daily_qnum_seed = new Random(Integer.valueOf(currentDate));
-            for (Quests quest : listaQuestow) {
-                Log.d("MojaAplikacja", "ID: " + quest.getId() + ", Tresc: " + quest.getTresc(getLang()));
-                int max = daily_qnum_seed.nextInt(quest.getPrzedzial_Gorny()-quest.getPrzedzial_Dolny()+1)+quest.getPrzedzial_Dolny();
-                quest.setGeneratedMax(max);
-                listaQuestowId.add(i);
-                i++;
-            }
-            Collections.shuffle(listaQuestowId,new Random(Integer.valueOf(currentDate)));
-            for(int j=0;j<3;j++){
-                Quests quest = listaQuestow.get(listaQuestowId.indexOf(j));
-                quest.setCzyWylosowano();
-                listaQuestow.set(listaQuestowId.indexOf(j),quest);
-            }
-        }else{
+        if(User.UpdateQuestDate(listaQuestowId,listaQuestow,zaladowano_questy)==-1){
             loadQuestsFromAsset();
         }
-        Log.d("QID",String.valueOf(listaQuestowId));
     }
     public void loadQuestsFromAsset() {
         TextView cosiedzieje = findViewById(R.id.cosiedzieje);
@@ -1415,6 +1409,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     Jedzenie jedzenie = listaZarcia.get(i);
                     int obrazResId = getResources().getIdentifier(jedzenie.getPlik(), "drawable", getPackageName());
                     Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,jedzenie.getNazwa(getLang()),jedzenie.getCena(),jedzenie.getCzyPremium());
+                    kupButton.setText(getString(R.string.kup));
+                    kupButton.setEnabled(jedzenie.getCzyDostepna());
                     kupButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1431,6 +1427,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     int obrazResId = getResources().getIdentifier(potka.getPlik(), "drawable", getPackageName());
                     Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,potka.getNazwa(getLang()),potka.getCena(),potka.getCzyPremium());
                     kupButton.setText(getString(R.string.kup));
+                    kupButton.setEnabled(potka.getCzyDostepna());
                     kupButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1534,8 +1531,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         return User.getMoney();
     }
     public String getLang() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        return sharedPreferences.getString(LANG, "Pl");
+        return User.getLang();
     }
     public void changeLang(String lang){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -1839,24 +1835,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     currentDate = ddMMyyyy;
     }
     public void SaveQuestDate(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        String readableDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
-        if(sharedPreferences.getString(SAVED_QUEST_DATE,"N/A").equals("N/A")){
-            editor.putString(SAVED_QUEST_DATE,readableDate);
-            editor.apply();
-        }
-        else{
-            readableDate = sharedPreferences.getString(SAVED_QUEST_DATE,readableDate);
-        }
-        if(!readableDate.equals(currentDate)){
-            Log.w("readable",readableDate);
-            Log.w("readable",currentDate);
-            readableDate = currentDate;
-            editor.putString(SAVED_QUEST_DATE,readableDate);
-            editor.apply();
-            ResetAllQuestProgress();
+        if(User.getDaily()==1){
+            User.ResetAllQuestProgress(listaQuestow);
             UpdateQuestDate();
         }
     }
@@ -1873,16 +1853,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         editor.apply();
     }
     public void SaveMoney(int value){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(MONEY,sharedPreferences.getInt(MONEY,0)+value);
-        editor.apply();
+        User.setMoney(value);
     }
     public void SaveFood(int value){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(FOOD,sharedPreferences.getInt(FOOD,0)+value);
-        editor.apply();
+        User.setFood(value);
     }
     public int getFood() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -2014,7 +1988,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             //Toast.makeText(getApplicationContext(),String.valueOf(sharedPreferences.getInt(STREAK,0)),Toast.LENGTH_SHORT).show();
             streak.setText(String.valueOf(sharedPreferences.getInt(STREAK,0)));
-            kasa.setText(String.valueOf(sharedPreferences.getInt(MONEY,0)));
+            kasa.setText(String.valueOf(User.getMoney()));
             zdane.setText(String.valueOf(sharedPreferences.getInt(PASSED_TESTS,0)));
             nzdane.setText(String.valueOf(sharedPreferences.getInt(FAILED_TESTS,0)));
             username.setText(sharedPreferences.getString(USERNAME,defaultUsername));
@@ -2534,13 +2508,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     // tutaj sekcja z pobieraniem danych z pamięci #SECMEMO
     public void loadQuestProgress(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        for(int i=0;i<listaQuestow.size();i++){
-            Quests quests = listaQuestow.get(i);
-            int questv = sharedPreferences.getInt(QUEST_PROGRESS+String.valueOf(i),0);
-            quests.setProgress(questv);
-            Log.d("QPROGRESS",String.valueOf(quests.getisDone()));
-        }
+        User.loadQuestProgress(listaQuestow);
     }
     // koniec sekcji
     // tutaj sekcja z przypisywaniem danych do pamięci #SECMEMO
@@ -2551,26 +2519,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         editor.apply();
     }
     public void addProgress(int id){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        int questv = sharedPreferences.getInt(QUEST_PROGRESS+String.valueOf(id),0);
-        Quests quest = listaQuestow.get(id);
-        if(quest.getGeneratedMax()>questv){
-            quest.setProgress(questv+1);
-            editor.putInt(QUEST_PROGRESS+String.valueOf(id),questv+1);
-            Log.d("QUESTVALUEACTUAL",String.valueOf(quest.getProgress()));
-            questPlaySound(quest);
-        }else{
-            //editor.putInt(QUEST_PROGRESS+String.valueOf(id),0); //debug
-        }
-
-        editor.apply();
+        User.addProgress(id,listaQuestow);
     }
     public void Claim(int id){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        boolean claim = sharedPreferences.getBoolean(QUEST_CLAIM+String.valueOf(id),false);
         Quests quest = listaQuestow.get(id);
         if(quest.getClaim()!=true){
             quest.Claim();
@@ -2708,6 +2661,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 e.printStackTrace();
                 zaladowanodb=false;
             }
+        }
+        try{
+            listaShuffled = listaPytan;
+        }catch (Exception e){
+            
         }
     }
     public int CURRENT_INDEX;
