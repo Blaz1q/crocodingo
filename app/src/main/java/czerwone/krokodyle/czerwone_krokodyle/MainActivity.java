@@ -95,7 +95,6 @@ import java.util.Random;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
-    Czapka czapka;
     private List<PytaniaDB> listaPytan = new ArrayList<>();
     private List<PytaniaDB> listaShuffled = new ArrayList<>();
     private List<Czapka> listaCzapek = new ArrayList<>();
@@ -104,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private List<Quests> listaQuestow = new ArrayList<>();
     private List<Integer> listaQuestowId = new ArrayList<>();
     private List<Achievements> listaOsiagniec = new ArrayList<>();
+    private List<String> listaKategorii = new ArrayList<>();
     // zmienne do akcji
     private List<String> actions = new ArrayList<>();
     private UserData User;
@@ -155,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     int current_item_index=-1;
     int POPUP_EXCEPTION_MODE=0;
     int POPUP_RESOLUTION=0; // 0 - normalny, 1 - fullscreen
-    String czapkiilosc="";
     String[] Wynik_msg = {
             "Niestety, nie udało się tym razem.\nAle nie przejmuj się, poćwicz dalej.\nCrocodingo w Ciebie wierzy. Razem możecie zdziałać cuda!",
             "Poszło Ci nawet dobrze, ale Croco wie, że stać Cię na więcej.\nCrocodingo zaprasza na zajęcia! Ding dong! Dzwonek na lekcje!",
@@ -199,11 +198,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public static final String VOLUME = "VOLUME";
     public static final String TUTORIAL = "TUTORIAL";
     public static final String TUTORIALTESTY = "TUTORIALTESTY";
-    private static final String PURCHASED_CZAPKI = "purchased_czapki";
+    private static final String PURCHASEDCZAPKA = "PURCHASEDCZAPKA";
     private static final String SAVED_LEVEL = "SAVED_LEVEL";
     private static final String SAVED_EXP = "SAVED_EXP";
     private static final String final_connection= "https://jncrew.5v.pl/androidAPI.php";
-    String kupioneczapkibool="";
     Dialog dialog;
     Dialog myDialog;
     Dialog TopBar;
@@ -548,6 +546,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         //Toast.makeText(this,String.valueOf(trueswitchvalue),Toast.LENGTH_SHORT).show();
         new Handler(getMainLooper()).postDelayed(() -> {
             kolopasy.animate().rotation(deg+12).setInterpolator(new DecelerateInterpolator()).setDuration(10000);
+            kolopasy.getRotation();
         },500);
         Log.d("deg/",String.valueOf(deg%10));
         new Handler(getMainLooper()).postDelayed(() -> {
@@ -558,9 +557,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 tekst_nagroda.setText(String.valueOf(nagroda));
                 Pokaz_Topbar();
                 Aktualizuj_Hajs(getMoney()-nagroda,getMoney());
-                Aktualizuj_Exp(getExp(),getExp()+10000);
+                Aktualizuj_Exp(getExp(),getExp()+5000);
                 Ukryj_Topbar();
-                AddExp(10000);
+                AddExp(5000);
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -695,8 +694,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             JSONArray jsonArray = new JSONArray(json);
             listaCzapek.clear();
             for (int i = 0; i < jsonArray.length(); i++) {
-                czapkiilosc+="0";
-                Log.w("JAPIERDOLE",kupioneczapkibool);
                 JSONObject czapkaJson = jsonArray.getJSONObject(i);
 
                 int id = czapkaJson.getInt("id");
@@ -726,15 +723,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 Czapka czapka = new Czapka(id, plik,nazwaArr,opisArr, cena); // Zaktualizuj obiekt Czapka
                 czapka.setCzyDostepna(czyDostepne);
                 czapka.setCzyPremium(czyPremium);
+                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+                boolean czykupiona = sharedPreferences.getBoolean(PURCHASEDCZAPKA+czapka.getId(),false);
+                czapka.setCzyZakupiona(czykupiona);
                 listaCzapek.add(czapka);
             }
             zaladowano_czapki = true;
             for (Czapka czapka : listaCzapek) {
                 Log.d("MojaAplikacja", "ID: " + czapka.getId() + ", Nazwa: " + czapka.getNazwa(getLang()) + ", Opis: " + czapka.getOpis(getLang()));
-            }
-            loadPurchasedCzapki();
-            if(kupioneczapkibool==""){
-                kupioneczapkibool=czapkiilosc;
             }
             loadAkcja();
             loadCurrentCzapka();
@@ -904,7 +900,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         for(int i=0;i<akcja.length;i++){
             if (i==current_item_index) {
                 akcja[i] = 2;
-            } else if (kupioneczapkibool.charAt(i)=='1') {
+            } else if (listaCzapek.get(i).isCzyZakupiona()) {
                 akcja[i] = 1;
             } else {
                 akcja[i] = 0;
@@ -1004,15 +1000,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void aktualizujTextPrzyciskow(Button[] button) {
-
         Log.w("kurwaw",String.valueOf(akcja.length));
-        Log.w("kurwawa",String.valueOf(kupioneczapkibool.length())); //XDDDD
                 for(int i=0;i<button.length;i++){
                     Log.w("cototjest","kup_czapka" + String.valueOf(i));
                     if (i==current_item_index) {
                         button[i].setText(getString(R.string.zdejmij));
                         akcja[i] = 2;
-                    } else if (kupioneczapkibool.charAt(i)=='1') {
+                    } else if (listaCzapek.get(i).isCzyZakupiona()) {
                         button[i].setText(getString(R.string.zaloz));
                         akcja[i] = 1;
                     } else {
@@ -1037,84 +1031,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         return json;
     }
-    int przyciskNumer=0;
-    /* stara funkcja, jest dalej używana
-    public void pokazPopupZakupuCzapek(View view) {
-        String buttonId = getResources().getResourceEntryName(view.getId());
-        if (buttonId.startsWith("kup_czapka")) {
-            przyciskNumer = Integer.parseInt(buttonId.substring("kup_czapka".length()));
-            int obrazResId = 0;
-            final String nazwaCzapki;
-            final String opisCzapki;
-            final String idCzapki;
-            if (zaladowano_czapki && przyciskNumer < listaCzapek.size()) {
-                czapka = listaCzapek.get(przyciskNumer);
-                obrazResId = getResources().getIdentifier(czapka.getPlik(), "drawable", getPackageName());
-            } else {
-                Log.w("MojaAplikacja", "Brak czapki dla przycisku numer: " + przyciskNumer);
-                nazwaCzapki = "Nazwa czapki";
-                opisCzapki = "Opis czapki";
-                idCzapki = String.valueOf(przyciskNumer);
-            }
-            Log.w("POPUP_VISIBLE",String.valueOf(isPopupVisible));
-                if(akcja[czapka.getId()]==0){
-                    if(isPopupVisible==false){
-                        POPUP_EXCEPTION_MODE = 1;
-                        ShowPopup(R.layout.popup_layout);
-                        ImageView czapaImage = myDialog.findViewById(R.id.czapa_image);
-                        TextView czapaNazwa = myDialog.findViewById(R.id.czapa_nazwa);
-                        TextView czapaOpis = myDialog.findViewById(R.id.czapa_opis);
-                        Button kupCzapaButton = myDialog.findViewById(R.id.kup_czapa);
-                        if (obrazResId != 0) {
-                            czapaImage.setImageResource(obrazResId);
-                        } else {
-                            czapaImage.setImageResource(R.drawable.circle);
-                        }
-                        czapaNazwa.setText(czapka.getNazwa(getLang()));
-                        czapaOpis.setText(czapka.getOpis(getLang()));
-                        Log.w("akcjasuper",String.valueOf(akcja[czapka.getId()]));
-                    kupCzapaButton.setOnClickListener(new View.OnClickListener() {
-                     @Override
-                     public void onClick(View v) {
-                         int dostepneHajsy = getMoney();
-                         if (dostepneHajsy >= czapka.getCena()) {
-                            savePurchasedCzapka(String.valueOf(czapka.getId()));
-                            int noweHajsy = czapka.getCena()*-1;
-                            SaveMoney(noweHajsy);
-                            Toast.makeText(MainActivity.this, "Zakupiono " + czapka.getNazwa(getLang()), Toast.LENGTH_SHORT).show();
-                            addProgress(3);
-                            ClosePopup();
-                            aktualizujTextPrzyciskow();
-                            updateCrococoinsInShop();
-                         } else {
-                            Toast.makeText(MainActivity.this, "Nie masz wystarczająco crococoinów na zakup", Toast.LENGTH_SHORT).show();
-                         }
-                    }
-                });
-                myDialog.show();
-                POPUP_EXCEPTION_MODE = 0;
-            }
-            }
-            else if(akcja[czapka.getId()]==1){
-                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(CURRENT_ITEM_ID,czapka.getId());
-                editor.apply();
-                current_item_index = sharedPreferences.getInt(CURRENT_ITEM_ID,-1);
-                aktualizujTextPrzyciskow();
-            }
-            else if(akcja[czapka.getId()]==2){
-                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(CURRENT_ITEM_ID,-1);
-                editor.apply();
-                current_item_index = sharedPreferences.getInt(CURRENT_ITEM_ID,-1);
-                aktualizujTextPrzyciskow();
-            }
-            Log.w("CURRENT_INDEX_CAZAPA",String.valueOf(current_item_index));
-        }
-    }
-    */
     public void Generuj_Achievementy(LinearLayout parent,Achievements osiagniecie){
         RelativeLayout mainRelativeLayout = new RelativeLayout(this);
         RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
@@ -1165,7 +1081,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         mainRelativeLayout.addView(Komentarz);
         parent.addView(mainRelativeLayout);
     }
-    public Button Generuj_Przedmiot(LinearLayout parent,int PlikResID,String TytulText,int CenaText,boolean premium){
+    public Button Generuj_Przedmiot(LinearLayout parent,int PlikResID,String TytulText,int CenaText,boolean premium,String Opis){
         RelativeLayout mainRelativeLayout = new RelativeLayout(this);
         RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -1198,6 +1114,21 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         czapkaImageView.setImageResource(PlikResID);
         czapkaImageView.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
         czapkaParams.setMargins(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
+        czapkaImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                POPUP_EXCEPTION_MODE = 1;
+                ShowPopup(R.layout.popup_layout);
+                ImageView czapaImage = myDialog.findViewById(R.id.czapa_image);
+                TextView czapaNazwa = myDialog.findViewById(R.id.czapa_nazwa);
+                TextView czapaOpis = myDialog.findViewById(R.id.czapa_opis);
+                czapaImage.setImageResource(PlikResID);
+                czapaNazwa.setText(TytulText);
+                czapaOpis.setText(Opis);
+                myDialog.show();
+                POPUP_EXCEPTION_MODE = 0;
+            }
+        });
         mainRelativeLayout.addView(czapkaImageView,czapkaParams);
 
         RelativeLayout nestedRelativeLayout = new RelativeLayout(this);
@@ -1387,7 +1318,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<listaCzapek.size();i++){
                     Czapka czapa = listaCzapek.get(i);
                     int obrazResId = getResources().getIdentifier(czapa.getPlik(), "drawable", getPackageName());
-                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,czapa.getNazwa(getLang()),czapa.getCena(),czapa.getCzyPremium());
+                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,czapa.getNazwa(getLang()),czapa.getCena(),czapa.getCzyPremium(),czapa.getOpis(getLang()));
                     int finalI = i;
                     listaButtonow[i]=kupButton;
                     kupButton.setOnClickListener(new View.OnClickListener() {
@@ -1406,7 +1337,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<listaZarcia.size();i++){
                     Jedzenie jedzenie = listaZarcia.get(i);
                     int obrazResId = getResources().getIdentifier(jedzenie.getPlik(), "drawable", getPackageName());
-                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,jedzenie.getNazwa(getLang()),jedzenie.getCena(),jedzenie.getCzyPremium());
+                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,jedzenie.getNazwa(getLang()),jedzenie.getCena(),jedzenie.getCzyPremium(),jedzenie.getOpis(getLang()));
                     kupButton.setText(getString(R.string.kup));
                     kupButton.setEnabled(jedzenie.getCzyDostepna());
                     int finalI = i;
@@ -1424,7 +1355,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<listaPotek.size();i++){
                     Potka potka = listaPotek.get(i);
                     int obrazResId = getResources().getIdentifier(potka.getPlik(), "drawable", getPackageName());
-                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,potka.getNazwa(getLang()),potka.getCena(),potka.getCzyPremium());
+                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,potka.getNazwa(getLang()),potka.getCena(),potka.getCzyPremium(),potka.getOpis(getLang()));
                     kupButton.setText(getString(R.string.kup));
                     kupButton.setEnabled(potka.getCzyDostepna());
                     kupButton.setOnClickListener(new View.OnClickListener() {
@@ -1444,64 +1375,52 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             final String nazwaCzapki;
             final String opisCzapki;
             final String idCzapki;
-            if (zaladowano_czapki && przyciskNumer < listaCzapek.size()) {
-                czapka = listaCzapek.get(przyciskNumer);
-                obrazResId = getResources().getIdentifier(czapka.getPlik(), "drawable", getPackageName());
-            } else {
-                Log.w("MojaAplikacja", "Brak czapki dla przycisku numer: " + przyciskNumer);
-                nazwaCzapki = "Nazwa czapki";
-                opisCzapki = "Opis czapki";
-                idCzapki = String.valueOf(przyciskNumer);
-            }
             Log.w("POPUP_VISIBLE",String.valueOf(isPopupVisible));
-            if(akcja[czapka.getId()]==0){
-                if(isPopupVisible==false){
-                    POPUP_EXCEPTION_MODE = 1;
-                    ShowPopup(R.layout.popup_layout);
-                    ImageView czapaImage = myDialog.findViewById(R.id.czapa_image);
-                    TextView czapaNazwa = myDialog.findViewById(R.id.czapa_nazwa);
-                    TextView czapaOpis = myDialog.findViewById(R.id.czapa_opis);
-                    Button kupCzapaButton = myDialog.findViewById(R.id.kup_czapa);
-                    if(!czapka.getCzyDostepna()) kupCzapaButton.setEnabled(false);
-                    if (obrazResId != 0) {
-                        czapaImage.setImageResource(obrazResId);
-                    } else {
-                        czapaImage.setImageResource(R.drawable.circle);
-                    }
-                    czapaNazwa.setText(czapka.getNazwa(getLang()));
-                    czapaOpis.setText(czapka.getOpis(getLang()));
-                    Log.w("akcjasuper",String.valueOf(akcja[czapka.getId()]));
-                    kupCzapaButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            int dostepneHajsy = getMoney();
-                            if (dostepneHajsy >= czapka.getCena()) {
-                                savePurchasedCzapka(String.valueOf(czapka.getId()));
-                                int noweHajsy = czapka.getCena()*-1;
-                                SaveMoney(noweHajsy);
-                                Toast.makeText(MainActivity.this, "Zakupiono " + czapka.getNazwa(getLang()), Toast.LENGTH_SHORT).show();
-                                addProgress(3);
-                                ClosePopup();
-                                aktualizujTextPrzyciskow(kupButton);
-                                updateCrococoinsInShop();
-                            } else {
-                                Toast.makeText(MainActivity.this, "Nie masz wystarczająco crococoinów na zakup", Toast.LENGTH_SHORT).show();
+            if(akcja[listaCzapek.get(przyciskNumer).getId()]==0){
+                if(User.getMoney()<listaCzapek.get(przyciskNumer).getCena()){
+                    Toast.makeText(MainActivity.this, "Nie masz wystarczająco crococoinów na zakup", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    if(isPopupVisible==false){
+                        POPUP_EXCEPTION_MODE = 1;
+                        ShowPopup(R.layout.kupienie_czapki);
+                        Button kupCzapaButton = myDialog.findViewById(R.id.kup_czapa);
+                        Log.w("akcjasuper",String.valueOf(akcja[listaCzapek.get(przyciskNumer).getId()]));
+                        kupCzapaButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int dostepneHajsy = getMoney();
+                                if (dostepneHajsy >= listaCzapek.get(przyciskNumer).getCena()) {
+                                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putBoolean(PURCHASEDCZAPKA+listaCzapek.get(przyciskNumer).getId(),true);
+                                    editor.apply();
+                                    sharedPreferences.getBoolean(PURCHASEDCZAPKA+listaCzapek.get(przyciskNumer).getId(),false);
+                                    listaCzapek.get(przyciskNumer).setCzyZakupiona(true);
+                                    int noweHajsy = listaCzapek.get(przyciskNumer).getCena()*-1;
+                                    SaveMoney(noweHajsy);
+                                    Toast.makeText(MainActivity.this, "Zakupiono " + listaCzapek.get(przyciskNumer).getNazwa(getLang()), Toast.LENGTH_SHORT).show();
+                                    addProgress(3);
+                                    ClosePopup();
+                                    aktualizujTextPrzyciskow(kupButton);
+                                    updateCrococoinsInShop();
+                                }
                             }
-                        }
-                    });
-                    myDialog.show();
-                    POPUP_EXCEPTION_MODE = 0;
+                        });
+                        myDialog.show();
+                        POPUP_EXCEPTION_MODE = 0;
+                    }
                 }
             }
-            else if(akcja[czapka.getId()]==1){
+            else if(akcja[listaCzapek.get(przyciskNumer).getId()]==1){
                 SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(CURRENT_ITEM_ID,czapka.getId());
+                editor.putInt(CURRENT_ITEM_ID,listaCzapek.get(przyciskNumer).getId());
                 editor.apply();
                 current_item_index = sharedPreferences.getInt(CURRENT_ITEM_ID,-1);
                 aktualizujTextPrzyciskow(kupButton);
             }
-            else if(akcja[czapka.getId()]==2){
+            else if(akcja[listaCzapek.get(przyciskNumer).getId()]==2){
                 SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt(CURRENT_ITEM_ID,-1);
@@ -1746,53 +1665,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
-    public void loadPurchasedCzapki(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        kupioneczapkibool = sharedPreferences.getString(PURCHASED_CZAPKI, czapkiilosc);
-        saveNewCzapka();
-        Log.w("JAPIERDOLE",kupioneczapkibool);
-    }
-    public void saveNewCzapka(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if(kupioneczapkibool.length()<listaCzapek.size()){
-            Log.d("zabij_mnie",String.valueOf(listaCzapek.size()-kupioneczapkibool.length()+1));
-            while(kupioneczapkibool.length()!=listaCzapek.size()){
-                kupioneczapkibool+="0";
-                Log.w("JAPIERDOLE",kupioneczapkibool);
-            }
-            editor.putString(PURCHASED_CZAPKI,kupioneczapkibool);
-            editor.apply();
-        }
-        if(kupioneczapkibool.length()>listaCzapek.size()){
-            String newstring="";
-            int h=0;
-            while(newstring.length()<listaCzapek.size()){
-                newstring += kupioneczapkibool.charAt(h);
-                h++;
-            }
-            kupioneczapkibool = newstring;
-            editor.putString(PURCHASED_CZAPKI,kupioneczapkibool);
-            editor.apply();
-        }
-    }
     public void loadCurrentCzapka(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         current_item_index = sharedPreferences.getInt(CURRENT_ITEM_ID, -1);
     }
-    private void savePurchasedCzapka(String czapka) {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        loadPurchasedCzapki();
-        StringBuilder myName = new StringBuilder(kupioneczapkibool);
-        myName.setCharAt(Integer.valueOf(czapka), '1');
-        kupioneczapkibool = myName.toString();
-        //zakupioneCzapki.add(czapka);
-        editor.putString(PURCHASED_CZAPKI, kupioneczapkibool);
-        editor.apply();
-        Log.w("kupione_czapy",kupioneczapkibool);
-    }
-    // #TODO napisz na nowo zapisywanie czapki, to jest bardzo łatwe i intuicyjne, użyj obiektu Czapka
     void UstawKrokodyla(){
         czerwony_krokodyl = findViewById(R.id.krokodyl);
         //Toast.makeText(this, "LF"+String.valueOf(lastFeed), Toast.LENGTH_SHORT).show();
@@ -2662,6 +2538,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void Set_Ids_List(String response){
+        int katIDs=0;
         if(response.equals("")){
             String id,poprawne,tresc,wyjasnienie,A,B,C,D,kategoria,KatID;
             Log.w("WarningDBError","DBCONNECTIONFAILED");
@@ -2696,6 +2573,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray jsonArray = jsonObject.getJSONArray("API");
                 String id, poprawne, tresc, wyjasnienie, A, B, C, D,kategoria,KatID;
+                boolean helper=false;
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject2 = jsonArray.getJSONObject(i);
                     id = jsonObject2.getString("id");
@@ -2708,11 +2586,17 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     D = jsonObject2.getString("D");
                     kategoria = jsonObject2.getString("kategoria");
                     KatID = jsonObject2.getString("katID");
+                    if(katIDs!=Integer.valueOf(KatID)){
+                        katIDs = Integer.valueOf(KatID);
+                        listaKategorii.add(kategoria);
+                    }
                     PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria,Integer.valueOf(KatID));
                     listaPytan.add(pytanie);
                     pytanie.Wypisz();
                     zaladowanodb=true;
+
                 }
+                Toast.makeText(this, String.valueOf(listaKategorii.size()), Toast.LENGTH_SHORT).show();
                 updateLoader();
             } catch (JSONException e) {
                 e.printStackTrace();

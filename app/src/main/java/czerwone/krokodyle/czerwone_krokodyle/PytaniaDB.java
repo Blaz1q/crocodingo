@@ -73,7 +73,9 @@ public class PytaniaDB {
     public String getWyjasnienie() {
         return Wyjasnienie;
     }
-
+    public String getKategoria(){
+        return Kategoria;
+    }
     public char getOdpUzytkownika() {
         Log.d("dziala?",String.valueOf(this.OdpUzytkownika));
         return OdpUzytkownika;

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="250dp"
+    android:layout_gravity="center"
+    android:background="#4F5D75"
+    android:padding="5dp">
+
+    <Button
+        android:id="@+id/kup_czapa"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:layout_marginEnd="185dp"
+        android:layout_marginBottom="50dp"
+        android:layout_weight="1"
+        android:backgroundTint="#2D3142"
+        android:gravity="center"
+        android:maxWidth="20dp"
+        android:padding="5dp"
+        android:text="@string/yes"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+
+    <Button
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="50dp"
+        android:layout_weight="1"
+        android:backgroundTint="#2D3142"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="@string/no"
+        android:textSize="18dp"
+        android:onClick="Zamknij_Popup"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/zamknij1"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        android:gravity="center"
+        android:text="X"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:onClick="Zamknij_Popup"
+        android:textStyle="bold"
+        tools:ignore="MissingConstraints,TextSizeCheck" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="116dp"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:text="Czy chcesz kupić tę czapkę?"
+        android:textColor="#fff"
+        android:textSize="30dp" />
+
+</RelativeLayout>

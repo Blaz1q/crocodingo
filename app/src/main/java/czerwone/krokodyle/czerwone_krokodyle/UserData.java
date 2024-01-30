@@ -81,14 +81,14 @@ public class UserData {
         return this.czy_zakrencil;
     }
     public void Zakrec(){
-        this.czy_zakrencil = true;
-        editEditor(KOLOFORTUNY,true);
+        //this.czy_zakrencil = true;
+        //editEditor(KOLOFORTUNY,true);
     }
     private void UpdateValues(){
         this.Money = sharedPreferences.getInt(MONEY, 0);
         this.Food = sharedPreferences.getInt(FOOD, 0);
         this.Lang = sharedPreferences.getString(LANG, "Pl");
-        this.czy_zakrencil = sharedPreferences.getBoolean(KOLOFORTUNY,false);
+        this.czy_zakrencil = false;//sharedPreferences.getBoolean(KOLOFORTUNY,false);
     }
     public void setFood(int value){
         editEditor(FOOD,value);
