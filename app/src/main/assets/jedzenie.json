@@ -9,11 +9,10 @@
     },
     {
         "id": 1,
-        "plik": "ciastko",
+        "plik": "logo",
         "nazwa": ["mięso"],
         "opis": ["Croco bardzo lubi wszamać dobre mięsko"],
         "nasycenie": 14000,
-        "cena": 600,
-        "czyDostepne": false
+        "cena": 600
     }
 ]

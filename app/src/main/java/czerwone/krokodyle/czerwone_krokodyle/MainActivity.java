@@ -208,15 +208,70 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     Dialog myDialog;
     Dialog TopBar;
     Boolean showonce = false;
+    int SELECTED_FOOD=0;
+    int SELECTED_LIST=0;
     final int[] sectors = {1,2,3,4,5,6,7,8,9,10};
     final int[] sectorDegrees = new int[sectors.length];
 
-    int randomSectorIndex = 0;
-
     boolean spinning = false;
-    int earningsRecord = 0;
     Random random = new Random();
     Runnable loadingrunnable;
+    @Override
+    protected void onResume() {
+        handler.postDelayed(loadingrunnable = new Runnable() {
+            @Override
+            public void run() {
+                handler.postDelayed(loadingrunnable, 400);
+                try{
+                    TextView loadingtext = findViewById(R.id.text_loading);
+                    String dots="";
+                    for(int j = kropki%3; j>=0 %3; j--){
+                        dots+=".";
+                    }
+                    String finalDots = dots;
+                    loadingtext.setText(("Loading"+ finalDots));
+
+                    kropki++;
+                }catch (Exception ee){
+
+                }
+            }
+        }, 400);
+
+        handler3.postDelayed(runnable3 = new Runnable() {
+            @Override
+            public void run() {
+                handler3.postDelayed(runnable3, Mrugajco);
+                if(canplayanimations){
+                    Mrugnij();
+                }
+            }
+        },Mrugajco);
+        handler2.postDelayed(runnable2 = new Runnable() {
+            @Override
+            public void run() {
+                handler2.postDelayed(runnable2, AnimationTimer);
+                if(canplayanimations){
+                    Animation();
+                }
+            }
+        },AnimationTimer);
+
+
+        handler.postDelayed(runnable = new Runnable() {
+            public void run() {
+                handler.postDelayed(runnable, UpdateTimer);
+                Log.w("powinno_odjac",String.valueOf((currentTime-savedTime)/1000));
+                Log.w("lastFeed_przed",String.valueOf(lastFeed));
+                lastFeed -= (currentTime-savedTime)/1000;
+                Log.w("lastFeed_po",String.valueOf(lastFeed));
+                SaveData();
+            }
+        }, UpdateTimer);
+        super.onResume();
+        bgmusicnormal();
+        ResumeTimePassage();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
@@ -233,14 +288,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         User = new UserData(getApplicationContext());
+        canplayanimations = false;
         LoadData();
         UpdateLocale();
         loadJSONFromAsset();
         loadQuestsFromAsset();
         SaveQuestDate();
         loadQuestProgress();
-        loadJedzenieFromAsset();
         loadPotkiFromAsset();
+        loadJedzenieFromAsset();
         loadOsiagnieciaFromAsset();
         fetchData(0);
         RelativeLayout bgimg = findViewById(R.id.MAIN_LOADING_BG);
@@ -259,6 +315,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         cosiedzieje.setText("Uruchamianie");
                         new Handler(getMainLooper()).postDelayed(() -> {
                             setContentView(R.layout.main_page);
+                            canplayanimations = true;
                             UstawKrokodyla();
                             Math_syn.set_Math("\\text{rozruch}");
                             updateAccInfo();
@@ -274,10 +331,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         } catch (Exception e){
             e.printStackTrace();
         }
-        //DebugSetGlodny();
-        for(int k=0;k<100;k++){
-            LevelEq(k);
-        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Czy chcesz wyjść?")
                 .setPositiveButton("Tak", new DialogInterface.OnClickListener() {
@@ -577,62 +631,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean canplayanimations = true;
     int kropki=0;
     @Override
-    protected void onResume() {
-        handler.postDelayed(loadingrunnable = new Runnable() {
-            @Override
-            public void run() {
-                handler.postDelayed(loadingrunnable, 400);
-                try{
-                    TextView loadingtext = findViewById(R.id.text_loading);
-                    String dots="";
-                    for(int j = kropki%3; j>=0 %3; j--){
-                        dots+=".";
-                    }
-                    String finalDots = dots;
-                    loadingtext.setText(("Loading"+ finalDots));
-
-                    kropki++;
-                }catch (Exception ee){
-
-                }
-            }
-        }, 400);
-
-            handler3.postDelayed(runnable3 = new Runnable() {
-                @Override
-                public void run() {
-                    handler3.postDelayed(runnable3, Mrugajco);
-                    if(canplayanimations){
-                    Mrugnij();
-                    }
-                }
-            },Mrugajco);
-            handler2.postDelayed(runnable2 = new Runnable() {
-                @Override
-                public void run() {
-                    handler2.postDelayed(runnable2, AnimationTimer);
-                    if(canplayanimations){
-                    Animation();
-                    }
-                }
-            },AnimationTimer);
-
-
-        handler.postDelayed(runnable = new Runnable() {
-            public void run() {
-                handler.postDelayed(runnable, UpdateTimer);
-                Log.w("powinno_odjac",String.valueOf((currentTime-savedTime)/1000));
-                Log.w("lastFeed_przed",String.valueOf(lastFeed));
-                lastFeed -= (currentTime-savedTime)/1000;
-                Log.w("lastFeed_po",String.valueOf(lastFeed));
-                SaveData();
-            }
-        }, UpdateTimer);
-        super.onResume();
-        bgmusicnormal();
-        ResumeTimePassage();
-    }
-    @Override
     public void onPause() {
         super.onPause();
         //Toast.makeText(getApplicationContext(),"PAUSE",Toast.LENGTH_SHORT).show();
@@ -774,7 +772,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
                 int nasycenie = jedzenieJson.getInt("nasycenie");
                 int cena = jedzenieJson.getInt("cena"); // Pobierz cenę czapki
-                Jedzenie jedzenie = new Jedzenie(id, plik,nazwaArr,opisArr, cena,nasycenie); // Zaktualizuj obiekt Czapka
+                Jedzenie jedzenie = new Jedzenie(id, plik,nazwaArr,opisArr, cena,nasycenie,getApplicationContext()); // Zaktualizuj obiekt Czapka
                 if(jedzenieJson.has("czyDostepne")){
                     jedzenie.setCzyDostepna(jedzenieJson.getBoolean("czyDostepne"));
                 }
@@ -887,7 +885,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     czasTrwania = potkiJSON.getInt("czas_trwania");
                 }
                 int cena = potkiJSON.getInt("cena"); // Pobierz cenę czapki
-                Potka potka = new Potka(id, plik,nazwaArr,opisArr, cena,czasTrwania); // Zaktualizuj obiekt Czapka
+                Potka potka = new Potka(id, plik,nazwaArr,opisArr, cena,czasTrwania,getApplicationContext()); // Zaktualizuj obiekt Czapka
                 if(potkiJSON.has("czyDostepne")){
                     potka.setCzyDostepna(potkiJSON.getBoolean("czyDostepne"));
                 }
@@ -1411,10 +1409,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,jedzenie.getNazwa(getLang()),jedzenie.getCena(),jedzenie.getCzyPremium());
                     kupButton.setText(getString(R.string.kup));
                     kupButton.setEnabled(jedzenie.getCzyDostepna());
+                    int finalI = i;
                     kupButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            KupCiastka(v);
+                            KupCiastka(v, finalI);
                         }
                     });
                 }
@@ -1431,7 +1430,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     kupButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            KupCiastka(v);
+                            //KupCiastka(v);
                         }
                     });
                 }
@@ -1516,9 +1515,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
     }
-    public void KupCiastka(View v){
-        if(getMoney()>=200){
-            SaveFood(1);
+    public void KupCiastka(View v,int idJedzenia){
+        if(getMoney()>=listaZarcia.get(idJedzenia).getCena()){
+            listaZarcia.get(idJedzenia).DodajJedzenie();
             SaveMoney(-200);
             updateCrococoinsInShop();
         }
@@ -1551,8 +1550,32 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean czypokazana = false;
     public void ustawMiche(){
         TextView ukrytytekst = findViewById(R.id.liczba_ciastek);
-        ukrytytekst.setText(getFood() +" Ciastek");
-        if(getFood()>0){
+        TextView ukrytytekst2 = findViewById(R.id.liczba_ciastekShadow);
+        ImageView zdj = findViewById(R.id.rzeczimg);
+        switch(SELECTED_LIST){
+            case 0:
+            {
+                Log.d("??",String.valueOf(listaZarcia.size()));
+                String ilosc = String.valueOf(listaZarcia.get(SELECTED_FOOD).getZapisanaIlosc());
+                zdj.setImageResource(getResources().getIdentifier("drawable/"+listaZarcia.get(SELECTED_FOOD).getPlik(), null, getApplicationContext().getPackageName()));
+                ukrytytekst.setText(ilosc);
+                ukrytytekst2.setText(ilosc);
+                ustawStateJedzenia(SELECTED_FOOD);
+            }
+            break;
+            case 1:
+            {
+                String ilosc = String.valueOf(listaPotek.get(SELECTED_FOOD).getZapisanaIlosc());
+                zdj.setImageResource(getResources().getIdentifier("drawable/"+listaPotek.get(SELECTED_FOOD).getPlik(), null, getApplicationContext().getPackageName()));
+                ukrytytekst.setText(ilosc);
+                ukrytytekst2.setText(ilosc);
+            }
+            break;
+        }
+
+    }
+    public void ustawStateJedzenia(int id){
+        if(listaZarcia.get(id).getZapisanaIlosc()>0){
             try{
                 ImageView miska = findViewById(R.id.jedzeniebutton);
                 miska.setImageResource(R.drawable.pelnamiskapsa);
@@ -1560,7 +1583,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
             }
         }
-        else if(getFood()==0){
+        else{
             try{
                 ImageView miska = findViewById(R.id.jedzeniebutton);
                 miska.setImageResource(R.drawable.pustamiskapsa);
@@ -1569,45 +1592,99 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    boolean czyselectpokazany = false;
+    public void PokazJedzenieSelect(View v){
+        if(czyselectpokazany){
+            LinearLayout container = findViewById(R.id.selectJedzenie);
+            YoYo.with(Techniques.SlideOutRight)
+                    .duration(300)
+                    .playOn(container);
+
+            new Handler(getMainLooper()).postDelayed(() -> {
+                try{
+                    container.setVisibility(View.GONE);
+                } catch (Exception ignored) {
+                    throw new RuntimeException(ignored);
+                }
+            }, 300);
+
+            czyselectpokazany = false;
+            PokazMiske(v);
+        }
+        else{
+            LinearLayout container = findViewById(R.id.selectJedzenie);
+            container.setVisibility(View.VISIBLE);
+            YoYo.with(Techniques.SlideInRight)
+                    .duration(300)
+                    .playOn(container);
+            czyselectpokazany = true;
+            PokazMiske(v);
+        }
+    }
     public void PokazMiske(View v){
         if(v.getId()==R.id.jedzeniemenu){
             ustawMiche();
             if(czypokazana){
-                ImageView ukrytybutton = findViewById(R.id.jedzeniebutton);
-                TextView ukrytytekst = findViewById(R.id.liczba_ciastek);
-                YoYo.with(Techniques.SlideOutRight)
+                RelativeLayout container = findViewById(R.id.karmieniecontainer);
+                LinearLayout strzalki = findViewById(R.id.strzalki);
+                YoYo.with(Techniques.SlideOutLeft)
                         .duration(300)
-                        .playOn(ukrytybutton);
-                YoYo.with(Techniques.SlideOutRight)
+                        .playOn(container);
+                YoYo.with(Techniques.SlideOutLeft)
                         .duration(300)
-                        .playOn(ukrytytekst);
+                        .playOn(strzalki);
 
                 new Handler(getMainLooper()).postDelayed(() -> {
                     try{
-                        ukrytybutton.setVisibility(View.GONE);
-                        ukrytytekst.setVisibility(View.GONE);
-
+                        container.setVisibility(View.GONE);
+                        strzalki.setVisibility(View.GONE);
                     } catch (Exception ignored) {
                         throw new RuntimeException(ignored);
                     }
                 }, 300);
 
+
                 czypokazana = false;
             }
             else{
-                ImageView ukrytybutton = findViewById(R.id.jedzeniebutton);
-                TextView ukrytytekst = findViewById(R.id.liczba_ciastek);
-                ukrytybutton.setVisibility(View.VISIBLE);
-                ukrytytekst.setVisibility(View.VISIBLE);
-                YoYo.with(Techniques.SlideInRight)
+                RelativeLayout container = findViewById(R.id.karmieniecontainer);
+                LinearLayout strzalki = findViewById(R.id.strzalki);
+                container.setVisibility(View.VISIBLE);
+                strzalki.setVisibility(View.VISIBLE);
+
+                YoYo.with(Techniques.SlideInLeft)
                         .duration(300)
-                        .playOn(ukrytybutton);
-                YoYo.with(Techniques.SlideInRight)
+                        .playOn(container);
+                YoYo.with(Techniques.SlideInLeft)
                         .duration(300)
-                        .playOn(ukrytytekst);
+                        .playOn(strzalki);
                 czypokazana = true;
             }
         }
+    }
+    public void ZmienPrzedmiotInc(View v){
+        int ListSize=0;
+        if(SELECTED_LIST==0) ListSize = listaZarcia.size();
+        if(SELECTED_LIST==1) ListSize = listaPotek.size();
+        if(ListSize>SELECTED_FOOD+1){
+            SELECTED_FOOD++;
+        }
+        else{
+            SELECTED_FOOD=0;
+        }
+        ustawMiche();
+    }
+    public void ZmienPrzedmiotDec(View v){
+        int ListSize=0;
+        if(SELECTED_LIST==0) ListSize = listaZarcia.size();
+        if(SELECTED_LIST==1) ListSize = listaPotek.size();
+        if(SELECTED_FOOD>0){
+            SELECTED_FOOD--;
+        }
+        else{
+            SELECTED_FOOD=ListSize-1;
+        }
+        ustawMiche();
     }
     public void Animacja_Jedzenia(){
             try{
@@ -1641,7 +1718,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void Nakarm(View v){
         if(v.getId()==R.id.jedzeniebutton){
             ustawMiche();
-            if(getFood()>0){
+            if(listaZarcia.get(SELECTED_FOOD).getZapisanaIlosc()>0){
                 addProgress(2);
                 Hapaba();
                 SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -1655,17 +1732,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     }
                 }
                 else{
-                    try{
-                        editor.putLong(LAST_FEED, sharedPreferences.getLong(LAST_FEED,0)+wartosc_ciastka);
-                    }catch (Exception e){
-
-                    }
+                    editor.putLong(LAST_FEED, sharedPreferences.getLong(LAST_FEED,0)+listaZarcia.get(SELECTED_FOOD).getNasycenie());
                 }
                 editor.apply();
                 lastFeed = sharedPreferences.getLong(LAST_FEED,0);
                 LoadData();
                 Animacja_Jedzenia();
-                SaveFood(-1);
+                listaZarcia.get(SELECTED_FOOD).Zjedz(getLang());
                 ustawMiche();
                 ustawCzapke();
             }else{
@@ -1722,13 +1795,18 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     // #TODO napisz na nowo zapisywanie czapki, to jest bardzo łatwe i intuicyjne, użyj obiektu Czapka
     void UstawKrokodyla(){
         czerwony_krokodyl = findViewById(R.id.krokodyl);
+        //Toast.makeText(this, "LF"+String.valueOf(lastFeed), Toast.LENGTH_SHORT).show();
         if(lastFeed>gloduje_co&&lastFeed>umiera_po){
            czerwony_krokodyl.setImageResource(R.drawable.logo);
+           User.CrocoState = 0;
         } else if(lastFeed>umiera_po&&lastFeed<gloduje_co){
             czerwony_krokodyl.setImageResource(R.drawable.glodnykroko);
+            User.CrocoState = 1;
         }else{
             czerwony_krokodyl.setImageResource(R.drawable.ripcroco);
+            User.CrocoState = 2;
         }
+        //Toast.makeText(this, String.valueOf(User.CrocoState), Toast.LENGTH_SHORT).show();
     }
     void Mrugnij(){
         try{
@@ -1924,40 +2002,18 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         switchstatewibracje = sharedPreferences.getBoolean(SWITCHWIBRACJE,false);
         savedTime = sharedPreferences.getLong(SAVED_DATE,currentTime);
         currentVol = sharedPreferences.getInt(VOLUME,-1);
+        //DebugSetGlodny();
         if(lastFeed==0){
             lastFeed = sharedPreferences.getLong(LAST_FEED,0);
         }
-
         Log.w("saved_time",String.valueOf(savedTime));
         Log.w("current_time",String.valueOf(currentTime));
         Log.w("time_calc",String.valueOf(currentTime-savedTime));
         Log.w("lastFeedVal",String.valueOf(lastFeed));
         if(canplayanimations) {
-            if (lastFeed > gloduje_co) {
-                try {
-                    czerwony_krokodyl = findViewById(R.id.krokodyl);
-                    czerwony_krokodyl.setImageResource(R.drawable.logo);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (lastFeed < gloduje_co && lastFeed > umiera_po) {
-                try {
-                    czerwony_krokodyl = findViewById(R.id.krokodyl);
-                    czerwony_krokodyl.setImageResource(R.drawable.glodnykroko);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            } else if (lastFeed < umiera_po) {
-                try {
-                    czerwony_krokodyl = findViewById(R.id.krokodyl);
-                    czerwony_krokodyl.setImageResource(R.drawable.ripcroco);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
+            UstawKrokodyla();
         }
+
         //Toast.makeText(this,"D:"+String.valueOf(lastFeed),Toast.LENGTH_SHORT).show();
         //DebugSetGlodny();
         //Toast.makeText(this,"date diff: "+String.valueOf(currentTime-sharedPreferences.getLong(SAVED_DATE,currentTime)),Toast.LENGTH_SHORT).show();
@@ -2420,6 +2476,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             AddActions("challenge_pytanie");
         }
         czypokazana = false;
+        czyselectpokazany = false;
         LoadData();
         Wibracje();
     }
@@ -2606,7 +2663,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void Set_Ids_List(String response){
         if(response.equals("")){
-            String id,poprawne,tresc,wyjasnienie,A,B,C,D,kategoria;
+            String id,poprawne,tresc,wyjasnienie,A,B,C,D,kategoria,KatID;
             Log.w("WarningDBError","DBCONNECTIONFAILED");
             Toast.makeText(this,"Wystąpił bład, wczytano lokalne pytania",Toast.LENGTH_SHORT).show();
             try{
@@ -2623,7 +2680,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         B = jsonObject2.getString("B");
                         C = jsonObject2.getString("C");
                         D = jsonObject2.getString("D");
-                        PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria);
+                        PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria,0);
                         listaPytan.add(pytanie);
                         zaladowanodb=true;
                     }
@@ -2638,8 +2695,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             try {
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray jsonArray = jsonObject.getJSONArray("API");
-                String id, poprawne, tresc, wyjasnienie, A, B, C, D,kategoria;
-
+                String id, poprawne, tresc, wyjasnienie, A, B, C, D,kategoria,KatID;
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject2 = jsonArray.getJSONObject(i);
                     id = jsonObject2.getString("id");
@@ -2651,7 +2707,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     C = jsonObject2.getString("C");
                     D = jsonObject2.getString("D");
                     kategoria = jsonObject2.getString("kategoria");
-                    PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria);
+                    KatID = jsonObject2.getString("katID");
+                    PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria,Integer.valueOf(KatID));
                     listaPytan.add(pytanie);
                     pytanie.Wypisz();
                     zaladowanodb=true;
@@ -3200,6 +3257,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 TextView pominiete_chart = findViewById(R.id.chart_pominiete);
                 TextView nagroda1 = findViewById(R.id.nagroda1);
                 TextView nagrodashadow1 = findViewById(R.id.nagrodashadow1);
+                TextView nagrodaMultiplier = findViewById(R.id.nagrodamultiplier1);
 
                 LinearLayout.LayoutParams poprawneWeight = (LinearLayout.LayoutParams) poprawne_chart.getLayoutParams();
                 LinearLayout.LayoutParams negatywneWeight = (LinearLayout.LayoutParams) negatywne_chart.getLayoutParams();
@@ -3212,7 +3270,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 poprawneWeight.weight = (float) poprawne/q_num;
                 negatywneWeight.weight = (float) (q_num-poprawne-brak_odp)/q_num;
                 pominieteWeight.weight = (float) brak_odp/q_num;
-
+                double mnoznik = 1;
+                if(User.CrocoState==1){
+                    mnoznik=0.7;
+                }
+                if(User.CrocoState==2){
+                    mnoznik=0.5;
+                }
+                int finalnagroda;
                 procenty.setText(fmt(oblicz_percenty) +"%");
                 wynik_pkt.setText("("+String.valueOf(poprawne)+"/"+String.valueOf(q_num)+")");
                 if(oblicz_percenty>=30){
@@ -3224,12 +3289,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     nagrodashadow1.setText("0");
                     if(oblicz_percenty>20){
 
-                        SaveFood(1);
-                        SaveMoney(100);
-                        nagroda1.setText("100");
-                        nagrodashadow1.setText("100");
+                        //SaveFood(1);
+                        finalnagroda = (int) Math.round(100*mnoznik);
+                        SaveMoney(finalnagroda);
+                        nagroda1.setText(String.valueOf(finalnagroda));
+                        nagrodashadow1.setText(String.valueOf(finalnagroda));
                         Pokaz_Topbar();
-                        Aktualizuj_Hajs(getMoney()-100,getMoney());
+                        Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
                         Ukryj_Topbar();
                     }
                     msg_text.setText(Wynik_msg[0]);
@@ -3238,43 +3304,48 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 } else if (oblicz_percenty>=30&&oblicz_percenty<60) {
                     msg_text.setText(Wynik_msg[1]);
                     SaveFood(3);
-                    SaveMoney(300);
-                    nagroda1.setText("300");
-                    nagrodashadow1.setText("300");
+                    finalnagroda = (int) Math.round(300*mnoznik);
+                    SaveMoney(finalnagroda);
+                    nagroda1.setText(String.valueOf(finalnagroda));
+                    nagrodashadow1.setText(String.valueOf(finalnagroda));
                     Pokaz_Topbar();
-                    Aktualizuj_Hajs(getMoney()-300,getMoney());
+                    Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
                     Ukryj_Topbar();
                 } else if (oblicz_percenty>=60&&oblicz_percenty<80) {
                     msg_text.setText(Wynik_msg[2]);
                     SaveFood(5);
-                    SaveMoney(500);
-                    nagroda1.setText("500");
-                    nagrodashadow1.setText("500");
+                    finalnagroda = (int) Math.round(500*mnoznik);
+                    SaveMoney(finalnagroda);
+                    nagroda1.setText(String.valueOf(finalnagroda));
+                    nagrodashadow1.setText(String.valueOf(finalnagroda));
                     Pokaz_Topbar();
-                    Aktualizuj_Hajs(getMoney()-500,getMoney());
+                    Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
                     Ukryj_Topbar();
                 } else if (oblicz_percenty>=80&&oblicz_percenty<100) {
                     msg_text.setText(Wynik_msg[3]);
                     SaveFood(7);
-                    SaveMoney(700);
-                    nagroda1.setText("700");
-                    nagrodashadow1.setText("700");
+                    finalnagroda = (int) Math.round(700*mnoznik);
+                    SaveMoney(finalnagroda);
+                    nagroda1.setText(String.valueOf(finalnagroda));
+                    nagrodashadow1.setText(String.valueOf(finalnagroda));
                     Pokaz_Topbar();
-                    Aktualizuj_Hajs(getMoney()-700,getMoney());
+                    Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
                     Ukryj_Topbar();
                 } else if (oblicz_percenty==100) {
                     msg_text.setText(Wynik_msg[4]);
                     SaveFood(10);
-                    SaveMoney(1000);
-                    nagroda1.setText("1000");
-                    nagrodashadow1.setText("1000");
+                    finalnagroda = (int) Math.round(1000*mnoznik);
+                    SaveMoney(finalnagroda);
+                    nagroda1.setText(String.valueOf(finalnagroda));
+                    nagrodashadow1.setText(String.valueOf(finalnagroda));
                     Pokaz_Topbar();
-                    Aktualizuj_Hajs(getMoney()-1000,getMoney());
+                    Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
                     Ukryj_Topbar();
                 }
                 if(czyZalogowany==true){
                     updateFirebaseData(acct.getIdToken());
                 }
+                nagrodaMultiplier.setText(String.valueOf(mnoznik*100)+"%");
             }catch (Exception e){
                 e.printStackTrace();
             }

@@ -16,8 +16,9 @@ public class PytaniaDB {
     private char OdpUzytkownika;
     private int OdpUzytkownikaInt;
     private int PoprawnaOdpInt;
+    private int KatID;
 
-    public PytaniaDB(int id,String tresc,char poprawna,String odpA,String odpB,String odpC,String odpD,String wyjasnienie,String kategoria){
+    public PytaniaDB(int id,String tresc,char poprawna,String odpA,String odpB,String odpC,String odpD,String wyjasnienie,String kategoria,int Kat){
         this.Id = id;
         this.Tresc = tresc;
         this.PoprawnaOdp = poprawna;
@@ -27,9 +28,13 @@ public class PytaniaDB {
         this.odpowiedzD = odpD;
         this.Wyjasnienie = wyjasnienie;
         this.Kategoria = kategoria;
+        this.KatID = Kat;
         this.Odpowiedzi = new String[]{this.odpowiedzA, this.odpowiedzB, this.odpowiedzC, this.odpowiedzD};
         this.OdpUzytkownika = '-';
         setPoprawnaOdpInt(this.PoprawnaOdp);
+    }
+    public int getKatID(){
+        return this.KatID;
     }
     public void ZapiszOdpowiedz(char odp){
         this.OdpUzytkownika = odp;
@@ -86,6 +91,7 @@ public class PytaniaDB {
         Log.d("Wyjasnienie",this.Wyjasnienie);
         Log.d("Kategoria",this.Kategoria);
         Log.d("OdpUzytkownika",String.valueOf(this.OdpUzytkownika));
+        Log.d("KatID",String.valueOf(this.KatID));
 
     }
     public String[] getOdpowiedzi() {

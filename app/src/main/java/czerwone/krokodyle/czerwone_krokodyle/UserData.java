@@ -46,8 +46,9 @@ public class UserData {
     private static final String SAVED_LEVEL = "SAVED_LEVEL";
     private static final String SAVED_EXP = "SAVED_EXP";
     private final SharedPreferences sharedPreferences;
-    private final SharedPreferences.Editor editor;
     private static final String SHARED_PREFS = "sharedPrefs"; //NIE ZMIENIAĆ!
+    private final SharedPreferences.Editor editor;
+
     private final Context context;
     private int Money;
     private int Exp;
@@ -61,6 +62,13 @@ public class UserData {
     private int Zdane;
     private int Niezdane;
     private int Volume;
+    public int CrocoState;
+    /**
+     Wartości Crocostate
+     0 === żywy
+     1 === głodny
+     2 === martwy
+     */
     private boolean czy_zakrencil;
     private final String currentDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
     UserData(Context ctx){
@@ -110,8 +118,8 @@ public class UserData {
     }
     public int getDaily(){
         String readableDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
-        if(sharedPreferences.getString(SAVED_QUEST_DATE,"N/A").equals("N/A")){
-            editEditor(SAVED_QUEST_DATE,readableDate);
+        if(sharedPreferences.getString(SAVED_DAIlY_DATE,"N/A").equals("N/A")){
+            editEditor(SAVED_DAIlY_DATE,readableDate);
         }
         else{
             readableDate = sharedPreferences.getString(SAVED_DAIlY_DATE,readableDate);
@@ -132,14 +140,13 @@ public class UserData {
     public void ResetAllQuestProgress(List<Quests> listaQuestow){
         Log.d("PROGRESSRESET","RESET");
         for (int i = 0; i < listaQuestow.size(); i++) {
-            Quests quest = listaQuestow.get(i);
-            quest.setProgress(0);
-            quest.setHadPlayedsound(false);
-            quest.overrideProgress(0);
-            quest.resetCzyWylosowano();
-            quest.checkifDone();
+            listaQuestow.get(i).setProgress(0);
+            listaQuestow.get(i).setHadPlayedsound(false);
+            listaQuestow.get(i).overrideProgress(0);
+            listaQuestow.get(i).resetCzyWylosowano();
+            listaQuestow.get(i).checkifDone();
             editor.putBoolean(QUEST_CLAIM+ i,false);
-            quest.overrideClaim(sharedPreferences.getBoolean(QUEST_CLAIM+ i,false));
+            listaQuestow.get(i).overrideClaim(sharedPreferences.getBoolean(QUEST_CLAIM+ i,false));
             editor.putInt(QUEST_PROGRESS+ i,0);
         }
         editor.apply();

@@ -70,6 +70,7 @@
         android:text="Username"
         android:textAlignment="center" />
 
+
     <ImageView
         android:id="@+id/krokodyl"
         android:layout_width="match_parent"
@@ -148,6 +149,133 @@
         tools:ignore="DuplicateSpeakableTextCheck"
         android:visibility="visible"
         />
+    <RelativeLayout
+        android:id="@+id/karmieniecontainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/strzalki"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:id="@+id/jedzeniebutton"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/pustamiskapsa"
+            android:onClick="Nakarm"
+            />
+        <ImageView
+            android:id="@+id/rzeczimg"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ciastko"
+            android:layout_alignBottom="@id/jedzeniebutton"
+            android:layout_alignLeft="@+id/jedzeniebutton"
+            />
+        <TextView
+            android:id="@+id/liczba_ciastek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/jedzeniebutton"
+            android:layout_alignRight="@+id/jedzeniebutton"
+            android:layout_alignTop="@id/rzeczimg"
+            android:fontFamily="@font/londrina_solid"
+            android:padding="7dp"
+            android:textSize="35dp"
+            android:text="150"
+            android:textColor="@color/ckbez" />
+        <TextView
+            android:id="@+id/liczba_ciastekShadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/rzeczimg"
+            android:layout_alignRight="@+id/jedzeniebutton"
+            android:layout_alignBottom="@id/jedzeniebutton"
+            android:fontFamily="@font/londrina_outline"
+            android:padding="7dp"
+            android:text="150"
+            android:textColor="@color/ckblack"
+            android:textSize="35dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/strzalki"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:layout_alignLeft="@+id/karmieniecontainer"
+        android:layout_alignRight="@+id/karmieniecontainer"
+        android:layout_above="@id/menu"
+        android:visibility="gone"
+        >
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="false"
+            android:background="#00FFFFFF"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:src="@drawable/strzalka"
+            android:rotation="180"
+            android:onClick="ZmienPrzedmiotDec"
+            >
+
+        </ImageButton>
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="false"
+            android:background="#00FFFFFF"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:src="@drawable/strzalka"
+            android:onClick="ZmienPrzedmiotInc"
+            >
+
+        </ImageButton>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/selectJedzenie"
+        android:layout_width="120dp"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:layout_above="@id/menu"
+        android:layout_alignEnd="@id/menu_top"
+        android:visibility="gone"
+        >
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="false"
+            android:background="#00FFFFFF"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:src="@drawable/strzalka"
+            android:rotation="180"
+            >
+
+        </ImageButton>
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="false"
+            android:background="#00FFFFFF"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:src="@drawable/strzalka"
+            >
+        </ImageButton>
+
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/menu_sub"
         android:layout_width="match_parent"
@@ -155,36 +283,7 @@
         android:layout_alignParentBottom="true"
         android:alwaysDrawnWithCache="false"
         android:background="#8DFFFFFF"
-        android:orientation="horizontal"
-        ></LinearLayout>
-
-    <TextView
-        android:id="@+id/liczba_ciastek"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/jedzeniebutton"
-        android:layout_alignRight="@id/menu"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="x Ciastek"
-        android:visibility="gone"
-        android:textAlignment="center" />
-    <ImageView
-        android:id="@+id/jedzeniebutton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_above="@id/menu"
-        android:layout_alignRight="@id/menu"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/pustamiskapsa"
-        android:visibility="gone"
-        android:onClick="Nakarm"
-        />
+        android:orientation="horizontal" />
 
     <LinearLayout
         android:id="@+id/menu"
@@ -229,7 +328,7 @@
             android:scaleType="centerInside"
             app:srcCompat="@drawable/jedzenie"
             tools:ignore="ImageContrastCheck"
-            android:onClick="PokazMiske"
+            android:onClick="PokazJedzenieSelect"
             />
     </LinearLayout>
     <LinearLayout
