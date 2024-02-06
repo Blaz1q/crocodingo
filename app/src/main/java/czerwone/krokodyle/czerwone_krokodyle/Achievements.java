@@ -1,8 +1,18 @@
 package czerwone.krokodyle.czerwone_krokodyle;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ApkChecksum;
+import android.media.MediaPlayer;
+import android.util.Log;
+
+import com.example.czerwone_krokodyle.R;
 
 public class Achievements {
+
+    private static final String SHARED_PREFS = "sharedPrefs"; //NIE ZMIENIAĆ!
     private int Id;
     private String[] Tresc;
     private String[] Podtytul;
@@ -13,31 +23,107 @@ public class Achievements {
     private boolean czyWidoczne;
     private int EXP;
     private boolean isComplete;
-    public Achievements(int id,String[] tresc,String[] podtytul,String[] komentarz,int progressmax,boolean hasnextstage,int exp){
+    private int stage;
+    private int[] CzapkiID;
+    private int[] JedzenieID;
+    private int[] JedzenieIlosc;
+    private int Hajs;
+    private Context context;
+    public boolean HasJedzenie = false;
+    public boolean hasCzapki = false;
+    public Achievements(int id,String[] tresc,String[] podtytul,String[] komentarz,int progressmax,boolean hasnextstage,int exp,Context ctx,int gStage){
+        this.context = ctx;
         this.Id = id;
         this.czyWidoczne = true;
         this.ProgressMax = progressmax;
         this.hasNextStage = hasnextstage;
         this.EXP = exp;
-        this.isComplete=false;
+        this.stage = gStage;
+        this.isComplete=loadIsComplete();
         SetTytul(tresc);
         SetPodTytul(podtytul);
         SetKomentarz(komentarz);
+        setCurrentProgress();
+    }
+    public int getStage(){
+        return this.stage;
     }
     public void checkComplete(){
-        this.isComplete = false;
-        if(this.CurrentProgress >= this.ProgressMax){
-            this.isComplete = true;
+        if(this.isComplete!=true){
+            this.isComplete=false;
+            if(this.CurrentProgress >= this.ProgressMax){
+                this.isComplete = true;
+                Claim();
+            }
         }
     }
     public boolean getHasNextStage(){
         return this.hasNextStage;
     }
     public boolean getIsComplete(){
+        checkComplete();
         return this.isComplete;
     }
-    public void setCurrentProgress(int currentProgress) {
-        this.CurrentProgress = currentProgress;
+    public void setHajs(int money){
+        this.Hajs = money;
+    }
+    public int getHajs(){
+        return this.Hajs;
+    }
+    public void setCzapki(int[] czapki){
+        this.CzapkiID = czapki;
+        this.hasCzapki = true;
+    }
+    public void setJedzenie(int[] jedzID,int[] jedzIlosc){
+        this.JedzenieID = jedzID;
+        this.JedzenieIlosc = jedzIlosc;
+        this.HasJedzenie = true;
+    }
+    public int[] getJedzenieID(){
+        return this.JedzenieID;
+    }
+    public int[] getJedzenieIlosc(){
+        return this.JedzenieIlosc;
+    }
+    public int[] getCzapkiID(){
+        return this.CzapkiID;
+    }
+    public void Override(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("OsiagniecieID"+String.valueOf(this.Id)+"STAGE"+String.valueOf(this.stage)+"IsComplete",false);
+        editor.apply();
+    }
+    public void Claim(){
+        MediaPlayer playComplete = MediaPlayer.create(context, R.raw.achievementget);
+        playComplete.start();
+        playComplete.setOnCompletionListener(mp -> mp.release());
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("OsiagniecieID"+String.valueOf(this.Id)+"STAGE"+String.valueOf(this.stage)+"IsComplete",true);
+        Log.d("CLAIMED",String.valueOf(this.Id)+"STAGE"+String.valueOf(this.stage)+"IsComplete");
+        editor.apply();
+    }
+    private boolean loadIsComplete(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        boolean complete = sharedPreferences.getBoolean("OsiagniecieID"+String.valueOf(this.Id)+"STAGE"+String.valueOf(this.stage)+"IsComplete",false);
+        Log.d("ISCOMPLETE","OsiagniecieID"+String.valueOf(this.Id)+"STAGE"+String.valueOf(this.stage)+"IsComplete"+String.valueOf(complete));
+        return complete;
+    }
+    private void setCurrentProgress() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        Log.d("ACHIEVE_MEMORY","OsiagniecieID"+String.valueOf(this.Id)+"STAGE"+String.valueOf(this.stage));
+        this.CurrentProgress = sharedPreferences.getInt("OsiagniecieID"+String.valueOf(this.Id)+"STAGE"+String.valueOf(this.stage),0);
+    }
+    public void addProgress(){
+        if(CurrentProgress < ProgressMax){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("OsiagniecieID"+String.valueOf(this.Id)+"STAGE"+String.valueOf(this.stage),this.CurrentProgress+1);
+            editor.apply();
+            this.CurrentProgress = sharedPreferences.getInt("OsiagniecieID"+String.valueOf(this.Id)+"STAGE"+String.valueOf(this.stage),0);
+            checkComplete();
+        }
     }
     public int getMaxProgress(){
         return this.ProgressMax;
@@ -86,9 +172,6 @@ public class Achievements {
     }
     public int getEXP() {
         return EXP;
-    }
-    public int getProgressMax() {
-        return ProgressMax;
     }
     public String getKomentarz(String lang) {
         switch (lang){

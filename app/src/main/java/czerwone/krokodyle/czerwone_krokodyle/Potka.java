@@ -41,6 +41,7 @@ public class Potka extends Przedmiot{
         if(ZapisanaIlosc>0){
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt(ITEMNAME+this.id,(sharedPreferences.getInt(ITEMNAME+this.id,0)-1));
+            editor.apply();
             this.ZapisanaIlosc = sharedPreferences.getInt(ITEMNAME+this.id,0);
         }
         else{
@@ -55,6 +56,7 @@ public class Potka extends Przedmiot{
     public void DodajJedzenie(){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(ITEMNAME+this.id,(sharedPreferences.getInt(ITEMNAME+this.id,0)+1));
+        editor.apply();
         this.ZapisanaIlosc = sharedPreferences.getInt(ITEMNAME+this.id,0);
     }
 }

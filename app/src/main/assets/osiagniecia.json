@@ -6,7 +6,13 @@
     "Komentarz": ["Gratulacje!"],
     "MaxProgress": 1,
     "hasNextStage": false,
-    "Exp": 500
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 1,
@@ -15,7 +21,13 @@
     "Komentarz": ["To jest straszne że Croco potrafi tyle zjeść"],
     "MaxProgress": 1,
     "hasNextStage": false,
-    "Exp": 500
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 2,
@@ -24,7 +36,13 @@
     "Komentarz": ["Jak te dzieci szybko dorastają.."],
     "MaxProgress": 1,
     "hasNextStage": false,
-    "Exp": 500
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 3,
@@ -33,7 +51,12 @@
     "Komentarz": ["Hej to my!"],
     "MaxProgress": 1,
     "hasNextStage": false,
-    "Exp": 500
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [6],
+      "JedzenieIlosc": [10],
+      "Hajs": 10000
+    }
   },
   {
     "Id": 4,
@@ -42,7 +65,13 @@
     "Komentarz": [":("],
     "MaxProgress": 1,
     "hasNextStage": false,
-    "Exp": 500
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 5,
@@ -51,7 +80,13 @@
     "Komentarz": ["B)"],
     "MaxProgress": 1,
     "hasNextStage": false,
-    "Exp": 500
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 6,
@@ -60,7 +95,13 @@
     "Komentarz": ["Jeremiaszu, musimy gotować"],
     "MaxProgress": 1,
     "hasNextStage": false,
-    "Exp": 500
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 7,
@@ -69,8 +110,14 @@
     "Komentarz": ["Aha"],
     "MaxProgress": 1,
     "hasNextStage": false,
-    "Exp": 500,
-    "CzyWidoczne": false
+    "CzyWidoczne": false,
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 8,
@@ -79,8 +126,14 @@
     "Komentarz": ["Bardzo ci się podoba co?"],
     "MaxProgress": 1,
     "hasNextStage": false,
-    "Exp": 500,
-    "CzyWidoczne": false
+    "CzyWidoczne": false,
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 9,
@@ -89,25 +142,43 @@
     "Komentarz": ["Aww to słodkie"],
     "MaxProgress": 10,
     "hasNextStage": true,
-    "Exp": 200
+    "Nagroda":{
+      "Exp": 200,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
+  },
+  {
+    "Id": 9,
+    "Tytul": ["Miłośnik Croco"],
+    "Podtytul": ["Pogłaszcz Croco 100 razy"],
+    "Komentarz": ["Chyba naprawde kochasz Croco.."],
+    "MaxProgress": 100,
+    "hasNextStage": true,
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 9,
     "Tytul": ["Miłośnik Croco"],
     "Podtytul": ["Pogłaszcz Croco 1000 razy"],
-    "Komentarz": ["Chyba naprawde kochasz Croco.."],
-    "MaxProgress": 1000,
-    "hasNextStage": true,
-    "Exp": 1000
-  },
-  {
-    "Id": 9,
-    "Tytul": ["Miłośnik Croco"],
-    "Podtytul": ["Pogłaszcz Croco 10000 razy"],
     "Komentarz": ["Wystarczy."],
-    "MaxProgress": 10000,
+    "MaxProgress": 1000,
     "hasNextStage": false,
-    "Exp": 3500
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 10,
@@ -116,7 +187,13 @@
     "Komentarz": ["Aby te zadania dobrze ci poszły jak te maturalne.."],
     "MaxProgress": 5,
     "hasNextStage": true,
-    "Exp": 600
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 10,
@@ -125,7 +202,13 @@
     "Komentarz": ["Oby tak dalej!"],
     "MaxProgress": 20,
     "hasNextStage": true,
-    "Exp": 2000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 10,
@@ -134,7 +217,13 @@
     "Komentarz": ["Musiało ci to trochę zająć co?"],
     "MaxProgress": 100,
     "hasNextStage": false,
-    "Exp": 8000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 11,
@@ -143,7 +232,13 @@
     "Komentarz": ["Grzeczne grupy nie chcą ze mną chodzić"],
     "MaxProgress": 10,
     "hasNextStage": true,
-    "Exp": 2000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 11,
@@ -152,7 +247,13 @@
     "Komentarz": ["Niegrzeczne grupy chcą się nieszkolić"],
     "MaxProgress": 100,
     "hasNextStage": true,
-    "Exp": 10000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 11,
@@ -161,7 +262,13 @@
     "Komentarz": ["Ona chce się uczyć nie po to żeby wynik zrobić"],
     "MaxProgress": 500,
     "hasNextStage": true,
-    "Exp": 50000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 11,
@@ -170,7 +277,13 @@
     "Komentarz": ["Ona chce się uczyć by być jak z testoholii"],
     "MaxProgress": 1000,
     "hasNextStage": false,
-    "Exp": 100000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 12,
@@ -179,7 +292,13 @@
     "Komentarz": ["To i tak mało.."],
     "MaxProgress": 5,
     "hasNextStage": true,
-    "Exp": 500
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 12,
@@ -188,7 +307,13 @@
     "Komentarz": ["Rewolucyjne ciastka Croco sprawiają, że nigdy się nie przejedzą"],
     "MaxProgress": 50,
     "hasNextStage": true,
-    "Exp": 2000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 12,
@@ -197,7 +322,13 @@
     "Komentarz": ["500 ciastek to zaledwie 2 paczki!"],
     "MaxProgress": 500,
     "hasNextStage": false,
-    "Exp": 8000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 13,
@@ -206,7 +337,13 @@
     "Komentarz": ["Dobrze ci idzie!"],
     "MaxProgress": 3,
     "hasNextStage": true,
-    "Exp": 2000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 13,
@@ -215,7 +352,13 @@
     "Komentarz": ["Croco jest dumny."],
     "MaxProgress": 5,
     "hasNextStage": true,
-    "Exp": 10000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 13,
@@ -224,7 +367,13 @@
     "Komentarz": ["Miejmy nadzieję że było warto"],
     "MaxProgress": 5,
     "hasNextStage": false,
-    "Exp": 30000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   },
   {
     "Id": 14,
@@ -233,6 +382,12 @@
     "Komentarz": ["Dawno tej czapki nie widzieliśmy, skąd ją masz?"],
     "MaxProgress": 1,
     "hasNextStage": false,
-    "Exp": 10000
+    "Nagroda":{
+      "Exp": 500,
+      "JedzenieID": [1,2,3],
+      "JedzenieIlosc": [1,2,3],
+      "CzapkaID": [1],
+      "Hajs": 2500
+    }
   }
 ]

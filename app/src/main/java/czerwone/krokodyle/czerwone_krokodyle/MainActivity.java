@@ -12,6 +12,7 @@ import android.app.Dialog;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Context;
@@ -22,6 +23,8 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -208,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     Boolean showonce = false;
     int SELECTED_FOOD=0;
     int SELECTED_LIST=0;
+    String[] Consumables = {"Jedzenie","Potki"};
     final int[] sectors = {1,2,3,4,5,6,7,8,9,10};
     final int[] sectorDegrees = new int[sectors.length];
 
@@ -442,14 +446,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void ChangeLang(View v){
         if(v.getId()==R.id.radioLangPl){
-            setLocale("Pl");
+            User.setLang("Pl");
         }
         else if(v.getId()==R.id.radioLangEng){
-            setLocale("En");
+            User.setLang("En");
         }
+        setLocale(User.getLang());
     }
     public void setLocale(String lang) {
-        changeLang(lang);
         Locale myLocale = new Locale(getLang());
         Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
@@ -459,8 +463,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         SaveSettings();
         setContentView(R.layout.settings);
         UpdateSettings();
-        //Intent refresh = new Intent(this, MainActivity.class);
-        //startActivity(refresh);
     }
     public void generateSectorDegrees() {
         int sectorDegree = 360/sectors.length;
@@ -662,6 +664,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void KrokodylKlikaj(View v){
         if(lastFeed>umiera_po){
             addProgress(4);
+            addProgressOsiagniecia(9);
         }
         if(v.getId()==R.id.krokodyl){
             czerwony_krokodyl = findViewById(R.id.krokodyl);
@@ -803,6 +806,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 JSONArray Tytul = osiagnieciaJSON.getJSONArray("Tytul");
                 JSONArray Podtytul = osiagnieciaJSON.getJSONArray("Podtytul");
                 JSONArray Komentarz = osiagnieciaJSON.getJSONArray("Komentarz");
+                JSONObject Nagroda = osiagnieciaJSON.getJSONObject("Nagroda");
                 boolean czyWidoczne = true;
                 String[] Tytularr = new String[Tytul.length()];
                 String[] Podtytularr = new String[Podtytul.length()];
@@ -819,17 +823,33 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 int MaxProgress = osiagnieciaJSON.getInt("MaxProgress");
                 boolean hasNextStage = osiagnieciaJSON.getBoolean("hasNextStage");
 
-                int Exp = osiagnieciaJSON.getInt("Exp");
-                Achievements osiagniecie = new Achievements(Id, Tytularr, Podtytularr, Komentarzarr, MaxProgress, hasNextStage, Exp);
+                int Exp = Nagroda.getInt("Exp");
+                Achievements osiagniecie = new Achievements(Id, Tytularr, Podtytularr, Komentarzarr, MaxProgress, hasNextStage, Exp,getApplicationContext(),stagecounter);
+                osiagniecie.setHajs(Nagroda.getInt("Hajs"));
+                if(Nagroda.has("JedzenieID")&&Nagroda.has("JedzenieIlosc")){
+                    JSONArray JedzenieID = Nagroda.getJSONArray("JedzenieID");
+                    JSONArray JedzenieIlosc = Nagroda.getJSONArray("JedzenieIlosc");
+                    if(JedzenieIlosc.length()==JedzenieID.length()){
+                        int[] JedzenieIDs = new int[JedzenieID.length()];
+                        int[] JedzenieIloscs = new int[JedzenieIlosc.length()];
+                        for(int j=0;j<JedzenieID.length();j++){
+                            JedzenieIDs[j] = JedzenieID.getInt(j);
+                            JedzenieIloscs[j] = JedzenieIlosc.getInt(j);
+                        }
+                        osiagniecie.setJedzenie(JedzenieIDs,JedzenieIloscs);
+                    }
+                }
+                if(Nagroda.has("CzapkaID")){
+                    JSONArray CzapkaID = Nagroda.getJSONArray("CzapkaID");
+                    int[] CzapkaIDs = new int[CzapkaID.length()];
+                    osiagniecie.setCzapki(CzapkaIDs);
+                }
                 if (osiagnieciaJSON.has("CzyWidoczne")) {
                     czyWidoczne = osiagnieciaJSON.getBoolean("CzyWidoczne");
                     osiagniecie.setCzyWidoczne(czyWidoczne);
                 }
-
-                osiagniecie.setCurrentProgress(loadOsiagnieciaProgressFromMemo(osiagniecie.getId(),stagecounter));
                 if(hasNextStage)stagecounter++;
                 else stagecounter=0;
-                osiagniecie.checkComplete();
                 listaOsiagniec.add(osiagniecie);
             }
             zaladowano_osiagniecia = true;
@@ -840,10 +860,49 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             ex.printStackTrace();
         }
     }
-    public int loadOsiagnieciaProgressFromMemo(int id,int stage){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        Log.d("ACHIEVE_MEMORY","OsiagniecieID"+String.valueOf(id)+"STAGE"+String.valueOf(stage));
-        return sharedPreferences.getInt("OsiagniecieID"+String.valueOf(id)+"STAGE"+String.valueOf(stage),0);
+    public void addProgressOsiagniecia(int id){
+        int saved_i=-1;
+        for(int i=0;i<listaOsiagniec.size();i++){
+            if(listaOsiagniec.get(i).getId()==id){
+                if(!listaOsiagniec.get(i).getIsComplete()){
+                    listaOsiagniec.get(i).addProgress();
+                    Log.d("JakiQuest",listaOsiagniec.get(i).getTresc(getLang()));
+                    Log.d("JakiStage",String.valueOf(listaOsiagniec.get(i).getStage()));
+                    saved_i = i;
+                    Log.d("savedi",String.valueOf(saved_i));
+                    break;
+                }
+            }
+        }
+        if(saved_i!=-1){
+            Log.d("Czapki",String.valueOf(listaOsiagniec.get(saved_i).hasCzapki));
+            Log.d("Jedzenie",String.valueOf(listaOsiagniec.get(saved_i).HasJedzenie));
+            if(listaOsiagniec.get(saved_i).getIsComplete()==true){
+                Pokaz_Topbar();
+                Aktualizuj_Hajs(getMoney(),getMoney()+listaOsiagniec.get(saved_i).getHajs());
+                Aktualizuj_Exp(getExp(),getExp()+getMoney()+listaOsiagniec.get(saved_i).getEXP());
+                Ukryj_Topbar();
+                AddExp(listaOsiagniec.get(saved_i).getEXP());
+                SaveMoney(listaOsiagniec.get(saved_i).getHajs());
+                if(listaOsiagniec.get(saved_i).hasCzapki){
+                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    int[] czapkiid = listaOsiagniec.get(saved_i).getCzapkiID();
+                    for(int i=0;i<czapkiid.length;i++){
+                        editor.putBoolean(PURCHASEDCZAPKA+String.valueOf(czapkiid[i]),true);
+                        editor.apply();
+                        listaCzapek.get(czapkiid[i]).setCzyZakupiona(true);
+                    }
+                }
+                if(listaOsiagniec.get(saved_i).HasJedzenie){
+                    int[] jedzenieid = listaOsiagniec.get(saved_i).getJedzenieID();
+                    int[] jedzenieilosc = listaOsiagniec.get(saved_i).getJedzenieIlosc();
+                    for(int i=0;i<jedzenieilosc.length;i++){
+                        listaZarcia.get(jedzenieid[i]).DodajJedzenie(jedzenieilosc[i]);
+                    }
+                }
+            }
+        }
     }
     public void loadPotkiFromAsset(){
         TextView cosiedzieje = findViewById(R.id.cosiedzieje);
@@ -1045,14 +1104,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         TextView Nazwa = new TextView(this);
         TextView Podtytul = new TextView(this);
         TextView Komentarz = new TextView(this);
+        ProgressBar Progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
         Nazwa.setId(View.generateViewId());
         Podtytul.setId(View.generateViewId());
         Komentarz.setId(View.generateViewId());
-
+        Progress.setId(View.generateViewId());
         Nazwa.setText(osiagniecie.getTresc(getLang()));
         Komentarz.setText(osiagniecie.getKomentarz(getLang()));
         Podtytul.setText(osiagniecie.getPodtytul(getLang()));
-
+        Progress.setMax(osiagniecie.getMaxProgress());
+        Progress.setProgress(osiagniecie.getCurrentProgress());
         // Ustawienie layout params dla wszystkich TextView
         RelativeLayout.LayoutParams nazwaParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -1066,22 +1127,30 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
         );
+        RelativeLayout.LayoutParams progressParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
 
         // Dodanie reguł dla Podtytulu i Komentarza
         podtytulParams.addRule(RelativeLayout.BELOW, Nazwa.getId());
         komentarzParams.addRule(RelativeLayout.BELOW, Podtytul.getId());
+        progressParams.addRule(RelativeLayout.BELOW, Komentarz.getId());
 
         // Ustawienie layout params dla Podtytulu i Komentarza
         Podtytul.setLayoutParams(podtytulParams);
         Komentarz.setLayoutParams(komentarzParams);
-
+        Progress.setLayoutParams(progressParams);
+        Progress.setProgressDrawable(getResources().getDrawable(getResources().getIdentifier("custom_progressbar", "drawable", getPackageName())));
+        Progress.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.ckred)));
         // Dodanie TextView do RelativeLayout
         mainRelativeLayout.addView(Nazwa, nazwaParams);
         mainRelativeLayout.addView(Podtytul);
         mainRelativeLayout.addView(Komentarz);
+        mainRelativeLayout.addView(Progress);
         parent.addView(mainRelativeLayout);
     }
-    public Button Generuj_Przedmiot(LinearLayout parent,int PlikResID,String TytulText,int CenaText,boolean premium,String Opis){
+    public Button Generuj_Przedmiot(LinearLayout parent,int PlikResID,String TytulText,int CenaText,boolean premium,boolean dostepne,String Opis){
         RelativeLayout mainRelativeLayout = new RelativeLayout(this);
         RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -1112,6 +1181,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         czapkaImageView.setBackgroundResource(R.drawable.custom_czapka_container);
         czapkaImageView.setBackgroundTintList(getResources().getColorStateList(R.color.ckdarkbez));
         czapkaImageView.setImageResource(PlikResID);
+        if (!dostepne){
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0);  //0 means grayscale
+            ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
+            czapkaImageView.setColorFilter(cf);
+            czapkaImageView.setImageAlpha(128);
+        }
         czapkaImageView.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
         czapkaParams.setMargins(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
         czapkaImageView.setOnClickListener(new View.OnClickListener() {
@@ -1318,7 +1394,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<listaCzapek.size();i++){
                     Czapka czapa = listaCzapek.get(i);
                     int obrazResId = getResources().getIdentifier(czapa.getPlik(), "drawable", getPackageName());
-                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,czapa.getNazwa(getLang()),czapa.getCena(),czapa.getCzyPremium(),czapa.getOpis(getLang()));
+                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,czapa.getNazwa(getLang()),czapa.getCena(),czapa.getCzyPremium(),czapa.getCzyDostepna(),czapa.getOpis(getLang()));
                     int finalI = i;
                     listaButtonow[i]=kupButton;
                     kupButton.setOnClickListener(new View.OnClickListener() {
@@ -1337,7 +1413,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<listaZarcia.size();i++){
                     Jedzenie jedzenie = listaZarcia.get(i);
                     int obrazResId = getResources().getIdentifier(jedzenie.getPlik(), "drawable", getPackageName());
-                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,jedzenie.getNazwa(getLang()),jedzenie.getCena(),jedzenie.getCzyPremium(),jedzenie.getOpis(getLang()));
+                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,jedzenie.getNazwa(getLang()),jedzenie.getCena(),jedzenie.getCzyPremium(),jedzenie.getCzyDostepna(),jedzenie.getOpis(getLang()));
                     kupButton.setText(getString(R.string.kup));
                     kupButton.setEnabled(jedzenie.getCzyDostepna());
                     int finalI = i;
@@ -1355,13 +1431,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<listaPotek.size();i++){
                     Potka potka = listaPotek.get(i);
                     int obrazResId = getResources().getIdentifier(potka.getPlik(), "drawable", getPackageName());
-                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,potka.getNazwa(getLang()),potka.getCena(),potka.getCzyPremium(),potka.getOpis(getLang()));
+                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,potka.getNazwa(getLang()),potka.getCena(),potka.getCzyPremium(),potka.getCzyDostepna(),potka.getOpis(getLang()));
                     kupButton.setText(getString(R.string.kup));
                     kupButton.setEnabled(potka.getCzyDostepna());
+                    int finalI = i;
                     kupButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //KupCiastka(v);
+                            KupPotki(v, finalI);
                         }
                     });
                 }
@@ -1404,6 +1481,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                     ClosePopup();
                                     aktualizujTextPrzyciskow(kupButton);
                                     updateCrococoinsInShop();
+                                    addProgressOsiagniecia(5);
                                 }
                             }
                         });
@@ -1437,8 +1515,22 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void KupCiastka(View v,int idJedzenia){
         if(getMoney()>=listaZarcia.get(idJedzenia).getCena()){
             listaZarcia.get(idJedzenia).DodajJedzenie();
-            SaveMoney(-200);
+            SaveMoney(-listaZarcia.get(idJedzenia).getCena());
             updateCrococoinsInShop();
+        }
+        else{
+            Toast.makeText(MainActivity.this, "Nie masz wystarczająco crococoinów na zakup", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void KupPotki(View v,int idPotki){
+        if(getMoney()>=listaPotek.get(idPotki).getCena()){
+            listaPotek.get(idPotki).DodajJedzenie();
+            SaveMoney(-listaPotek.get(idPotki).getCena());
+            updateCrococoinsInShop();
+            addProgressOsiagniecia(6);
+        }
+        else{
+            Toast.makeText(MainActivity.this, "Nie masz wystarczająco crococoinów na zakup", Toast.LENGTH_SHORT).show();
         }
     }
     public int GetRadioButtonChecked(){
@@ -1468,6 +1560,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     boolean czypokazana = false;
     public void ustawMiche(){
+        ImageView JedzenieButton = findViewById(R.id.jedzeniebutton);
         TextView ukrytytekst = findViewById(R.id.liczba_ciastek);
         TextView ukrytytekst2 = findViewById(R.id.liczba_ciastekShadow);
         ImageView zdj = findViewById(R.id.rzeczimg);
@@ -1488,27 +1581,29 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 zdj.setImageResource(getResources().getIdentifier("drawable/"+listaPotek.get(SELECTED_FOOD).getPlik(), null, getApplicationContext().getPackageName()));
                 ukrytytekst.setText(ilosc);
                 ukrytytekst2.setText(ilosc);
+                ustawStateJedzenia(SELECTED_FOOD);
             }
             break;
         }
 
     }
     public void ustawStateJedzenia(int id){
-        if(listaZarcia.get(id).getZapisanaIlosc()>0){
-            try{
+        switch (SELECTED_LIST){
+            case 0:
+            {
                 ImageView miska = findViewById(R.id.jedzeniebutton);
-                miska.setImageResource(R.drawable.pelnamiskapsa);
-            } catch (Exception ignored){
-
+                if(listaZarcia.get(id).getZapisanaIlosc()>0){
+                    miska.setImageResource(R.drawable.pelnamiskapsa);
+                }
+                else{
+                    miska.setImageResource(R.drawable.pustamiskapsa);
+                }
             }
-        }
-        else{
-            try{
+                break;// jedzenie
+            case 1:
                 ImageView miska = findViewById(R.id.jedzeniebutton);
-                miska.setImageResource(R.drawable.pustamiskapsa);
-            } catch (Exception ignored){
-
-            }
+                miska.setImageResource(R.drawable.garnek);
+                break;
         }
     }
     boolean czyselectpokazany = false;
@@ -1605,6 +1700,26 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         ustawMiche();
     }
+    public void ZmienListeInc(View v){
+        if(Consumables.length>SELECTED_LIST+1){
+            SELECTED_LIST++;
+        }
+        else{
+            SELECTED_LIST=0;
+        }
+        SELECTED_FOOD=0;
+        ustawMiche();
+    }
+    public void ZmienListeDec(View v){
+        if(SELECTED_LIST>0){
+            SELECTED_LIST--;
+        }
+        else{
+            SELECTED_LIST=Consumables.length-1;
+        }
+        SELECTED_FOOD=0;
+        ustawMiche();
+    }
     public void Animacja_Jedzenia(){
             try{
                 if(lastFeed>gloduje_co&&lastFeed>umiera_po){
@@ -1637,32 +1752,60 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void Nakarm(View v){
         if(v.getId()==R.id.jedzeniebutton){
             ustawMiche();
-            if(listaZarcia.get(SELECTED_FOOD).getZapisanaIlosc()>0){
-                addProgress(2);
-                Hapaba();
-                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                if(lastFeed<umiera_po){
-                    currentTime = new Date().getTime();
-                    try{
-                        editor.putLong(LAST_FEED, 1);
-                    }catch (Exception e){
-
+            SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            switch (SELECTED_LIST){
+                case 0:
+                {
+                    if(listaZarcia.get(SELECTED_FOOD).getZapisanaIlosc()>0){
+                        if(lastFeed<umiera_po){
+                            Toast.makeText(getApplicationContext(),"Croco nie żyje..",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            addProgress(2);
+                            Hapaba();
+                            editor.putLong(LAST_FEED, sharedPreferences.getLong(LAST_FEED,0)+listaZarcia.get(SELECTED_FOOD).getNasycenie());
+                            editor.apply();
+                            lastFeed = sharedPreferences.getLong(LAST_FEED,0);
+                            LoadData();
+                            Animacja_Jedzenia();
+                            listaZarcia.get(SELECTED_FOOD).Zjedz(getLang());
+                            ustawMiche();
+                            ustawCzapke();
+                            User.Stats("ZJEDZONE_JEDZENIE",1);
+                            addProgressOsiagniecia(12);
+                        }
+                    }else{
+                        Toast.makeText(getApplicationContext(),"brak ciasteczek :(",Toast.LENGTH_SHORT).show();
                     }
                 }
-                else{
-                    editor.putLong(LAST_FEED, sharedPreferences.getLong(LAST_FEED,0)+listaZarcia.get(SELECTED_FOOD).getNasycenie());
+                    break;
+                case 1:
+                {
+                    if(listaPotek.get(SELECTED_FOOD).getZapisanaIlosc()>0){
+                        switch (listaPotek.get(SELECTED_FOOD).getId()){
+                            case 0:
+                                editor.putLong(LAST_FEED, 0);
+                                editor.apply();
+                                break;
+                        }
+                        listaPotek.get(SELECTED_FOOD).Zjedz(getLang());
+                        addProgress(5);
+                        Hapaba();
+                        lastFeed = sharedPreferences.getLong(LAST_FEED,0);
+                        LoadData();
+                        Animacja_Jedzenia();
+                        listaPotek.get(SELECTED_FOOD).Zjedz(getLang());
+                        ustawMiche();
+                        ustawCzapke();
+                        User.Stats("ZJEDZONE_POTKI",1);
+                    }else{
+                        Toast.makeText(getApplicationContext(),"brak potki :(",Toast.LENGTH_SHORT).show();
+                    }
                 }
-                editor.apply();
-                lastFeed = sharedPreferences.getLong(LAST_FEED,0);
-                LoadData();
-                Animacja_Jedzenia();
-                listaZarcia.get(SELECTED_FOOD).Zjedz(getLang());
-                ustawMiche();
-                ustawCzapke();
-            }else{
-                Toast.makeText(getApplicationContext(),"brak ciasteczek :(",Toast.LENGTH_SHORT).show();
+                    break;
             }
+
         }
     }
     public void loadCurrentCzapka(){
@@ -1774,16 +1917,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         editor.apply();
     }
     public void SavePassedTest(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(PASSED_TESTS,sharedPreferences.getInt(PASSED_TESTS,0)+1);
-        editor.apply();
+        User.Stats(PASSED_TESTS,1);
     }
     public void SaveFailedTest(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(FAILED_TESTS,sharedPreferences.getInt(FAILED_TESTS,0)+1);
-        editor.apply();
+        User.Stats(FAILED_TESTS,1);
     }
     public void DebugSetDate(String ddMMyyyy){
     currentDate = ddMMyyyy;
@@ -2181,11 +2318,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 if(!prevshown) {
                     acID = ac.getId();
                     prevshown = true;
-                    if(ac.getCzyWidoczne()){
-                        Generuj_Achievementy(lin, ac);
-                    }else{
-                        if(ac.getIsComplete()){
+                    if(ac.getIsComplete()&&ac.getHasNextStage()){
+                        prevshown=false;
+                    }
+                    else{
+                        if(ac.getCzyWidoczne()){
                             Generuj_Achievementy(lin, ac);
+                        }else{
+                            if(ac.getIsComplete()){
+                                Generuj_Achievementy(lin, ac);
+                            }
                         }
                     }
                 }
@@ -2286,6 +2428,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             SaveSettings();
             setContentView(R.layout.credits);
             AddActions("credits");
+            addProgressOsiagniecia(3);
         }
         else if (v.getId()==R.id.OtworzSklep){
             setContentView(R.layout.sklep);
@@ -2459,6 +2602,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Quests quest = listaQuestow.get(id);
         if(quest.getClaim()!=true){
+            addProgressOsiagniecia(10);
             quest.Claim();
             SaveMoney(quest.getNagroda());
             AddExp(quest.getExp());
@@ -2594,9 +2738,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     listaPytan.add(pytanie);
                     pytanie.Wypisz();
                     zaladowanodb=true;
-
                 }
-                Toast.makeText(this, String.valueOf(listaKategorii.size()), Toast.LENGTH_SHORT).show();
                 updateLoader();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -3129,6 +3271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             bgmusicnormal();
             setContentView(R.layout.test_final);
             addProgress(1);
+            addProgressOsiagniecia(11);
             AddActions("test_final");
             try{
 

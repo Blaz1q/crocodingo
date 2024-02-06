@@ -38,5 +38,13 @@
     "exp": 100,
     "przedzial": [15,40],
     "exception": 0
+  },
+  {
+    "id": 5,
+    "tresc": ["Użyj Potki","Use a Potion"],
+    "Nagroda": 300,
+    "exp": 300,
+    "przedzial": [1,1],
+    "exception": 0
   }
 ]

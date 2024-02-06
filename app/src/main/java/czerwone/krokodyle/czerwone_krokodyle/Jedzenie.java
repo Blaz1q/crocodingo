@@ -48,7 +48,14 @@ public class Jedzenie extends Przedmiot{
         editor.putInt(ITEMNAME+this.id,val);
         editor.apply();
         this.ZapisanaIlosc = sharedPreferences.getInt(ITEMNAME+this.id,0);
-        Toast.makeText(context, String.valueOf(ZapisanaIlosc), Toast.LENGTH_SHORT).show();
+    }
+    public void DodajJedzenie(int value){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int val = sharedPreferences.getInt(ITEMNAME+this.id,0);
+        val+=value;
+        editor.putInt(ITEMNAME+this.id,val);
+        editor.apply();
+        this.ZapisanaIlosc = sharedPreferences.getInt(ITEMNAME+this.id,0);
     }
     public int getNasycenie(){
         return nasycenie;

@@ -260,6 +260,7 @@
             android:layout_weight="1"
             android:src="@drawable/strzalka"
             android:rotation="180"
+            android:onClick="ZmienListeDec"
             >
 
         </ImageButton>
@@ -272,6 +273,7 @@
             android:scaleType="fitCenter"
             android:layout_weight="1"
             android:src="@drawable/strzalka"
+            android:onClick="ZmienListeInc"
             >
         </ImageButton>
 

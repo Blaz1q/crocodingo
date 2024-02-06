@@ -55,12 +55,10 @@ public class UserData {
     private int Level;
     private int LastOpened;
     private int Food;
-    private String Username;
+    public String Username;
     private String Lang;
     private Boolean IsMusicOn;
-    private int Streak;
-    private int Zdane;
-    private int Niezdane;
+
     private int Volume;
     public int CrocoState;
     /**
@@ -69,6 +67,17 @@ public class UserData {
      1 === głodny
      2 === martwy
      */
+    /** Stats */
+    private int Kupione_Czapki;
+    private int Zjedzone_Jedzenie;
+    private int Zjedzone_Potki;
+    private int Wydany_Hajs;
+    private int PojedynczeZdane;
+    private int PojedynczeNiezdane;
+    private int Streak;
+    private int Zdane;
+    private int Niezdane;
+    private int StreakPojedyncze;
     private boolean czy_zakrencil;
     private final String currentDate = new SimpleDateFormat("ddMMyyyy", Locale.getDefault()).format(new Date());
     UserData(Context ctx){
@@ -81,14 +90,20 @@ public class UserData {
         return this.czy_zakrencil;
     }
     public void Zakrec(){
-        //this.czy_zakrencil = true;
-        //editEditor(KOLOFORTUNY,true);
+        this.czy_zakrencil = true;
+        editEditor(KOLOFORTUNY,true);
     }
     private void UpdateValues(){
-        this.Money = sharedPreferences.getInt(MONEY, 0);
-        this.Food = sharedPreferences.getInt(FOOD, 0);
+        this.Money = getStat(MONEY);
+        this.Food = getStat(FOOD);
         this.Lang = sharedPreferences.getString(LANG, "Pl");
-        this.czy_zakrencil = false;//sharedPreferences.getBoolean(KOLOFORTUNY,false);
+        this.czy_zakrencil = sharedPreferences.getBoolean(KOLOFORTUNY,false);
+        this.Kupione_Czapki = getStat("KUPIONECZAPKI");
+        this.Zjedzone_Jedzenie = getStat("ZJEDZONE_JEDZENIE");
+        this.Zjedzone_Potki = getStat("ZJEDZONE_POTKI");
+        this.Wydany_Hajs = getStat("WYDANY_HAJS");
+        this.Streak = getStat(STREAK);
+        this.Username = sharedPreferences.getString(USERNAME, "Croco");
     }
     public void setFood(int value){
         editEditor(FOOD,value);
@@ -109,6 +124,16 @@ public class UserData {
     private void editEditor(String KEY,Boolean value){
         editor.putBoolean(KEY,value);
         editor.apply();
+    }
+    public void Stats(String KEY,int value){
+        editor.putInt(KEY,sharedPreferences.getInt(KEY,0)+value);
+        editor.apply();
+        UpdateValues();
+    }
+    public int getStat(String KEY){
+        int x = sharedPreferences.getInt(KEY,0);
+        Log.d(KEY,String.valueOf(x));
+        return x;
     }
     public int getFood(){
         return this.Food;
@@ -150,6 +175,10 @@ public class UserData {
             editor.putInt(QUEST_PROGRESS+ i,0);
         }
         editor.apply();
+    }
+    public void setLang(String lang){
+        this.Lang = lang;
+        editEditor(LANG,this.Lang);
     }
     public String getLang() {
         return this.Lang;
