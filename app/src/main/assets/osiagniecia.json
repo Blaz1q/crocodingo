@@ -146,8 +146,8 @@
       "Exp": 200,
       "JedzenieID": [1,2,3],
       "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "CzapkaID": [9],
+      "Hajs": 500
     }
   },
   {

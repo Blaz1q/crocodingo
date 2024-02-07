@@ -80,5 +80,14 @@
     "opis": ["Twardsza niż się wydaje"],
     "waluta": "Crococoin",
     "czyDostepne": false
+  },
+  {
+    "id": 9,
+    "plik": "czapkastudencka",
+    "cena": 4300,
+    "nazwa": ["Czapka Studencka","Work Hat"],
+    "opis": ["Twardsza niż się wydaje"],
+    "waluta": "Crococoin",
+    "czyWidoczna":false
   }
 ]

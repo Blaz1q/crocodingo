@@ -3,6 +3,8 @@ public class Czapka extends Przedmiot {
     private boolean czyZakupiona;
     private boolean czyZalozona;
     private boolean czyDostepna;
+    private boolean czyEkskluzywna;
+    private boolean czyWidoczna;
 
     private String waluta;
 
@@ -12,6 +14,8 @@ public class Czapka extends Przedmiot {
         this.cena = cena;
         this.czyZakupiona = false;
         this.czyZalozona = false;
+        this.czyWidoczna = true;
+        this.czyEkskluzywna = false;
         setNazwa(NazwaDane);
         setOpis(OpisDane);
     }
@@ -21,7 +25,12 @@ public class Czapka extends Przedmiot {
     public String getWaluta(){
         return waluta;
     }
-
+    public void setCzyWidoczna(boolean widoczna){
+        this.czyWidoczna = widoczna;
+    }
+    public boolean getczyWidoczna(){
+        return czyWidoczna;
+    }
     public void setCzyDostepna(Boolean CzyJestDostepna){
         this.czyDostepna = CzyJestDostepna;
     }

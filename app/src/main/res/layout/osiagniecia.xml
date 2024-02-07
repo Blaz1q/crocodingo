@@ -2,25 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/cktlo"
+
+    >
+
     <LinearLayout
+        android:id="@+id/hiddentop"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:id="@+id/hiddentop"
-        android:orientation="horizontal"
-        ></LinearLayout>
-        <Button
-            android:id="@+id/wrocmenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:backgroundTint="#333333"
-            android:layout_below="@id/hiddentop"
-            android:onClick="Zmien_widoki"
-            android:text="@string/wroc_do_startu" />
+        android:orientation="horizontal"></LinearLayout>
+
+    <Button
+        android:id="@+id/wrocmenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hiddentop"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#333333"
+        android:onClick="Zmien_widoki"
+        android:text="@string/wroc_do_startu" />
+
     <ScrollView
         android:id="@+id/scroll_container_osiagniecia"
         android:layout_width="match_parent"
@@ -31,13 +36,12 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:scrollbars="none">
+
         <LinearLayout
             android:id="@+id/osiagniecia_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
-        </LinearLayout>
+            android:orientation="vertical"></LinearLayout>
 
     </ScrollView>
 </RelativeLayout>

@@ -713,7 +713,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int j=0;j<opis.length();j++){
                     opisArr[j] = opis.getString(j);
                 }
-                Boolean czyDostepne = true;
+                boolean czyDostepne = true;
+                boolean czywidoczna = true;
+                if(czapkaJson.has("czyWidoczna")){
+                    czywidoczna = czapkaJson.getBoolean("czyWidoczna");
+                }
                 if(czapkaJson.has("czyDostepne")){
                     czyDostepne = czapkaJson.getBoolean("czyDostepne");
                 }
@@ -722,12 +726,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     czyPremium = czapkaJson.getBoolean("czyPremium");
                 }
                 int cena = czapkaJson.getInt("cena"); // Pobierz cenę czapki
-
-                Czapka czapka = new Czapka(id, plik,nazwaArr,opisArr, cena); // Zaktualizuj obiekt Czapka
-                czapka.setCzyDostepna(czyDostepne);
-                czapka.setCzyPremium(czyPremium);
                 SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-                boolean czykupiona = sharedPreferences.getBoolean(PURCHASEDCZAPKA+czapka.getId(),false);
+                Czapka czapka = new Czapka(id, plik,nazwaArr,opisArr, cena); // Zaktualizuj obiekt Czapka
+                czapka.setCzyDostepna(sharedPreferences.getBoolean("DOSTEPNACZAPKA"+String.valueOf(czapka.getId()),czyDostepne));
+                czapka.setCzyPremium(czyPremium);
+                czapka.setCzyWidoczna(czywidoczna);
+
+                boolean czykupiona = sharedPreferences.getBoolean(PURCHASEDCZAPKA+String.valueOf(czapka.getId()),false);
                 czapka.setCzyZakupiona(czykupiona);
                 listaCzapek.add(czapka);
             }
@@ -842,6 +847,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 if(Nagroda.has("CzapkaID")){
                     JSONArray CzapkaID = Nagroda.getJSONArray("CzapkaID");
                     int[] CzapkaIDs = new int[CzapkaID.length()];
+                    for(int j=0;j<CzapkaID.length();j++){
+                        CzapkaIDs[j] = CzapkaID.getInt(j);
+                    }
                     osiagniecie.setCzapki(CzapkaIDs);
                 }
                 if (osiagnieciaJSON.has("CzyWidoczne")) {
@@ -861,45 +869,44 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void addProgressOsiagniecia(int id){
-        int saved_i=-1;
         for(int i=0;i<listaOsiagniec.size();i++){
             if(listaOsiagniec.get(i).getId()==id){
                 if(!listaOsiagniec.get(i).getIsComplete()){
                     listaOsiagniec.get(i).addProgress();
                     Log.d("JakiQuest",listaOsiagniec.get(i).getTresc(getLang()));
                     Log.d("JakiStage",String.valueOf(listaOsiagniec.get(i).getStage()));
-                    saved_i = i;
-                    Log.d("savedi",String.valueOf(saved_i));
+                    if(listaOsiagniec.get(i).getIsComplete()){
+                        Log.d("Czapki",String.valueOf(listaOsiagniec.get(i).hasCzapki));
+                        Log.d("Jedzenie",String.valueOf(listaOsiagniec.get(i).HasJedzenie));
+                        if(listaOsiagniec.get(i).getIsComplete()==true){
+                            Pokaz_Topbar();
+                            Aktualizuj_Hajs(getMoney(),getMoney()+listaOsiagniec.get(i).getHajs());
+                            Aktualizuj_Exp(getExp(),getExp()+getMoney()+listaOsiagniec.get(i).getEXP());
+                            Ukryj_Topbar();
+                            AddExp(listaOsiagniec.get(i).getEXP());
+                            SaveMoney(listaOsiagniec.get(i).getHajs());
+                            if(listaOsiagniec.get(i).hasCzapki){
+                                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                int[] czapkiid = listaOsiagniec.get(i).getCzapkiID();
+
+                                for(int j=0;j<czapkiid.length;j++){
+                                    Log.d("czapkaID",String.valueOf(czapkiid[j]));
+                                    editor.putBoolean(PURCHASEDCZAPKA+String.valueOf(czapkiid[j]),true);
+                                    editor.apply();
+                                    listaCzapek.get(czapkiid[j]).setCzyZakupiona(true);
+                                }
+                            }
+                            if(listaOsiagniec.get(i).HasJedzenie){
+                                int[] jedzenieid = listaOsiagniec.get(i).getJedzenieID();
+                                int[] jedzenieilosc = listaOsiagniec.get(i).getJedzenieIlosc();
+                                for(int j=0;j<jedzenieilosc.length;j++){
+                                    listaZarcia.get(jedzenieid[j]).DodajJedzenie(jedzenieilosc[j]);
+                                }
+                            }
+                        }
+                    }
                     break;
-                }
-            }
-        }
-        if(saved_i!=-1){
-            Log.d("Czapki",String.valueOf(listaOsiagniec.get(saved_i).hasCzapki));
-            Log.d("Jedzenie",String.valueOf(listaOsiagniec.get(saved_i).HasJedzenie));
-            if(listaOsiagniec.get(saved_i).getIsComplete()==true){
-                Pokaz_Topbar();
-                Aktualizuj_Hajs(getMoney(),getMoney()+listaOsiagniec.get(saved_i).getHajs());
-                Aktualizuj_Exp(getExp(),getExp()+getMoney()+listaOsiagniec.get(saved_i).getEXP());
-                Ukryj_Topbar();
-                AddExp(listaOsiagniec.get(saved_i).getEXP());
-                SaveMoney(listaOsiagniec.get(saved_i).getHajs());
-                if(listaOsiagniec.get(saved_i).hasCzapki){
-                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    int[] czapkiid = listaOsiagniec.get(saved_i).getCzapkiID();
-                    for(int i=0;i<czapkiid.length;i++){
-                        editor.putBoolean(PURCHASEDCZAPKA+String.valueOf(czapkiid[i]),true);
-                        editor.apply();
-                        listaCzapek.get(czapkiid[i]).setCzyZakupiona(true);
-                    }
-                }
-                if(listaOsiagniec.get(saved_i).HasJedzenie){
-                    int[] jedzenieid = listaOsiagniec.get(saved_i).getJedzenieID();
-                    int[] jedzenieilosc = listaOsiagniec.get(saved_i).getJedzenieIlosc();
-                    for(int i=0;i<jedzenieilosc.length;i++){
-                        listaZarcia.get(jedzenieid[i]).DodajJedzenie(jedzenieilosc[i]);
-                    }
                 }
             }
         }
@@ -1105,10 +1112,24 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         TextView Podtytul = new TextView(this);
         TextView Komentarz = new TextView(this);
         ProgressBar Progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        TextView TextProgress = new TextView(this);
         Nazwa.setId(View.generateViewId());
         Podtytul.setId(View.generateViewId());
         Komentarz.setId(View.generateViewId());
         Progress.setId(View.generateViewId());
+        TextProgress.setId(View.generateViewId());
+        Nazwa.setTextSize(20);
+        Nazwa.setTextColor(getResources().getColor(R.color.ckblack));
+        if(!osiagniecie.getCzyWidoczne()){
+            Nazwa.setTextColor(getResources().getColor(R.color.ckgolden));
+        }
+        Podtytul.setTextColor(getResources().getColor(R.color.ckblack));
+        Komentarz.setTextColor(getResources().getColor(R.color.ckblack));
+        TextProgress.setTextColor(getResources().getColor(R.color.ckblack));
+        Podtytul.setTextSize(15);
+        Komentarz.setTextSize(13);
+        TextProgress.setTextSize(15);
+        TextProgress.setText("("+osiagniecie.getCurrentProgress()+"/"+osiagniecie.getMaxProgress()+")");
         Nazwa.setText(osiagniecie.getTresc(getLang()));
         Komentarz.setText(osiagniecie.getKomentarz(getLang()));
         Podtytul.setText(osiagniecie.getPodtytul(getLang()));
@@ -1131,15 +1152,21 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
         );
+        RelativeLayout.LayoutParams textprogressParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
 
         // Dodanie reguł dla Podtytulu i Komentarza
         podtytulParams.addRule(RelativeLayout.BELOW, Nazwa.getId());
         komentarzParams.addRule(RelativeLayout.BELOW, Podtytul.getId());
         progressParams.addRule(RelativeLayout.BELOW, Komentarz.getId());
-
+        textprogressParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        textprogressParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         // Ustawienie layout params dla Podtytulu i Komentarza
         Podtytul.setLayoutParams(podtytulParams);
         Komentarz.setLayoutParams(komentarzParams);
+        TextProgress.setLayoutParams(textprogressParams);
         Progress.setLayoutParams(progressParams);
         Progress.setProgressDrawable(getResources().getDrawable(getResources().getIdentifier("custom_progressbar", "drawable", getPackageName())));
         Progress.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.ckred)));
@@ -1148,9 +1175,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         mainRelativeLayout.addView(Podtytul);
         mainRelativeLayout.addView(Komentarz);
         mainRelativeLayout.addView(Progress);
+        mainRelativeLayout.addView(TextProgress);
         parent.addView(mainRelativeLayout);
     }
-    public Button Generuj_Przedmiot(LinearLayout parent,int PlikResID,String TytulText,int CenaText,boolean premium,boolean dostepne,String Opis){
+    public Button Generuj_Przedmiot(LinearLayout parent,int PlikResID,String TytulText,int CenaText,boolean premium,boolean dostepne,String Opis,boolean odblokowana,boolean czywidoczne){
         RelativeLayout mainRelativeLayout = new RelativeLayout(this);
         RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -1163,6 +1191,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         mainRelativeLayout.setBackgroundResource(R.drawable.custom_czapka_container);
         if(premium) mainRelativeLayout.setBackgroundResource(R.drawable.custom_czapka_premium_container);
         mainRelativeLayout.setClickable(true);
+        if(!czywidoczne&&!odblokowana){
+            mainRelativeLayout.setVisibility(View.GONE);
+        }
         parent.addView(mainRelativeLayout);
         TextView cena = new TextView(this);
         TextView cenashadow = new TextView(this);
@@ -1181,7 +1212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         czapkaImageView.setBackgroundResource(R.drawable.custom_czapka_container);
         czapkaImageView.setBackgroundTintList(getResources().getColorStateList(R.color.ckdarkbez));
         czapkaImageView.setImageResource(PlikResID);
-        if (!dostepne){
+        if (!dostepne&&!odblokowana){
             ColorMatrix matrix = new ColorMatrix();
             matrix.setSaturation(0);  //0 means grayscale
             ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
@@ -1394,7 +1425,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<listaCzapek.size();i++){
                     Czapka czapa = listaCzapek.get(i);
                     int obrazResId = getResources().getIdentifier(czapa.getPlik(), "drawable", getPackageName());
-                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,czapa.getNazwa(getLang()),czapa.getCena(),czapa.getCzyPremium(),czapa.getCzyDostepna(),czapa.getOpis(getLang()));
+                    Button kupButton = new Button(this);
+                    if(listaCzapek.get(i).getczyWidoczna()||listaCzapek.get(i).isCzyZakupiona()){
+                        kupButton = Generuj_Przedmiot(parentLayout,obrazResId,czapa.getNazwa(getLang()),czapa.getCena(),czapa.getCzyPremium(),czapa.getCzyDostepna(),czapa.getOpis(getLang()),czapa.isCzyZakupiona(),czapa.getczyWidoczna());
+                    }
                     int finalI = i;
                     listaButtonow[i]=kupButton;
                     kupButton.setOnClickListener(new View.OnClickListener() {
@@ -1413,7 +1447,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<listaZarcia.size();i++){
                     Jedzenie jedzenie = listaZarcia.get(i);
                     int obrazResId = getResources().getIdentifier(jedzenie.getPlik(), "drawable", getPackageName());
-                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,jedzenie.getNazwa(getLang()),jedzenie.getCena(),jedzenie.getCzyPremium(),jedzenie.getCzyDostepna(),jedzenie.getOpis(getLang()));
+                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,jedzenie.getNazwa(getLang()),jedzenie.getCena(),jedzenie.getCzyPremium(),jedzenie.getCzyDostepna(),jedzenie.getOpis(getLang()),false,true);
                     kupButton.setText(getString(R.string.kup));
                     kupButton.setEnabled(jedzenie.getCzyDostepna());
                     int finalI = i;
@@ -1431,7 +1465,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<listaPotek.size();i++){
                     Potka potka = listaPotek.get(i);
                     int obrazResId = getResources().getIdentifier(potka.getPlik(), "drawable", getPackageName());
-                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,potka.getNazwa(getLang()),potka.getCena(),potka.getCzyPremium(),potka.getCzyDostepna(),potka.getOpis(getLang()));
+                    Button kupButton = Generuj_Przedmiot(parentLayout,obrazResId,potka.getNazwa(getLang()),potka.getCena(),potka.getCzyPremium(),potka.getCzyDostepna(),potka.getOpis(getLang()),false,true);
                     kupButton.setText(getString(R.string.kup));
                     kupButton.setEnabled(potka.getCzyDostepna());
                     int finalI = i;
@@ -1454,39 +1488,43 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             final String idCzapki;
             Log.w("POPUP_VISIBLE",String.valueOf(isPopupVisible));
             if(akcja[listaCzapek.get(przyciskNumer).getId()]==0){
+                if(!listaCzapek.get(przyciskNumer).getCzyDostepna()){
+                    Toast.makeText(MainActivity.this, "Nie możesz kupić tej czapki", Toast.LENGTH_SHORT).show();
+                }else{
                 if(User.getMoney()<listaCzapek.get(przyciskNumer).getCena()){
                     Toast.makeText(MainActivity.this, "Nie masz wystarczająco crococoinów na zakup", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    if(isPopupVisible==false){
+                    if(isPopupVisible==false) {
                         POPUP_EXCEPTION_MODE = 1;
                         ShowPopup(R.layout.kupienie_czapki);
                         Button kupCzapaButton = myDialog.findViewById(R.id.kup_czapa);
-                        Log.w("akcjasuper",String.valueOf(akcja[listaCzapek.get(przyciskNumer).getId()]));
-                        kupCzapaButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                int dostepneHajsy = getMoney();
-                                if (dostepneHajsy >= listaCzapek.get(przyciskNumer).getCena()) {
-                                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putBoolean(PURCHASEDCZAPKA+listaCzapek.get(przyciskNumer).getId(),true);
-                                    editor.apply();
-                                    sharedPreferences.getBoolean(PURCHASEDCZAPKA+listaCzapek.get(przyciskNumer).getId(),false);
-                                    listaCzapek.get(przyciskNumer).setCzyZakupiona(true);
-                                    int noweHajsy = listaCzapek.get(przyciskNumer).getCena()*-1;
-                                    SaveMoney(noweHajsy);
-                                    Toast.makeText(MainActivity.this, "Zakupiono " + listaCzapek.get(przyciskNumer).getNazwa(getLang()), Toast.LENGTH_SHORT).show();
-                                    addProgress(3);
-                                    ClosePopup();
-                                    aktualizujTextPrzyciskow(kupButton);
-                                    updateCrococoinsInShop();
-                                    addProgressOsiagniecia(5);
+                        Log.w("akcjasuper", String.valueOf(akcja[listaCzapek.get(przyciskNumer).getId()]));
+                            kupCzapaButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int dostepneHajsy = getMoney();
+                                    if (dostepneHajsy >= listaCzapek.get(przyciskNumer).getCena()) {
+                                        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putBoolean(PURCHASEDCZAPKA + listaCzapek.get(przyciskNumer).getId(), true);
+                                        editor.apply();
+                                        sharedPreferences.getBoolean(PURCHASEDCZAPKA + listaCzapek.get(przyciskNumer).getId(), false);
+                                        listaCzapek.get(przyciskNumer).setCzyZakupiona(true);
+                                        int noweHajsy = listaCzapek.get(przyciskNumer).getCena() * -1;
+                                        SaveMoney(noweHajsy);
+                                        Toast.makeText(MainActivity.this, "Zakupiono " + listaCzapek.get(przyciskNumer).getNazwa(getLang()), Toast.LENGTH_SHORT).show();
+                                        addProgress(3);
+                                        ClosePopup();
+                                        aktualizujTextPrzyciskow(kupButton);
+                                        updateCrococoinsInShop();
+                                        addProgressOsiagniecia(5);
+                                    }
                                 }
-                            }
-                        });
-                        myDialog.show();
-                        POPUP_EXCEPTION_MODE = 0;
+                            });
+                            myDialog.show();
+                            POPUP_EXCEPTION_MODE = 0;
+                        }
                     }
                 }
             }

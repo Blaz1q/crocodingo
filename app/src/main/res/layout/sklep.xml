@@ -2,13 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/obrusskyrwysynnicer"
+        android:scaleType="centerCrop"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:id="@+id/hiddentop"
         android:orientation="horizontal"
-        ></LinearLayout>
+        />
 <RelativeLayout
     android:id="@+id/topcontainer"
     android:layout_width="wrap_content"
@@ -26,38 +33,29 @@
         android:backgroundTint="#333333"
         android:onClick="Zmien_widoki"
         android:text="@string/wroc_do_startu" />
-    <TextView
-        android:id="@+id/crococoiny_napis"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
 
-        android:text="Crococoiny:"
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:id="@+id/crococoinimg"
+        android:src="@drawable/crococoin"
         android:layout_toRightOf="@id/wrocmenu"
-        android:layout_marginTop="10dp"
         android:layout_alignTop="@id/wrocmenu"
-        android:layout_alignBottom="@id/wrocmenu"
-        android:gravity="center"
-        />
+        android:layout_marginRight="10dp"
+        android:layout_alignBottom="@id/wrocmenu" />
     <TextView
         android:id="@+id/crococoinyilosc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="x"
-        android:layout_toRightOf="@id/crococoiny_napis"
+        android:fontFamily="@font/londrina_solid"
+        android:textColor="@color/black"
+        android:textSize="30sp"
         android:layout_alignTop="@id/wrocmenu"
         android:layout_alignBottom="@id/wrocmenu"
-        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/crococoinimg"
         android:gravity="center"
         />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/crococoinimg"
-        android:src="@drawable/crococoin"
-        android:layout_toRightOf="@id/crococoinyilosc"
-        android:layout_alignTop="@id/wrocmenu"
-        android:layout_alignBottom="@id/wrocmenu"
-        android:layout_marginTop="10dp"/>
 </RelativeLayout>
     <HorizontalScrollView
         android:id="@+id/scroll_container_kategoria"
@@ -65,31 +63,38 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/topcontainer"
         android:scrollbars="none"
-        android:layout_margin="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+
         >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
+
             <Button
                 android:id="@+id/katczapki"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="czapki"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
                 android:onClick="Wyswietl_Zakladke"
+                android:text="czapki"
+                android:backgroundTint="#333333"
                 />
+
             <Button
                 android:id="@+id/katjedzenie"
+                android:backgroundTint="#333333"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="jedzenie"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
                 android:onClick="Wyswietl_Zakladke"
-                />
+                android:text="jedzenie" />
+
             <Button
                 android:id="@+id/katpotki"
                 android:layout_width="wrap_content"
@@ -98,14 +103,16 @@
                 android:layout_margin="2dp"
                 android:layout_weight="1"
                 android:onClick="Wyswietl_Zakladke"
+                android:backgroundTint="#333333"
                 />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="akcesoria"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
+                android:text="akcesoria"
+                android:backgroundTint="#333333"
                 />
 
             <Button
@@ -114,6 +121,7 @@
                 android:text="premium"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
+                android:backgroundTint="#333333"
                 />
         </LinearLayout>
     </HorizontalScrollView>
@@ -127,6 +135,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_above="@id/hiddenbottom"
         android:scrollbars="none">
 
         <LinearLayout
@@ -146,7 +155,6 @@
                     android:id="@+id/ciastka"
                     android:layout_width="200dp"
                     android:layout_height="100dp"
-
                     android:src="@drawable/czapa_1"
 
                     />
@@ -187,4 +195,12 @@
         </LinearLayout>
 
     </ScrollView>
-</RelativeLayout> 
+    <LinearLayout
+        android:id="@+id/hiddenbottom"
+        android:layout_alignParentBottom="true"
+        android:alwaysDrawnWithCache="false"
+        android:orientation="horizontal"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        />
+</RelativeLayout>
