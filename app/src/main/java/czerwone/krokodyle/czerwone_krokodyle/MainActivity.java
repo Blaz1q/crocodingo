@@ -28,6 +28,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -106,7 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private List<Quests> listaQuestow = new ArrayList<>();
     private List<Integer> listaQuestowId = new ArrayList<>();
     private List<Achievements> listaOsiagniec = new ArrayList<>();
-    private List<String> listaKategorii = new ArrayList<>();
+    private List<Integer> listaKategorii = new ArrayList<>();
+    private List<List<PytaniaDB>> podzielonaListaPytan = new ArrayList<>();
     // zmienne do akcji
     private List<String> actions = new ArrayList<>();
     private UserData User;
@@ -135,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     final int color_incorrect = 0xfff52720;
     final int color_text_incorrect = 0xff270302;
     final int wartosc_ciastka = 7000; //2 h (prawie)
-    int AnswerListPoj;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     GoogleSignInAccount acct;
@@ -2506,6 +2507,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             AddActions("pytania_wybor");
         }
         else if (v.getId()==R.id.Rozpocznij_test2){
+            ResetAllQuestions();
             setContentView(R.layout.pojedyncze_pytanie);
             CHALLENGE_MODE = false;
             Set_pytanie_Poj();
@@ -2768,13 +2770,22 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     D = jsonObject2.getString("D");
                     kategoria = jsonObject2.getString("kategoria");
                     KatID = jsonObject2.getString("katID");
-                    if(katIDs!=Integer.valueOf(KatID)){
-                        katIDs = Integer.valueOf(KatID);
-                        listaKategorii.add(kategoria);
+                    int j=0;
+                    boolean hasKat = false;
+                    while(j<listaKategorii.size()){
+                        if(listaKategorii.get(j)==Integer.valueOf(KatID)){
+                            hasKat=true;
+                        }
+                        j++;
+                    }
+                    if(!hasKat){
+                        listaKategorii.add(Integer.valueOf(KatID));
+                        podzielonaListaPytan.add(new ArrayList<PytaniaDB>());
                     }
                     PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria,Integer.valueOf(KatID));
+                    podzielonaListaPytan.get(Integer.valueOf(KatID)-1).add(pytanie);
                     listaPytan.add(pytanie);
-                    pytanie.Wypisz();
+                    //pytanie.Wypisz();
                     zaladowanodb=true;
                 }
                 updateLoader();
@@ -2787,6 +2798,21 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             listaShuffled = listaPytan;
         }catch (Exception e){
             
+        }
+        //DebugTestWypiszPytania();
+        DebugTestWypiszKategorie(1);
+    }
+    public void DebugTestWypiszPytania(){
+        for(int i=0;i<podzielonaListaPytan.size();i++){
+            for(int j=0;j<podzielonaListaPytan.get(i).size();j++){
+                podzielonaListaPytan.get(i).get(j).Wypisz();
+            }
+        }
+    }
+    public void DebugTestWypiszKategorie(int id){
+        id=id-1;
+        for(int j=0;j<podzielonaListaPytan.get(id).size();j++){
+            podzielonaListaPytan.get(id).get(j).Wypisz();
         }
     }
     public int CURRENT_INDEX;
@@ -2971,305 +2997,129 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     int ilosc_blednych=0;
     public void Set_pytanie(){
         Log.d("testaction","setting_question");
-        try{
-            TextView numer_pytania = findViewById(R.id.numer_pytania);
-            numer_pytania.setText(getString(R.string.pytanie)+" "+(CURRENT_INDEX + 1));
-            int i = SET_TEST_ID;
-            String tresc,id;
-            PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-            ImageView tes = findViewById(R.id.tresc_pytania);
-            Log.d("testaction","setting_tresc");
-            try{
-                tes.setBackground(Math_syn.set_Math(pytanie.getTresc()));
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            Log.d("testaction","setting_tresc");
-            Button[] buttony = {
-                    findViewById(R.id.odp_A),
-                    findViewById(R.id.odp_B),
-                    findViewById(R.id.odp_C),
-                    findViewById(R.id.odp_D)
-            };//#todo odmałp to
-            Log.d("testaction","setting_tresc");
-            Log.d("testaction","setting_odpowiedzi");
-            for(int j=0;j<4;j++){
-                try {
-                    Log.d("testaction",String.valueOf(j));
-                    StringCurrentQuestion[j] = "\\text{" + LitABCD[j] + ": }" + pytanie.getJednaOdpowiedz(j);
-                    CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
-                    buttony[j].setBackground(CurrentQuestion[j]);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    buttony[j].setText("crash");
-                }
-            }
-            if(CURRENT_INDEX==0){
-                Button zmientekst=findViewById(R.id.prevbutton);
-                zmientekst.setEnabled(false);
-            }else{
-                Button zmientekst=findViewById(R.id.prevbutton);
-                zmientekst.setEnabled(true);
-            }
-            if(q_num-1==CURRENT_INDEX){
-                Button zmientekst=findViewById(R.id.nextbutton);
-                zmientekst.setText("zakończ"); //#todo tłumacz
-                wywolajfunkcje=true;
-            }else{
-                Button zmientekst=findViewById(R.id.nextbutton);
-                zmientekst.setText(getString(R.string.next));
-                wywolajfunkcje=false;
-            }
-            UpdateAnswer();
-        } catch (Exception e){
-            e.printStackTrace();
+        TextView numer_pytania = findViewById(R.id.numer_pytania);
+        numer_pytania.setText(getString(R.string.pytanie)+" "+(CURRENT_INDEX + 1));
+        Button[] buttony = {
+                findViewById(R.id.odp_A),
+                findViewById(R.id.odp_B),
+                findViewById(R.id.odp_C),
+                findViewById(R.id.odp_D)
+        };
+        ImageView tes = findViewById(R.id.tresc_pytania);
+        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
+        SetPytanieParent(buttony,pytanie,tes);
+        if(CURRENT_INDEX==0){
+            Button zmientekst=findViewById(R.id.prevbutton);
+            zmientekst.setEnabled(false);
+        }else{
+            Button zmientekst=findViewById(R.id.prevbutton);
+            zmientekst.setEnabled(true);
+        }
+        if(q_num-1==CURRENT_INDEX){
+            Button zmientekst=findViewById(R.id.nextbutton);
+            zmientekst.setText("zakończ"); //#todo tłumacz
+            wywolajfunkcje=true;
+        }else{
+            Button zmientekst=findViewById(R.id.nextbutton);
+            zmientekst.setText(getString(R.string.next));
+            wywolajfunkcje=false;
         }
     }
     public void Set_pytanie_Poj(){
         Random r = new Random();
         CURRENT_INDEX = r.nextInt(listaPytan.size());
-        try{
-            oneshot=true;
-            if(CHALLENGE_MODE!=true){
-                Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
-                wyjasnienie_button.setEnabled(false);
-            }
-            AnswerListPoj = 0;
-            Collections.shuffle(listaShuffled);
-            PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
-            String[] pytania = pytanie.getOdpowiedzi();
-            ImageView tes = findViewById(R.id.tresc_pytania_i_wyjasnienie);
-            try{
-                Test_Math_drawable=Math_syn.set_Math(pytanie.getTresc());
-                tes.setBackground(Test_Math_drawable);
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            Button[] buttony = {
-                    findViewById(R.id.odp_A_Poj),
-                    findViewById(R.id.odp_B_Poj),
-                    findViewById(R.id.odp_C_Poj),
-                    findViewById(R.id.odp_D_Poj)
-            };
-            for(int j=0;j<4;j++){
-                try {
-                    buttony[j].setText("");
-                    StringCurrentQuestion[j] = "\\text{" + LitABCD[j] + ": }" + pytania[j];
-                    CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
-                    buttony[j].setBackground(CurrentQuestion[j]);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    buttony[j].setText("crash");
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
+        oneshot=true;
+        if(CHALLENGE_MODE!=true){
+            Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
+            wyjasnienie_button.setEnabled(false);
         }
+        Button[] buttony = {
+                findViewById(R.id.odp_A_Poj),
+                findViewById(R.id.odp_B_Poj),
+                findViewById(R.id.odp_C_Poj),
+                findViewById(R.id.odp_D_Poj)
+        };
+        Collections.shuffle(listaShuffled);
+        ImageView tes = findViewById(R.id.tresc_pytania_i_wyjasnienie);
+        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
+        SetPytanieParent(buttony,pytanie,tes);
     }
     public void Set_pytanie_bledne(){
-        try{
-            int i = SET_TEST_ID;
-            String tresc;
-            PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-            tresc = pytanie.getTresc();
-            String[] pytania = pytanie.getOdpowiedzi();
-            ImageView tes = findViewById(R.id.tresc_pytaniabledne);
-            try{
-                Test_Math_drawable=Math_syn.set_Math(tresc);
-                tes.setBackground(Test_Math_drawable);
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            Button[] buttony = {
-                    findViewById(R.id.odp_Abledne),
-                    findViewById(R.id.odp_Bbledne),
-                    findViewById(R.id.odp_Cbledne),
-                    findViewById(R.id.odp_Dbledne)
-            };
-            for(int j=0;j<4;j++){
-                try {
-                    buttony[j].setText("");
-                    StringCurrentQuestion[j] = "\\text{" + LitABCD[j] + ": }" + pytania[j];
-                    CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
-                    buttony[j].setBackground(CurrentQuestion[j]);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    buttony[j].setText("crash");
-                }
-            }
-            UpdateAnswerBledne();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public void UpdateAnswer(){
-        Log.d("testaction","updating_answear");
-        try{
-            Button[] buttony = {
-                    findViewById(R.id.odp_A),
-                    findViewById(R.id.odp_B),
-                    findViewById(R.id.odp_C),
-                    findViewById(R.id.odp_D)
-            };
-            for(int j=0;j<4;j++){
-                CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
-                if(listaShuffled.get(CURRENT_INDEX).getOdpUzytkownikaInt()==j+1){
-                    CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],0xff4f5d75,0xffffffff);
-                }
-                buttony[j].setBackground(CurrentQuestion[j]);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        Button[] buttony = {
+                findViewById(R.id.odp_Abledne),
+                findViewById(R.id.odp_Bbledne),
+                findViewById(R.id.odp_Cbledne),
+                findViewById(R.id.odp_Dbledne)
+        };
+        ImageView tes = findViewById(R.id.tresc_pytaniabledne);
+        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
+        SetPytanieParent(buttony,pytanie,tes);
+        setBledneParent(buttony,pytanie);
     }
     public void UpdateAnswer_Poj(){
-        try{
-            Button[] buttony = {
-                    findViewById(R.id.odp_A_Poj),
-                    findViewById(R.id.odp_B_Poj),
-                    findViewById(R.id.odp_C_Poj),
-                    findViewById(R.id.odp_D_Poj)
-            };
-            PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
-            char odp = pytanie.getOdpUzytkownika();
-            int odpint=pytanie.getPoprawnaOdpInt();
-            char correctansw = pytanie.getPoprawnaOdp();
-            int current_color= 0x00ffffff;
-            for(int j=0;j<4;j++){
-                current_color= 0x00ffffff;
-                if(AnswerListPoj==j+1){
-                    if(pytanie.getOdpUzytkownika()!=pytanie.getPoprawnaOdp()){
-                        current_color = color_incorrect;
-                    }
-                }
-                CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],current_color,color_text_incorrect);
-                buttony[j].setBackground(CurrentQuestion[j]);
-            }
-            if(odpint!=0){
-                CurrentQuestion[odpint-1] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[odpint-1],color_correct,color_text_correct);
-                buttony[odpint-1].setBackground(CurrentQuestion[odpint-1]);
-            }
-            if(pytanie.getOdpUzytkownika()==pytanie.getPoprawnaOdp()){
-                addProgress(0); //może progress do challenge?
-            }else{
-                if(CHALLENGE_MODE==true){
-                    ilosc_blednych++;
-                    String japka = "zycie_";
-                        int resID = getResources().getIdentifier((japka+String.valueOf(3-ilosc_blednych+1)), "id", getPackageName());
-                        ImageView img = findViewById(resID);
-                        img.setImageResource(R.drawable.japkodead);
-                        PlaySound("life_lost",false);
-                }
-                if(ilosc_blednych>=3){
-                    new Handler(getMainLooper()).postDelayed(() -> {
-                        DefaultMainPageActions();
-                    }, 2500);
-                }
-            }
+        Button[] buttony = {
+                findViewById(R.id.odp_A_Poj),
+                findViewById(R.id.odp_B_Poj),
+                findViewById(R.id.odp_C_Poj),
+                findViewById(R.id.odp_D_Poj)
+        };
+        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
+        setBledneParent(buttony,pytanie);
+        if(pytanie.getOdpUzytkownika()==pytanie.getPoprawnaOdp()){
+            addProgress(0); //może progress do challenge?
+        }else{
             if(CHALLENGE_MODE==true){
+                ilosc_blednych++;
+                String japka = "zycie_";
+                int resID = getResources().getIdentifier((japka+String.valueOf(3-ilosc_blednych+1)), "id", getPackageName());
+                ImageView img = findViewById(resID);
+                img.setImageResource(R.drawable.japkodead);
+                PlaySound("life_lost",false);
+            }
+            if(ilosc_blednych>=3){
                 new Handler(getMainLooper()).postDelayed(() -> {
-                    Set_pytanie_Poj();
+                    DefaultMainPageActions();
                 }, 2500);
             }
-        } catch (Exception e){
-            e.printStackTrace();
         }
-    }
-    public void UpdateAnswerBledne(){
-        try{
-
-            Button[] buttony = {
-                    findViewById(R.id.odp_Abledne),
-                    findViewById(R.id.odp_Bbledne),
-                    findViewById(R.id.odp_Cbledne),
-                    findViewById(R.id.odp_Dbledne)
-            };
-            for(int j=0;j<4;j++){
-                CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
-                buttony[j].setBackground(CurrentQuestion[j]);
-                buttony[j].setText("");
-            }
-            char odp;
-            PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-            int odpint=pytanie.getPoprawnaOdpInt();
-            odp = pytanie.getOdpUzytkownika();
-            char correctansw = pytanie.getPoprawnaOdp();
-            int current_color= 0x00ffffff;
-
-            for(int j=0;j<4;j++){
-                current_color= 0x00ffffff;
-                if(listaShuffled.get(CURRENT_INDEX).getOdpUzytkownikaInt()==j+1){
-                    if(pytanie.getOdpUzytkownika()!=pytanie.getPoprawnaOdp()){
-                        current_color = color_incorrect;
-                    }
-                }
-                CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],current_color,color_text_incorrect);
-                buttony[j].setBackground(CurrentQuestion[j]);
-            }
-            if(odpint!=0){
-                CurrentQuestion[odpint-1] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[odpint-1],color_correct,color_text_incorrect);
-                buttony[odpint-1].setBackground(CurrentQuestion[odpint-1]);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
+        if(CHALLENGE_MODE==true){
+            new Handler(getMainLooper()).postDelayed(() -> {
+                Set_pytanie_Poj();
+            }, 2500);
         }
-    }
-    public void setAnswerParent(){
-        // #TODO wrzuć wszystko do jednej funkcji
     }
     public void setAnswer(View v){
-        try{
-            PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-            if(v.getId()==R.id.odp_A){
-                pytanie.ZapiszOdpowiedz('A');
-            }
-            else if(v.getId()==R.id.odp_B){
-                pytanie.ZapiszOdpowiedz('B');
-            }
-            else if(v.getId()==R.id.odp_C){
-                pytanie.ZapiszOdpowiedz('C');
-            }
-            else if(v.getId()==R.id.odp_D){
-                pytanie.ZapiszOdpowiedz('D');
-            }
-            listaShuffled.set(CURRENT_INDEX,pytanie);
-            UpdateAnswer();
-        } catch (Exception e){
-            e.printStackTrace();
+        int[] ids = {
+                R.id.odp_A,
+                R.id.odp_B,
+                R.id.odp_C,
+                R.id.odp_D
+        };
+        Button[] buttony = new Button[ids.length];
+        for(int i=0;i<ids.length;i++){
+            buttony[i] = findViewById(ids[i]);
         }
+        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
+        setAnswerParent(v,ids,pytanie);
+        UpdateAnswerParent(buttony);
     }
     public void setAnswerPoj(View v){
-        PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
-        try{
-            if(v.getId()==R.id.odp_A_Poj){
-                AnswerListPoj = 1;
-                pytanie.ZapiszOdpowiedz('A');
+        int[] ids = {
+                R.id.odp_A_Poj,
+                R.id.odp_B_Poj,
+                R.id.odp_C_Poj,
+                R.id.odp_D_Poj
+        };
+        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
+        setAnswerParent(v,ids,pytanie);
+        if(oneshot==true){
+            UpdateAnswer_Poj();
+            if(CHALLENGE_MODE!=true){
+                Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
+                wyjasnienie_button.setEnabled(true);
             }
-            else if(v.getId()==R.id.odp_B_Poj){
-                AnswerListPoj = 2;
-                pytanie.ZapiszOdpowiedz('B');
-            }
-            else if(v.getId()==R.id.odp_C_Poj){
-                AnswerListPoj = 3;
-                pytanie.ZapiszOdpowiedz('C');
-            }
-            else if(v.getId()==R.id.odp_D_Poj){
-                AnswerListPoj = 4;
-                pytanie.ZapiszOdpowiedz('D');
-            }
-            listaPytan.set(CURRENT_INDEX,pytanie);
-            if(oneshot==true){
-                UpdateAnswer_Poj();
-                if(CHALLENGE_MODE!=true){
-                    Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
-                    wyjasnienie_button.setEnabled(true);
-                }
-
-            }
-            oneshot=false;
-        } catch (Exception e){
-            e.printStackTrace();
         }
+        oneshot=false;
     }
     public double oblicz_percenty;
     public int brak_odp=0;
@@ -3416,6 +3266,97 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             }
         }
+    public void setBledneParent(Button[] buttony,PytaniaDB pytanie) {
+        try{
+            for(int j=0;j<4;j++){
+                CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
+                buttony[j].setBackground(CurrentQuestion[j]);
+                buttony[j].setText("");
+            }
+            char odp;
+            int odpint=pytanie.getPoprawnaOdpInt();
+            odp = pytanie.getOdpUzytkownika();
+            char correctansw = pytanie.getPoprawnaOdp();
+            int current_color= 0x00ffffff;
+
+            for(int j=0;j<4;j++){
+                current_color= 0x00ffffff;
+                if(listaShuffled.get(CURRENT_INDEX).getOdpUzytkownikaInt()==j+1){
+                    if(pytanie.getOdpUzytkownika()!=pytanie.getPoprawnaOdp()){
+                        current_color = color_incorrect;
+                    }
+                }
+                CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],current_color,color_text_incorrect);
+                buttony[j].setBackground(CurrentQuestion[j]);
+            }
+            if(odpint!=0){
+                CurrentQuestion[odpint-1] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[odpint-1],color_correct,color_text_incorrect);
+                buttony[odpint-1].setBackground(CurrentQuestion[odpint-1]);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void SetPytanieParent(Button[] buttony, PytaniaDB pytanie, ImageView MiejsceNaPytanie){
+        Log.d("testaction","setting_question");
+        try{
+            String tresc,id;
+            Log.d("testaction","setting_tresc");
+            try{
+                MiejsceNaPytanie.setBackground(Math_syn.set_Math(pytanie.getTresc()));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            Log.d("testaction","setting_odpowiedzi");
+            for(int j=0;j<4;j++){
+                try {
+                    Log.d("testaction",String.valueOf(j));
+                    StringCurrentQuestion[j] = "\\text{" + LitABCD[j] + ": }" + pytanie.getJednaOdpowiedz(j);
+                    CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
+                    buttony[j].setBackground(CurrentQuestion[j]);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    buttony[j].setText("crash");
+                }
+            }
+            UpdateAnswerParent(buttony);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void setAnswerParent(View v,int[] ids,PytaniaDB pytanie){
+        try{
+            if(v.getId()==ids[0]){
+                pytanie.ZapiszOdpowiedz('A');
+            }
+            else if(v.getId()==ids[1]){
+                pytanie.ZapiszOdpowiedz('B');
+            }
+            else if(v.getId()==ids[2]){
+                pytanie.ZapiszOdpowiedz('C');
+            }
+            else if(v.getId()==ids[3]){
+                pytanie.ZapiszOdpowiedz('D');
+            }
+            listaShuffled.set(CURRENT_INDEX,pytanie);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void UpdateAnswerParent(Button[] buttony){
+        Log.d("testaction","updating_answer");
+        try{
+            for(int j=0;j<4;j++){
+                CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
+                if(listaShuffled.get(CURRENT_INDEX).getOdpUzytkownikaInt()==j+1){
+                    CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],0xff4f5d75,0xffffffff);
+                }
+                buttony[j].setBackground(CurrentQuestion[j]);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public void parseJson(String response){
         try{
             JSONObject jsonObject = new JSONObject(response);
