@@ -37,15 +37,12 @@ public class Potka extends Przedmiot{
     public boolean getCzyDostepna(){
         return czyDostepna;
     }
-    public void Zjedz(String Lang){
+    public void Zjedz(){
         if(ZapisanaIlosc>0){
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt(ITEMNAME+this.id,(sharedPreferences.getInt(ITEMNAME+this.id,0)-1));
             editor.apply();
             this.ZapisanaIlosc = sharedPreferences.getInt(ITEMNAME+this.id,0);
-        }
-        else{
-            Toast.makeText(context, "Brak "+getNazwa(Lang)+" :(", Toast.LENGTH_SHORT).show();
         }
     }
 

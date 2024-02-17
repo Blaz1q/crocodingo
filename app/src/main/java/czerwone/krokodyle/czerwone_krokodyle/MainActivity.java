@@ -1647,12 +1647,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     boolean czyselectpokazany = false;
     public void PokazJedzenieSelect(View v){
+        LinearLayout container = findViewById(R.id.selectJedzenie);
         if(czyselectpokazany){
-            LinearLayout container = findViewById(R.id.selectJedzenie);
             YoYo.with(Techniques.SlideOutRight)
                     .duration(300)
                     .playOn(container);
-
             new Handler(getMainLooper()).postDelayed(() -> {
                 try{
                     container.setVisibility(View.GONE);
@@ -1660,60 +1659,53 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     throw new RuntimeException(ignored);
                 }
             }, 300);
-
             czyselectpokazany = false;
-            PokazMiske(v);
         }
         else{
-            LinearLayout container = findViewById(R.id.selectJedzenie);
             container.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.SlideInRight)
                     .duration(300)
                     .playOn(container);
             czyselectpokazany = true;
-            PokazMiske(v);
         }
+        PokazMiske(v);
     }
     public void PokazMiske(View v){
-        if(v.getId()==R.id.jedzeniemenu){
-            ustawMiche();
-            if(czypokazana){
-                RelativeLayout container = findViewById(R.id.karmieniecontainer);
-                LinearLayout strzalki = findViewById(R.id.strzalki);
-                YoYo.with(Techniques.SlideOutLeft)
-                        .duration(300)
-                        .playOn(container);
-                YoYo.with(Techniques.SlideOutLeft)
-                        .duration(300)
-                        .playOn(strzalki);
+        if(czypokazana){
+            RelativeLayout container = findViewById(R.id.karmieniecontainer);
+            LinearLayout strzalki = findViewById(R.id.strzalki);
+            YoYo.with(Techniques.SlideOutLeft)
+                    .duration(300)
+                    .playOn(container);
+            YoYo.with(Techniques.SlideOutLeft)
+                    .duration(300)
+                    .playOn(strzalki);
 
-                new Handler(getMainLooper()).postDelayed(() -> {
-                    try{
-                        container.setVisibility(View.GONE);
-                        strzalki.setVisibility(View.GONE);
-                    } catch (Exception ignored) {
-                        throw new RuntimeException(ignored);
-                    }
-                }, 300);
-
-
-                czypokazana = false;
-            }
-            else{
-                RelativeLayout container = findViewById(R.id.karmieniecontainer);
-                LinearLayout strzalki = findViewById(R.id.strzalki);
-                container.setVisibility(View.VISIBLE);
-                strzalki.setVisibility(View.VISIBLE);
-
-                YoYo.with(Techniques.SlideInLeft)
-                        .duration(300)
-                        .playOn(container);
-                YoYo.with(Techniques.SlideInLeft)
-                        .duration(300)
-                        .playOn(strzalki);
-                czypokazana = true;
-            }
+            new Handler(getMainLooper()).postDelayed(() -> {
+                try{
+                    container.setVisibility(View.GONE);
+                    strzalki.setVisibility(View.GONE);
+                } catch (Exception ignored) {
+                    throw new RuntimeException(ignored);
+                }
+            }, 300);
+            czypokazana = false;
         }
+        else{
+            RelativeLayout container = findViewById(R.id.karmieniecontainer);
+            LinearLayout strzalki = findViewById(R.id.strzalki);
+            container.setVisibility(View.VISIBLE);
+            strzalki.setVisibility(View.VISIBLE);
+
+            YoYo.with(Techniques.SlideInLeft)
+                    .duration(300)
+                    .playOn(container);
+            YoYo.with(Techniques.SlideInLeft)
+                    .duration(300)
+                    .playOn(strzalki);
+            czypokazana = true;
+        }
+        ustawMiche();
     }
     public void ZmienPrzedmiotInc(View v){
         int ListSize=0;
@@ -1828,13 +1820,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                 editor.apply();
                                 break;
                         }
-                        listaPotek.get(SELECTED_FOOD).Zjedz(getLang());
+                        listaPotek.get(SELECTED_FOOD).Zjedz();
                         addProgress(5);
                         Hapaba();
                         lastFeed = sharedPreferences.getLong(LAST_FEED,0);
                         LoadData();
                         Animacja_Jedzenia();
-                        listaPotek.get(SELECTED_FOOD).Zjedz(getLang());
                         ustawMiche();
                         ustawCzapke();
                         User.Stats("ZJEDZONE_POTKI",1);
@@ -2375,6 +2366,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         else if(v.getId()==R.id.kolo_fortuny){
             if(isPopupVisible==false){
+                if(czyselectpokazany) PokazJedzenieSelect(v);
                 POPUP_RESOLUTION = 1;
                 ShowPopup(R.layout.popup_kolo_fortuny);
                 generateSectorDegrees();
@@ -2384,6 +2376,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         else if(v.getId()==R.id.questy){
             if(!isPopupVisible){
+                if(czyselectpokazany) PokazJedzenieSelect(v);
                 if(zaladowano_questy){
             POPUP_RESOLUTION = 1;
             POPUP_EXCEPTION_MODE = 1;
@@ -2500,6 +2493,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             updateLoader();
         }
         else if (v.getId()==R.id.Rozpocznij_test1){
+            ResetAllQuestions();
             setContentView(R.layout.pytania_wybor);
             Create_Question_Buttons();
             ClosePopup();
@@ -2795,7 +2789,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
         try{
-            listaShuffled = listaPytan;
+            listaShuffled.addAll(listaPytan);
         }catch (Exception e){
             
         }
@@ -2911,15 +2905,31 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void Create_Question_Buttons(){
         Log.d("testaction","creating");
         poprawne = 0;
-        q_num = rand_num.nextInt(25-20)+20;
+        int localqnum=0;
         ResetAllQuestions();
-        Collections.shuffle(listaShuffled);
+        List<PytaniaDB> ListaPytan = new ArrayList<>();
+        List<PytaniaDB> PreShuffle = new ArrayList<>();
+        for(int i=0;i<podzielonaListaPytan.size();i++){
+            PreShuffle.clear();
+            localqnum=0;
+            localqnum = rand_num.nextInt(3)+1;
+            PreShuffle.addAll(podzielonaListaPytan.get(i));
+            Collections.shuffle(PreShuffle);
+            for(int j=0;j<localqnum;j++){
+                ListaPytan.add(PreShuffle.get(j));
+            }
+        }
+        q_num = ListaPytan.size();
+        listaShuffled.clear();
+        listaShuffled.addAll(ListaPytan);
+        //Collections.shuffle(listaShuffled);
         Resume_Question_Buttons();
     }
     public void ResetAllQuestions(){
         Log.d("testaction","reseting");
-        listaShuffled = listaPytan;
+        listaShuffled.clear();
         for(int i=0;i<listaPytan.size();i++){
+            listaShuffled.add(listaPytan.get(i));
             listaShuffled.get(i).ResetAnswer();
         }
     }
@@ -3040,6 +3050,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 findViewById(R.id.odp_D_Poj)
         };
         Collections.shuffle(listaShuffled);
+        listaShuffled.get(CURRENT_INDEX).ResetAnswer();
         ImageView tes = findViewById(R.id.tresc_pytania_i_wyjasnienie);
         PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
         SetPytanieParent(buttony,pytanie,tes);
@@ -3300,7 +3311,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void SetPytanieParent(Button[] buttony, PytaniaDB pytanie, ImageView MiejsceNaPytanie){
         Log.d("testaction","setting_question");
         try{
-            String tresc,id;
+            String tresc;
             Log.d("testaction","setting_tresc");
             try{
                 MiejsceNaPytanie.setBackground(Math_syn.set_Math(pytanie.getTresc()));
