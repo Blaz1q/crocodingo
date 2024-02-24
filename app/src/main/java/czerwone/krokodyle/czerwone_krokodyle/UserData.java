@@ -1,6 +1,7 @@
 package czerwone.krokodyle.czerwone_krokodyle;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.provider.Settings.System.getString;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -45,6 +46,7 @@ public class UserData {
     private static final String PURCHASED_CZAPKI = "purchased_czapki";
     private static final String SAVED_LEVEL = "SAVED_LEVEL";
     private static final String SAVED_EXP = "SAVED_EXP";
+    private static final String CROCODINGO_VERSION = "CROCODINGO_VERSION";
     private final SharedPreferences sharedPreferences;
     private static final String SHARED_PREFS = "sharedPrefs"; //NIE ZMIENIAĆ!
     private final SharedPreferences.Editor editor;
@@ -134,6 +136,19 @@ public class UserData {
         int x = sharedPreferences.getInt(KEY,0);
         Log.d(KEY,String.valueOf(x));
         return x;
+    }
+    public String getVersion(){
+        return sharedPreferences.getString(CROCODINGO_VERSION,"VERSION");
+    }
+    public boolean checkVersion(){
+        String ver = sharedPreferences.getString(CROCODINGO_VERSION,"VERSION");
+        Log.d("ver",ver);
+        if(ver.equals(context.getString(R.string.version))) return true;
+        updateVersion();
+        return false;
+    }
+    public void updateVersion(){
+        editEditor(CROCODINGO_VERSION,context.getString(R.string.version));
     }
     public int getFood(){
         return this.Food;

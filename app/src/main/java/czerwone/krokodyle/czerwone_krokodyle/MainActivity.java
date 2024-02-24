@@ -323,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             Math_syn.set_Math("\\text{rozruch}");
                             updateAccInfo();
                             ResumeOnLongListener();
+                            showUpdatePopup();
                             PierwszeUruchomienie();
                             Uruchomienie_animajca();
                             ustawCzapke();
@@ -417,6 +418,35 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         LoadData();
         Wibracje();
+    }
+    public void showUpdatePopup(){
+        if(!User.checkVersion()){
+            CoNowego update = loadUpdateFromAsset();
+            if(update.code!=-1){
+                POPUP_EXCEPTION_MODE = 1;
+                ShowPopup(R.layout.popup_update);
+                TextView wersja = myDialog.findViewById(R.id.patchnotes);
+                wersja.setText(getString(R.string.conowego)+update.Wersja);
+                LinearLayout parent = myDialog.findViewById(R.id.patchnotes_content);
+                for(int i=0;i<update.getOpis(getLang()).length;i++){
+                    TextView tresc = new TextView(this);
+                    tresc.setText("- "+update.getOpis(getLang())[i]);
+                    tresc.setTextColor(getColor(R.color.ckblack));
+                    tresc.setTextSize(30);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    tresc.setLayoutParams(params);
+                    tresc.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    Typeface typeface = ResourcesCompat.getFont(this, R.font.londrina_solid);
+                    tresc.setTypeface(typeface);
+                    parent.addView(tresc);
+                }
+                myDialog.show();
+                POPUP_EXCEPTION_MODE =0;
+            }
+        }
     }
     public int LevelEq(int x){
         int val = (int) Math.floor(x*50*x*1.5);
@@ -746,6 +776,50 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    public CoNowego loadUpdateFromAsset(){
+        String wersja="";
+        String[][] finalopis;
+        try {
+            InputStream is = getAssets().open("update.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+            Log.d("MojaAplikacja", "Prawidłowo wczytano JSON: " + json);
+            JSONArray jsonArray = new JSONArray(json);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject updateJSON = jsonArray.getJSONObject(i);
+                JSONArray opisArray = updateJSON.getJSONArray("Opis");
+                String[][] opis = new String[opisArray.length()][]; // Inicjalizacja tablicy opis
+                for (int j = 0; j < opisArray.length(); j++) {
+                    JSONArray opisInner = opisArray.getJSONArray(j);
+                    opis[j] = new String[opisInner.length()]; // Inicjalizacja tablicy wewnętrznej
+                    for(int k=0; k<opisInner.length(); k++){
+                        opis[j][k] = opisInner.getString(k); // Przypisanie wartości do tablicy
+                    }
+                }
+                wersja = updateJSON.getString("Wersja");
+                Log.d("wersja", wersja);
+                for(int j=0; j<opis.length; j++){
+                    for(int k=0; k<opis[j].length; k++){
+                        Log.d("japierdole", "attempt" + opis[j][k]);
+                    }
+                }
+                String wersjaCroco = getString(R.string.version);
+                Log.d("wersja", wersjaCroco);
+                if(wersja.equals(wersjaCroco)){
+                    Log.d("KURWWWWAAAA","KUTWWAAARRAAR");
+                    CoNowego nowyupdate = new CoNowego(wersja,opis);
+                    return nowyupdate;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        CoNowego nowyupdate = new CoNowego();
+        return nowyupdate;
     }
     public void loadJedzenieFromAsset(){
         TextView cosiedzieje = findViewById(R.id.cosiedzieje);
@@ -2777,9 +2851,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         podzielonaListaPytan.add(new ArrayList<PytaniaDB>());
                     }
                     PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria,Integer.valueOf(KatID));
-                    podzielonaListaPytan.get(Integer.valueOf(KatID)-1).add(pytanie);
+                    podzielonaListaPytan.get(listaKategorii.indexOf(Integer.valueOf(KatID))).add(pytanie);
                     listaPytan.add(pytanie);
-                    //pytanie.Wypisz();
+                    pytanie.Wypisz();
                     zaladowanodb=true;
                 }
                 updateLoader();
@@ -2794,7 +2868,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             
         }
         //DebugTestWypiszPytania();
-        DebugTestWypiszKategorie(1);
+        //DebugTestWypiszKategorie(9);
     }
     public void DebugTestWypiszPytania(){
         for(int i=0;i<podzielonaListaPytan.size();i++){
@@ -2915,9 +2989,17 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             localqnum = rand_num.nextInt(3)+1;
             PreShuffle.addAll(podzielonaListaPytan.get(i));
             Collections.shuffle(PreShuffle);
-            for(int j=0;j<localqnum;j++){
-                ListaPytan.add(PreShuffle.get(j));
+            if(localqnum<=podzielonaListaPytan.get(i).size()){
+                for(int j=0;j<localqnum;j++){
+                    ListaPytan.add(PreShuffle.get(j));
+                }
             }
+            else{
+                for(int j=0;j<podzielonaListaPytan.get(i).size();j++){
+                    ListaPytan.add(PreShuffle.get(j));
+                }
+            }
+
         }
         q_num = ListaPytan.size();
         listaShuffled.clear();
@@ -3448,8 +3530,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         //Log.d("JSON_DATA",response);
                         switch (action){
                             case 0:
-                                TextView cosiedzieje = findViewById(R.id.cosiedzieje);
-                                cosiedzieje.setText("Pobieranie Pytań..");
+                                //TextView cosiedzieje = findViewById(R.id.cosiedzieje);
+                                //cosiedzieje.setText("Pobieranie Pytań..");
                                 Set_Ids_List(response);
                                 break;
                             case 1:
