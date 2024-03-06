@@ -10,6 +10,11 @@ package czerwone.krokodyle.czerwone_krokodyle;
 import android.app.AlertDialog;
 import android.app.Dialog;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -81,6 +86,12 @@ import ru.noties.jlatexmath.JLatexMathDrawable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.appupdate.AppUpdateOptions;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -206,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private static final String SAVED_LEVEL = "SAVED_LEVEL";
     private static final String SAVED_EXP = "SAVED_EXP";
     private static final String final_connection= "https://jncrew.5v.pl/androidAPI.php";
+    AppUpdateManager appUpdateManager;
     Dialog dialog;
     Dialog myDialog;
     Dialog TopBar;
@@ -292,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         database = FirebaseDatabase.getInstance();
         User = new UserData(getApplicationContext());
         canplayanimations = false;
+        checkForUpdates();
         LoadData();
         UpdateLocale();
         loadJSONFromAsset();
@@ -352,6 +365,46 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 });
         wyjscie = builder.create();
 
+    }
+    private void checkForUpdates(){
+        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(getApplicationContext());
+
+// Returns an intent object that you use to check for an update.
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
+// Checks that the platform will allow the specified type of update.
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    // This example applies an immediate update. To apply a flexible update
+                    // instead, pass in AppUpdateType.FLEXIBLE
+                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+
+                // Request the update.
+                appUpdateManager.startUpdateFlowForResult(
+                        // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                        appUpdateInfo,
+                        // an activity result launcher registered via registerForActivityResult
+                        registerForActivityResult(
+                                new ActivityResultContracts.StartIntentSenderForResult(),
+                                new ActivityResultCallback<ActivityResult>() {
+                                    @Override
+                                    public void onActivityResult(ActivityResult result) {
+                                        // handle callback
+                                        if (result.getResultCode() != RESULT_OK) {
+                                            Log.d("UpdateHandler","Update flow failed! Result code: " + result.getResultCode());
+                                            // If the update is canceled or fails,
+                                            // you can request to start the update again.
+                                        }
+                                        else{
+
+                                        }Log.d("UpdateHandler","Update flow successfull!");
+                                    }
+                                }),
+                        // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
+                        // flexible updates.
+                        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build());
+            }
+        });
     }
     @Override
     public void onBackPressed() {
