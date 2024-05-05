@@ -1,6 +1,10 @@
 [
   {
     "Wersja": "BETA 1.5.1",
-    "Opis": [["Poprawiono testy","Dodano potki","Dodano aktualizacje"],["Improved tests","Added potions","Added updates"]]
+    "Opis": [["Poprawiono testy","Dodano mikstury","Dodano aktualizacje"],["Improved tests","Added potions","Added updates"]]
+  },
+  {
+    "Wersja": "BETA 1.6.0",
+    "Opis": [["Poprawiono testy","Dodano Kategorie","Dodano nowe zadania"],["Improved tests","Added Categories","Added new quests"]]
   }
 ]

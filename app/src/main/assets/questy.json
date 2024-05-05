@@ -1,7 +1,7 @@
 [
   {
     "id": 0,
-    "tresc": ["Rozwiąż pojedyncze testy","Complete single tests"],
+    "tresc": ["Rozwiąż pojedyncze testy","Solve single tests"],
     "Nagroda": 500,
     "exp": 10000,
     "przedzial": [10,25],
@@ -9,7 +9,7 @@
   },
   {
     "id": 1,
-    "tresc": ["Rozwiąż testy","Complete tests"],
+    "tresc": ["Rozwiąż testy","Solve tests"],
     "Nagroda": 500,
     "exp": 300,
     "przedzial": [1,2],
@@ -45,6 +45,14 @@
     "Nagroda": 300,
     "exp": 300,
     "przedzial": [1,1],
+    "exception": 0
+  },
+  {
+    "id": 6,
+    "tresc": ["Rozwiąż wybrane kategorie ","Solve selected categories"],
+    "Nagroda": 300,
+    "exp": 300,
+    "przedzial": [5,15],
     "exception": 0
   }
 ]

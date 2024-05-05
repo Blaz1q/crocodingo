@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+            android:padding="10dp"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/hiddentop"
+        android:orientation="horizontal"
+        >
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/menu_top_pytania"
+        android:layout_below="@id/hiddentop"
+        >
+        <Button
+            android:layout_below="@id/hiddentop"
+            android:id="@+id/testy_kategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wybierz_kat"
+            android:onClick="Zmien_widoki"
+            android:layout_weight="1"
+            android:layout_marginRight="3dp"
+            android:backgroundTint="@color/gray_active"
+            />
+
+        <ImageView
+            android:id="@+id/numer_pytania"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:cropToPadding="false"
+            android:gravity="center"
+            android:scaleType="centerInside"
+            android:src="@drawable/crocodingo_logo_long"
+            android:textSize="20sp" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/tresc_pytania_i_wyjasnienie"
+        android:layout_width="match_parent"
+        android:layout_height="357dp"
+        android:layout_below="@id/menu_top_pytania"
+        android:layout_centerHorizontal="true"
+        />
+
+
+
+    <LinearLayout
+        android:layout_below="@+id/tresc_pytania_i_wyjasnienie"
+        android:id="@+id/select_id_containter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/wyjasnij_kat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/gray_active"
+            android:onClick="Wyjasnij"
+
+            android:text="@string/wyjasnienie" />
+
+        <Button
+            android:id="@+id/nextkatpytanie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/gray_active"
+            android:onClick="NextPytanie"
+            android:text="@string/next" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/select_id_containter"
+        >
+
+        <Button
+            android:id="@+id/odp_A_Poj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="setAnswerKategoria"
+            />
+
+        <Button
+            android:id="@+id/odp_B_Poj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="setAnswerKategoria"
+            />
+
+        <Button
+            android:id="@+id/odp_C_Poj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="setAnswerKategoria"
+             />
+
+        <Button
+            android:id="@+id/odp_D_Poj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="setAnswerKategoria"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

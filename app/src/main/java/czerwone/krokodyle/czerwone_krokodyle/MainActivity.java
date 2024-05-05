@@ -12,8 +12,6 @@ import android.app.Dialog;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,19 +29,15 @@ import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -56,7 +50,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -80,7 +73,6 @@ import com.google.android.gms.common.api.ApiException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import ru.noties.jlatexmath.JLatexMathDrawable;
 
@@ -461,6 +453,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     UpdateSettings();
                     RemoveAction();
                     break;
+                case "pytania_wybor_kategoria":
+                    DefaultMainPageActions();break;
                 default:
                     wyjscie.show();
                     break;
@@ -972,6 +966,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         osiagniecie.setJedzenie(JedzenieIDs,JedzenieIloscs);
                     }
                 }
+                if(Nagroda.has("PotkaID")&&Nagroda.has("JedzenieIlosc")){
+                    JSONArray PotkaID = Nagroda.getJSONArray("PotkaID");
+                    JSONArray PotkaIlosc = Nagroda.getJSONArray("PotkaIlosc");
+                    if(PotkaIlosc.length()==PotkaID.length()){
+                        int[] PotkiIDs = new int[PotkaID.length()];
+                        int[] PotkiIloscs = new int[PotkaIlosc.length()];
+                        for(int j=0;j<PotkaID.length();j++){
+                            PotkiIDs[j] = PotkaID.getInt(j);
+                            PotkiIloscs[j] = PotkaIlosc.getInt(j);
+                        }
+                        osiagniecie.setPotki(PotkiIDs,PotkiIloscs);
+                    }
+                }
                 if(Nagroda.has("CzapkaID")){
                     JSONArray CzapkaID = Nagroda.getJSONArray("CzapkaID");
                     int[] CzapkaIDs = new int[CzapkaID.length()];
@@ -1030,6 +1037,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                 int[] jedzenieilosc = listaOsiagniec.get(i).getJedzenieIlosc();
                                 for(int j=0;j<jedzenieilosc.length;j++){
                                     listaZarcia.get(jedzenieid[j]).DodajJedzenie(jedzenieilosc[j]);
+                                }
+                            }
+                            if(listaOsiagniec.get(i).HasPotki){
+                                int[] jedzenieid = listaOsiagniec.get(i).getPotkiID();
+                                int[] jedzenieilosc = listaOsiagniec.get(i).getPotkiIlosc();
+                                for(int j=0;j<jedzenieilosc.length;j++){
+                                    listaPotek.get(jedzenieid[j]).DodajJedzenie(jedzenieilosc[j]);
                                 }
                             }
                         }
@@ -1225,7 +1239,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         return json;
     }
-    public void Generuj_Achievementy(LinearLayout parent,Achievements osiagniecie){
+    public void Generuj_Achievementy(LinearLayout parent,Achievements osiagniecie,boolean show){
         RelativeLayout mainRelativeLayout = new RelativeLayout(this);
         RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -1258,9 +1272,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Komentarz.setTextSize(13);
         TextProgress.setTextSize(15);
         TextProgress.setText("("+osiagniecie.getCurrentProgress()+"/"+osiagniecie.getMaxProgress()+")");
-        Nazwa.setText(osiagniecie.getTresc(getLang()));
-        Komentarz.setText(osiagniecie.getKomentarz(getLang()));
-        Podtytul.setText(osiagniecie.getPodtytul(getLang()));
+        if(show){
+            Nazwa.setText(osiagniecie.getTresc(getLang()));
+            Komentarz.setText(osiagniecie.getKomentarz(getLang()));
+            Podtytul.setText(osiagniecie.getPodtytul(getLang()));
+        }else{
+            Nazwa.setText("???");
+            Komentarz.setText("???");
+            Podtytul.setText("???");
+        }
+
         Progress.setMax(osiagniecie.getMaxProgress());
         Progress.setProgress(osiagniecie.getCurrentProgress());
         // Ustawienie layout params dla wszystkich TextView
@@ -1690,7 +1711,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void KupPotki(View v,int idPotki){
         if(getMoney()>=listaPotek.get(idPotki).getCena()){
-            listaPotek.get(idPotki).DodajJedzenie();
+            listaPotek.get(idPotki).DodajJedzenie(1);
             SaveMoney(-listaPotek.get(idPotki).getCena());
             updateCrococoinsInShop();
             addProgressOsiagniecia(6);
@@ -1981,6 +2002,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }else{
             czerwony_krokodyl.setImageResource(R.drawable.ripcroco);
             User.CrocoState = 2;
+            addProgressOsiagniecia(4);
         }
         //Toast.makeText(this, String.valueOf(User.CrocoState), Toast.LENGTH_SHORT).show();
     }
@@ -2401,6 +2423,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 }
                 else{
                     bgsong.pause();
+                    addProgressOsiagniecia(7);
                 }
             }
             catch (Exception e){
@@ -2480,10 +2503,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     }
                     else{
                         if(ac.getCzyWidoczne()){
-                            Generuj_Achievementy(lin, ac);
+                            Generuj_Achievementy(lin, ac,true);
                         }else{
                             if(ac.getIsComplete()){
-                                Generuj_Achievementy(lin, ac);
+                                Generuj_Achievementy(lin, ac,true);
+                            }else{
+                                Generuj_Achievementy(lin, ac,false);
                             }
                         }
                     }
@@ -2635,6 +2660,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             ClosePopup();
             bgmusictesty();
             AddActions("pojedyncze_pytanie");
+        }
+        else if(v.getId()==R.id.testy_kategoria){
+            ResetAllQuestions();
+            setContentView(R.layout.pytania_wybor_kategoria);
+            Create_Kategoria_Buttons();
+            ClosePopup();
+            bgmusictesty();
+            AddActions("pytania_wybor_kategoria");
         }
         else if (v.getId()==R.id.wroc_do_pytan){
             setContentView(R.layout.pytania_wybor);
@@ -2937,6 +2970,44 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public int CURRENT_INDEX;
+    public int KATEGORIA_ID;
+    public void Create_Kategoria_Buttons(){
+        Log.d("testaction","creating kategoria");
+        try{
+            LinearLayout layout = findViewById(R.id.questions_select);
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(0, 0, 0, 20);
+            for(int i=0;i<podzielonaListaPytan.size();i++){
+                Button btn_tests = new Button(this);
+                btn_tests.setLayoutParams(params);
+                btn_tests.setText(podzielonaListaPytan.get(i).get(0).getKategoria()+" ("+podzielonaListaPytan.get(i).size()+")");
+                btn_tests.setTextSize(30);
+                btn_tests.setTag(i);
+                int finalI = i;
+                btn_tests.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{
+                            KATEGORIA_ID = finalI;
+                            SET_TEST_ID = listaShuffled.get(KATEGORIA_ID).getId();
+                            setContentView(R.layout.pytanie_kategoria);
+                            AddActions("pojedyncze_pytanie");
+                            Set_pytanie_kategoria();
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                layout.addView(btn_tests);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public void Resume_Question_Buttons(){
         Log.d("testaction","creating");
         try{
@@ -2965,11 +3036,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     @Override
                     public void onClick(View v) {
                         try{
-                            CURRENT_INDEX = finalI;
-                            SET_TEST_ID = listaShuffled.get(CURRENT_INDEX).getId();
-                            setContentView(R.layout.pytanie_wyglad);
+                            setContentView(R.layout.pojedyncze_pytanie);
                             AddActions("pytanie_wyglad");
-                            Set_pytanie();
+                            Set_pytanie_Poj();
                         } catch (Exception e){
                             e.printStackTrace();
                         }
@@ -3091,6 +3160,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         else if(v.getId()==R.id.nextpojpytanie){
             Set_pytanie_Poj();
         }
+        else if(v.getId()==R.id.nextkatpytanie){
+            Set_pytanie_kategoria();
+        }
     }
     public void PrevPytanie(View v){
         if(v.getId()==R.id.prevbutton||v.getId()==R.id.prevbuttonbledne){
@@ -3138,6 +3210,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 }
             }
         }
+        if(v.getId()==R.id.wyjasnij_kat){
+            if(oneshot==false){
+                try{
+                    PytaniaDB pytanie = podzielonaListaPytan.get(KATEGORIA_ID).get(CURRENT_INDEX);
+                    ImageView wyjasnienie = findViewById(R.id.tresc_pytania_i_wyjasnienie);
+                    String wyjasnienie_tekst = pytanie.getWyjasnienie();
+                    Test_Math_drawable=Math_syn.set_Math(wyjasnienie_tekst);
+                    wyjasnienie.setBackground(Test_Math_drawable);
+                } catch (Exception e){
+
+                }
+            }
+        }
     }
     int ilosc_blednych=0;
     public void Set_pytanie(){
@@ -3169,6 +3254,41 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             zmientekst.setText(getString(R.string.next));
             wywolajfunkcje=false;
         }
+    }
+    int rerollindex=-1;
+    public void Set_pytanie_kategoria(){
+        Random r = new Random();
+        CURRENT_INDEX = r.nextInt(podzielonaListaPytan.get(KATEGORIA_ID).size());
+        switch(rerollindex){
+            case -1:{
+                rerollindex=CURRENT_INDEX;
+            }break;
+            default:{
+                Log.d("index",String.valueOf(CURRENT_INDEX));
+                if(podzielonaListaPytan.get(KATEGORIA_ID).size()>1) {
+                    while (rerollindex == CURRENT_INDEX) {
+                        CURRENT_INDEX = r.nextInt(podzielonaListaPytan.get(KATEGORIA_ID).size());
+                        Log.d("ROLLINN",String.valueOf(CURRENT_INDEX));
+                    }
+                    rerollindex=CURRENT_INDEX;
+                }
+            }break;
+        }
+
+        oneshot=true;
+        Button[] buttony = {
+                findViewById(R.id.odp_A_Poj),
+                findViewById(R.id.odp_B_Poj),
+                findViewById(R.id.odp_C_Poj),
+                findViewById(R.id.odp_D_Poj)
+        };
+        ResetAllQuestions();
+        listaShuffled.clear();
+        listaShuffled.addAll(podzielonaListaPytan.get(KATEGORIA_ID));
+        listaShuffled.get(CURRENT_INDEX).ResetAnswer();
+        ImageView tes = findViewById(R.id.tresc_pytania_i_wyjasnienie);
+        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
+        SetPytanieParent(buttony,pytanie,tes);
     }
     public void Set_pytanie_Poj(){
         Random r = new Random();
@@ -3202,7 +3322,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         SetPytanieParent(buttony,pytanie,tes);
         setBledneParent(buttony,pytanie);
     }
-    public void UpdateAnswer_Poj(){
+    public void UpdateAnswer_Poj(int questID){
         Button[] buttony = {
                 findViewById(R.id.odp_A_Poj),
                 findViewById(R.id.odp_B_Poj),
@@ -3212,7 +3332,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
         setBledneParent(buttony,pytanie);
         if(pytanie.getOdpUzytkownika()==pytanie.getPoprawnaOdp()){
-            addProgress(0); //może progress do challenge?
+            addProgress(questID); //może progress do challenge?
         }else{
             if(CHALLENGE_MODE==true){
                 ilosc_blednych++;
@@ -3259,9 +3379,27 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
         setAnswerParent(v,ids,pytanie);
         if(oneshot==true){
-            UpdateAnswer_Poj();
+            UpdateAnswer_Poj(1);
             if(CHALLENGE_MODE!=true){
                 Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
+                wyjasnienie_button.setEnabled(true);
+            }
+        }
+        oneshot=false;
+    }
+    public void setAnswerKategoria(View v){
+        int[] ids = {
+                R.id.odp_A_Poj,
+                R.id.odp_B_Poj,
+                R.id.odp_C_Poj,
+                R.id.odp_D_Poj
+        };
+        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
+        setAnswerParent(v,ids,pytanie);
+        if(oneshot==true){
+            UpdateAnswer_Poj(6);
+            if(CHALLENGE_MODE!=true){
+                Button wyjasnienie_button = findViewById(R.id.wyjasnij_kat);
                 wyjasnienie_button.setEnabled(true);
             }
         }
@@ -3308,7 +3446,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             addProgressOsiagniecia(11);
             AddActions("test_final");
             try{
-
                 TextView wynik_pkt = findViewById(R.id.wynik_punktowy);
                 TextView ilosc_pytan = findViewById(R.id.iloscpytan);
                 TextView msg_text = findViewById(R.id.opisWyniku);

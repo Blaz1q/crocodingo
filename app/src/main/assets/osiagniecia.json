@@ -8,21 +8,20 @@
     "hasNextStage": false,
     "Nagroda":{
       "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "JedzenieID": [2],
+      "JedzenieIlosc": [1],
+      "Hajs": 1500
     }
   },
   {
     "Id": 1,
-    "Tytul": ["Zabójczy apetyt"],
+    "Tytul": ["Zabójczy apetyt (Czerwone Krokodyle dalej nad tym pracują!)"],
     "Podtytul": ["Przekarm Croco"],
     "Komentarz": ["To jest straszne że Croco potrafi tyle zjeść"],
     "MaxProgress": 1,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500,
+      "Exp": 300,
       "JedzenieID": [1,2,3],
       "JedzenieIlosc": [1,2,3],
       "CzapkaID": [1],
@@ -37,11 +36,10 @@
     "MaxProgress": 1,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 200,
+      "JedzenieID": [0],
+      "JedzenieIlosc": [1],
+      "Hajs": 100
     }
   },
   {
@@ -52,10 +50,10 @@
     "MaxProgress": 1,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500,
+      "Exp": 300,
       "JedzenieID": [6],
-      "JedzenieIlosc": [10],
-      "Hajs": 10000
+      "JedzenieIlosc": [1],
+      "Hajs": 1000
     }
   },
   {
@@ -66,11 +64,10 @@
     "MaxProgress": 1,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 300,
+      "PotkaID": [0],
+      "PotkaIlosc": [1],
+      "Hajs": 100
     }
   },
   {
@@ -81,11 +78,7 @@
     "MaxProgress": 1,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 500
     }
   },
   {
@@ -96,11 +89,7 @@
     "MaxProgress": 1,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 500
     }
   },
   {
@@ -113,10 +102,7 @@
     "CzyWidoczne": false,
     "Nagroda":{
       "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Hajs": 30
     }
   },
   {
@@ -144,8 +130,6 @@
     "hasNextStage": true,
     "Nagroda":{
       "Exp": 200,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
       "CzapkaID": [9],
       "Hajs": 500
     }
@@ -158,11 +142,7 @@
     "MaxProgress": 100,
     "hasNextStage": true,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 500
     }
   },
   {
@@ -174,10 +154,7 @@
     "hasNextStage": false,
     "Nagroda":{
       "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Hajs": 400
     }
   },
   {
@@ -189,10 +166,7 @@
     "hasNextStage": true,
     "Nagroda":{
       "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Hajs": 100
     }
   },
   {
@@ -204,10 +178,7 @@
     "hasNextStage": true,
     "Nagroda":{
       "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Hajs": 200
     }
   },
   {
@@ -218,11 +189,8 @@
     "MaxProgress": 100,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 1000,
+      "Hajs": 1000
     }
   },
   {
@@ -234,10 +202,7 @@
     "hasNextStage": true,
     "Nagroda":{
       "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Hajs": 100
     }
   },
   {
@@ -249,10 +214,7 @@
     "hasNextStage": true,
     "Nagroda":{
       "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Hajs": 200
     }
   },
   {
@@ -264,10 +226,7 @@
     "hasNextStage": true,
     "Nagroda":{
       "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Hajs": 1000
     }
   },
   {
@@ -278,11 +237,8 @@
     "MaxProgress": 1000,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 1000,
+      "Hajs": 6000
     }
   },
   {
@@ -293,11 +249,8 @@
     "MaxProgress": 5,
     "hasNextStage": true,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 100,
+      "Hajs": 100
     }
   },
   {
@@ -309,10 +262,7 @@
     "hasNextStage": true,
     "Nagroda":{
       "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Hajs": 500
     }
   },
   {
@@ -324,10 +274,7 @@
     "hasNextStage": false,
     "Nagroda":{
       "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Hajs": 1000
     }
   },
   {
@@ -338,11 +285,7 @@
     "MaxProgress": 3,
     "hasNextStage": true,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 0
     }
   },
   {
@@ -353,11 +296,7 @@
     "MaxProgress": 5,
     "hasNextStage": true,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 0
     }
   },
   {
@@ -383,11 +322,8 @@
     "MaxProgress": 1,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500,
-      "JedzenieID": [1,2,3],
-      "JedzenieIlosc": [1,2,3],
-      "CzapkaID": [1],
-      "Hajs": 2500
+      "Exp": 200,
+      "Hajs": 500
     }
   }
 ]

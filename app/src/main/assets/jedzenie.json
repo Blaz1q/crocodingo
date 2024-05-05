@@ -2,16 +2,16 @@
     {
         "id": 0,
         "plik": "ciastko",
-        "nazwa": ["ciastko"],
-        "opis": ["Przysmak Croco"],
+        "nazwa": ["ciastko","cookie"],
+        "opis": ["Przysmak Croco","Croco delicacy"],
         "nasycenie": 7200,
         "cena": 250
     },
     {
         "id": 1,
         "plik": "stek",
-        "nazwa": ["mięso"],
-        "opis": ["Croco bardzo lubi wszamać dobre mięsko"],
+        "nazwa": ["mięso","meat"],
+        "opis": ["Croco bardzo lubi wszamać dobre mięsko","Croco loves eating good meat"],
         "nasycenie": 14000,
         "cena": 500
     },
@@ -19,7 +19,7 @@
         "id": 2,
         "plik": "japkoj",
         "nazwa": ["jabłko","apple"],
-        "opis": ["Zwykłe, zdrowe jabłko"],
+        "opis": ["Zwykłe, zdrowe jabłko","A regular, healthy apple"],
         "nasycenie": 10800,
         "cena": 350
     },
@@ -43,15 +43,15 @@
         "id": 5,
         "plik": "bread",
         "nazwa": ["Chlebek","Bread"],
-        "opis": ["Przysmak croco i wielu polaków","Croco's fav food"],
+        "opis": ["Chleb wypieczony specjalnie dla krokodyli!","Bread baked especially for crocodiles!"],
         "nasycenie": 3600,
         "cena": 100
     },
     {
         "id": 6,
         "plik": "ciastkoryba",
-        "nazwa": ["Ciastko Ryba","Ciastko Ryba"],
-        "opis": ["Przysmak croco i wielu polaków","Croco's fav food"],
+        "nazwa": ["Ciastko Ryba","Fish Cookie"],
+        "opis": ["Ciastko, ale w kształcie rybki","A cookie, but in the shape of a fish"],
         "nasycenie": 9000,
         "cena": 260
     }

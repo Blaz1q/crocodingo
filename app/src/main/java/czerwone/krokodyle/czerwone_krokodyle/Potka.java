@@ -50,9 +50,9 @@ public class Potka extends Przedmiot{
         return ZapisanaIlosc;
     }
 
-    public void DodajJedzenie(){
+    public void DodajJedzenie(int ilosc){
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(ITEMNAME+this.id,(sharedPreferences.getInt(ITEMNAME+this.id,0)+1));
+        editor.putInt(ITEMNAME+this.id,(sharedPreferences.getInt(ITEMNAME+this.id,0)+ilosc));
         editor.apply();
         this.ZapisanaIlosc = sharedPreferences.getInt(ITEMNAME+this.id,0);
     }

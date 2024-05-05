@@ -27,9 +27,12 @@ public class Achievements {
     private int[] CzapkiID;
     private int[] JedzenieID;
     private int[] JedzenieIlosc;
+    private int[] PotkiID;
+    private int[] PotkiIlosc;
     private int Hajs;
     private Context context;
     public boolean HasJedzenie = false;
+    public boolean HasPotki = false;
     public boolean hasCzapki = false;
     public Achievements(int id,String[] tresc,String[] podtytul,String[] komentarz,int progressmax,boolean hasnextstage,int exp,Context ctx,int gStage){
         this.context = ctx;
@@ -79,6 +82,20 @@ public class Achievements {
         this.JedzenieIlosc = jedzIlosc;
         this.HasJedzenie = true;
     }
+    public void setPotki(int[] potkID,int[] potkIlosc){
+        this.PotkiID = potkID;
+        this.PotkiIlosc = potkIlosc;
+        this.HasPotki = true;
+    }
+
+    public int[] getPotkiID() {
+        return PotkiID;
+    }
+
+    public int[] getPotkiIlosc() {
+        return PotkiIlosc;
+    }
+
     public int[] getJedzenieID(){
         return this.JedzenieID;
     }
