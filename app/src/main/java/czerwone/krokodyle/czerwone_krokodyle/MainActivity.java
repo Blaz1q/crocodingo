@@ -3380,7 +3380,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
         setAnswerParent(v,ids,pytanie);
         if(oneshot==true){
-            UpdateAnswer_Poj(1);
+            UpdateAnswer_Poj(0);
             if(CHALLENGE_MODE!=true){
                 Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
                 wyjasnienie_button.setEnabled(true);
