@@ -3036,9 +3036,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     @Override
                     public void onClick(View v) {
                         try{
-                            setContentView(R.layout.pojedyncze_pytanie);
+                            setContentView(R.layout.pytanie_wyglad);
+                            CURRENT_INDEX = finalI;
                             AddActions("pytanie_wyglad");
-                            Set_pytanie_Poj();
+                            Set_pytanie();
                         } catch (Exception e){
                             e.printStackTrace();
                         }
@@ -3200,7 +3201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(v.getId()==R.id.wyjasnij_poj){
             if(oneshot==false){
                 try{
-                    PytaniaDB pytanie = listaPytan.get(CURRENT_INDEX);
+                    PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
                     ImageView wyjasnienie = findViewById(R.id.tresc_pytania_i_wyjasnienie);
                     String wyjasnienie_tekst = pytanie.getWyjasnienie();
                     Test_Math_drawable=Math_syn.set_Math(wyjasnienie_tekst);
