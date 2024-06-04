@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/hiddentop"
+        android:orientation="horizontal"
+        >
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/menu_top_pytania"
+        android:layout_below="@id/hiddentop"
+        >
+        <Button
+            android:layout_below="@id/hiddentop"
+            android:id="@+id/wroc_do_pytan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wroc_do_pytan"
+            android:onClick="Zmien_widoki"
+            android:layout_weight="1"
+            android:layout_marginRight="3dp"
+            android:backgroundTint="#333333"
+            />
+
+        <Button
+            android:layout_below="@id/hiddentop"
+            android:id="@+id/karta_wzorow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="karta wzorów"
+            android:onClick="Zmien_widoki"
+            android:layout_weight="1"
+            android:layout_marginRight="3dp"
+            android:backgroundTint="#333333"
+            />
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/menu_top_pytania"
+        android:layout_above="@id/select_id_containter"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_container"
+                    android:backgroundTint="#8D47FD"
+                    android:text="PYTANIE X"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/custom_container"
+                    android:backgroundTint="@color/ckgolden"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="PKT"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="30sp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/polecenie"
+                />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/pytanie"
+                />
+            <android.widget.Button
+                android:id="@+id/odp_A"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="setAnswer"
+                android:background="@drawable/custom_container"
+                android:backgroundTint="#B8B8B8"
+                android:text="jy7twa"
+                />
+        </LinearLayout>
+
+    </ScrollView>
+
+
+    <LinearLayout
+        android:layout_above="@id/hiddenbottom"
+        android:id="@+id/select_id_containter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/prevbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/prev"
+            android:onClick="PrevPytanie"
+            android:layout_marginRight="3dp"
+            android:backgroundTint="#333333"
+            />
+
+        <Button
+            android:id="@+id/nextbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/next"
+            android:onClick="NextPytanie"
+            android:layout_marginLeft="3dp"
+            android:backgroundTint="#333333"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/hiddenbottom"
+        android:layout_alignParentBottom="true"
+        android:alwaysDrawnWithCache="false"
+        android:orientation="horizontal"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        />
+</RelativeLayout>
