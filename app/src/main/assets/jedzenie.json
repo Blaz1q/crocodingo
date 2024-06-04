@@ -29,7 +29,7 @@
         "nazwa": ["pizza","pizza"],
         "opis": ["Pizza z pepe","It's pizza time"],
         "nasycenie": 21000,
-        "cena": 800
+        "cena": 0
     },
     {
         "id": 4,

@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private List<List<PytaniaDB>> podzielonaListaPytan = new ArrayList<>();
     // zmienne do akcji
     private List<String> actions = new ArrayList<>();
+    private List<Integer> popups = new ArrayList<>();
     private UserData User;
     int actionsindex = 0;
     AlertDialog wyjscie;
@@ -326,9 +327,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             canplayanimations = true;
                             UstawKrokodyla();
                             Math_syn.set_Math("\\text{rozruch}");
-                            updateAccInfo();
                             ResumeOnLongListener();
                             showUpdatePopup();
+                            updateAccInfo();
                             PierwszeUruchomienie();
                             Uruchomienie_animajca();
                             ustawCzapke();
@@ -402,8 +403,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void onBackPressed() {
         canplayanimations = false;
         if(isExitEnabled){
-        if(actionsindex!=0){
-            switch (actions.get(actionsindex-1)){
+        if(actions.size()!=0){
+            switch (actions.get(actions.size()-1)){
                 case "select_tests":
                     DefaultMainPageActions();
                     break;
@@ -2701,34 +2702,49 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void ResetActions(){
         actions.clear();
-        actionsindex=0;
         Log.w("actionslist",actions.toString());
-        Log.w("actionsindex",String.valueOf(actionsindex));
+    }
+    public void ResetActions(List<String> Stringlist){
+        Stringlist.clear();
+        Log.w("stringlist",Stringlist.toString());
     }
     public void AddActions(String str){
         actions.add(str);
-        actionsindex++;
         Log.w("actionslist",actions.toString());
-        Log.w("actionsindex",String.valueOf(actionsindex));
+    }
+    public void AddActions(String str,List<String> Stringlist){
+        Stringlist.add(str);
+        Log.w("stringlist",Stringlist.toString());
     }
     public void RemoveAction(){
-        actions.remove(actionsindex-1);
-        actionsindex--;
+        actions.remove(actions.size()-1);
         Log.w("actionslist",actions.toString());
-        Log.w("actionsindex",String.valueOf(actionsindex));
+    }
+    public void RemoveAction(List<String> Stringlist){
+        Stringlist.remove(Stringlist.size()-1);
+        Log.w("stringlist",Stringlist.toString());
     }
     //tutaj sekcja z popupami #SECPOPUP
     public void ShowPopup(int layout){
+        popups.add(layout);
+        if(popups.size()>1){
+            if(popups.get(popups.size()-1).equals(popups.get(popups.size()-2))) popups.remove(popups.size()-1);
+        }
+        if(!isPopupVisible){
+            Log.d("isvisible","przeszlo");
         isPopupVisible = true;
         if(POPUP_RESOLUTION==1)
             myDialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
         else
             myDialog = new Dialog(this);
-        myDialog.setContentView(layout);
+
+        myDialog.setContentView(popups.get(0));
         myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 isPopupVisible = false;
+                popups.remove(0);
+                ShowPopup();
             }
         });
         switch(POPUP_EXCEPTION_MODE){
@@ -2736,9 +2752,43 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             case 1:/*don't show dialog */break;
             default:myDialog.show();break;
         }
+        }
+    }
+    public void ShowPopup(){
+        if(popups.size()>0){
+        if(!isPopupVisible){
+            isPopupVisible = true;
+            if(POPUP_RESOLUTION==1)
+                myDialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
+            else
+                myDialog = new Dialog(this);
+
+            myDialog.setContentView(popups.get(0));
+
+
+            myDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    isPopupVisible = false;
+                    popups.remove(0);
+                }
+            });
+            switch(POPUP_EXCEPTION_MODE){
+                case 0:myDialog.show();break;
+                case 1:/*don't show dialog */break;
+                default:myDialog.show();break;
+            }
+        }
+    }
     }
     public void Zamknij_Popup(View v){
         ClosePopup();
+    }
+    public void ClosePopup(){
+        myDialog.dismiss();
+        isPopupVisible = false;
+        popups.remove(0);
+        ShowPopup();
     }
     public void PopupTestyRozpocznij(View v){
         if(isPopupVisible==false){
@@ -2757,10 +2807,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
-    public void ClosePopup(){
-        myDialog.dismiss();
-        isPopupVisible = false;
-    }
+
     // koniec sekcji
     public void Hapaba(){
         String name = "hapaba";
