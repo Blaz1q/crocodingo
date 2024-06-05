@@ -28,6 +28,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -40,6 +41,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
@@ -65,6 +67,8 @@ import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.czerwone_krokodyle.R;
+import com.github.jinatonic.confetti.CommonConfetti;
+import com.github.jinatonic.confetti.ConfettiView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -100,6 +104,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
     private List<PytaniaDB> listaPytan = new ArrayList<>();
@@ -310,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         fetchData(0);
         RelativeLayout bgimg = findViewById(R.id.MAIN_LOADING_BG);
         ImageView ckrkdl = findViewById(R.id.krokodyl_loading);
+
         try{
             YoYo.with(Techniques.Shake).duration(1000).repeat(2).playOn(ckrkdl);
             new Handler(getMainLooper()).postDelayed(() -> {
@@ -333,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             PierwszeUruchomienie();
                             Uruchomienie_animajca();
                             ustawCzapke();
+
                             handler.removeCallbacks(loadingrunnable);
                         }, 500);
                     }, 500);
@@ -645,7 +653,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }catch (Exception e){
                 e.printStackTrace();
             }
-
+            ViewGroup testconfetti = myDialog.findViewById(R.id.kolo_fortuny_box);
+            Rect bounding_box=new Rect(testconfetti.getLeft(),testconfetti.getTop(),testconfetti.getRight(),testconfetti.getBottom());
+            int[] colors = {getColor(R.color.ckgolden),getColor(R.color.ckred)};
+            CommonConfetti.explosion(testconfetti,testconfetti.getWidth()/2,testconfetti.getHeight()/2,colors).oneShot().setBound(bounding_box).animate();
         },10500);
     }
     public void krec(View v){
@@ -741,6 +752,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void KrokodylKlikaj(View v){
+        ViewGroup testconfetti = findViewById(R.id.pierwsze_uruchomienie_animacja);
+        Rect bounding_box=new Rect(testconfetti.getLeft(),testconfetti.getTop(),testconfetti.getRight(),testconfetti.getBottom());
+        int[] colors = {getColor(R.color.ckgolden),getColor(R.color.ckred)};
+        CommonConfetti.explosion(testconfetti,testconfetti.getWidth()/2,testconfetti.getHeight()/2,colors).oneShot().setBound(bounding_box).animate();
         if(lastFeed>umiera_po){
             addProgress(4);
             addProgressOsiagniecia(9);
@@ -2555,6 +2570,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     int resIDquestProgress = getResources().getIdentifier(questProgress, "id", getPackageName());
                     int resIDnagrodashadow = getResources().getIdentifier(questNagrodashadow, "id", getPackageName());
                     int resIDclaim = getResources().getIdentifier(claim, "id", getPackageName());
+
                     ProgressBar progress = (ProgressBar) myDialog.findViewById(resIDprogress);
                     ImageView questProgressImg = myDialog.findViewById(resIDprogressImg);
                     Button claimbutton = myDialog.findViewById(resIDclaim);
@@ -2565,6 +2581,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             claimbutton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    ViewGroup testconfetti = myDialog.findViewById(getResources().getIdentifier("confettireward"+String.valueOf(finalI+1), "id", getPackageName()));
+                                    Rect bounding_box=new Rect(testconfetti.getLeft(),testconfetti.getTop(),testconfetti.getRight(),testconfetti.getBottom());
+                                    int[] colors = {getColor(R.color.ckgolden),getColor(R.color.ckcorrect)};
+
+                                    CommonConfetti.rainingConfetti(testconfetti,colors).stream(1000).disableFadeOut();
+
                                     Claim(listaQuestowId.indexOf(finalI));
                                     claimbutton.setEnabled(false);
                                     claimbutton.setVisibility(View.GONE);
@@ -2787,7 +2809,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void ClosePopup(){
         myDialog.dismiss();
         isPopupVisible = false;
-        popups.remove(0);
+        if(popups.size()>0) {
+            int[] layouty = {R.layout.popup_kolo_fortuny,R.layout.popup_update,R.layout.popup_quest,R.layout.popup_login};
+            boolean helper=false;
+            for(int i=0;i<layouty.length;i++){
+                if(popups.get(0).equals(layouty[i])) helper=true;
+            }
+            popups.remove(0);
+            canplayanimations = helper;
+        }
+
         ShowPopup();
     }
     public void PopupTestyRozpocznij(View v){

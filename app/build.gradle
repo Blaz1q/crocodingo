@@ -11,8 +11,8 @@ android {
         applicationId "czerwone.krokodyle.czerwone_krokodyle"
         minSdk 24
         targetSdk 33
-        versionCode 6
-        versionName "CD1.5.1"
+        versionCode 7
+        versionName "CD1.6.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,5 +51,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'com.github.jinatonic.confetti:confetti:1.1.2' //particles
 }
 apply plugin: 'com.google.gms.google-services'

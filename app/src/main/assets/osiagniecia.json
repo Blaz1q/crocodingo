@@ -78,7 +78,8 @@
     "MaxProgress": 1,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500
+      "Exp": 500,
+      "Hajs": 0
     }
   },
   {
@@ -89,7 +90,8 @@
     "MaxProgress": 1,
     "hasNextStage": false,
     "Nagroda":{
-      "Exp": 500
+      "Exp": 500,
+      "Hajs": 0
     }
   },
   {
@@ -142,7 +144,8 @@
     "MaxProgress": 100,
     "hasNextStage": true,
     "Nagroda":{
-      "Exp": 500
+      "Exp": 500,
+      "Hajs": 0
     }
   },
   {
@@ -285,7 +288,8 @@
     "MaxProgress": 3,
     "hasNextStage": true,
     "Nagroda":{
-      "Exp": 0
+      "Exp": 0,
+      "Hajs": 0
     }
   },
   {
@@ -296,7 +300,8 @@
     "MaxProgress": 5,
     "hasNextStage": true,
     "Nagroda":{
-      "Exp": 0
+      "Exp": 0,
+      "Hajs": 0
     }
   },
   {

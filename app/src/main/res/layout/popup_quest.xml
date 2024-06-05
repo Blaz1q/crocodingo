@@ -20,7 +20,6 @@
         android:orientation="vertical"
         android:padding="15dp">
 
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/custom_quest_bg"
                 android:padding="10dp">
+
 
                 <ImageView
                     android:id="@+id/nagrodaimg1"
@@ -101,7 +101,13 @@
                     android:minHeight="0dp"
                     android:text="@string/claim" />
 
-
+                <RelativeLayout
+                    android:id="@+id/confettireward1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/nagroda1"
+                    android:layout_alignParentTop="true"
+                    />
             </RelativeLayout>
 
             <TextView
@@ -208,7 +214,13 @@
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:text="@string/claim" />
-
+                <RelativeLayout
+                    android:id="@+id/confettireward2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/nagroda2"
+                    android:layout_alignParentTop="true"
+                    />
 
             </RelativeLayout>
 
@@ -316,7 +328,13 @@
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:text="@string/claim" />
-
+                <RelativeLayout
+                    android:id="@+id/confettireward3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/nagroda3"
+                    android:layout_alignParentTop="true"
+                    />
 
             </RelativeLayout>
 
