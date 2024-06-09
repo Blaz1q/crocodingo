@@ -147,6 +147,7 @@
         tools:ignore="DuplicateSpeakableTextCheck"
         android:visibility="visible"
         />
+
     <RelativeLayout
         android:id="@+id/karmieniecontainer"
         android:layout_width="wrap_content"
@@ -154,36 +155,36 @@
         android:layout_above="@id/strzalki"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/jedzeniebutton"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/pustamiskapsa"
             android:onClick="Nakarm"
-            />
+            android:src="@drawable/pustamiskapsa" />
+
         <ImageView
             android:id="@+id/rzeczimg"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ciastko"
-            android:layout_alignBottom="@id/jedzeniebutton"
             android:layout_alignLeft="@+id/jedzeniebutton"
-            />
+            android:layout_alignBottom="@id/jedzeniebutton"
+            android:src="@drawable/ciastko" />
+
         <TextView
             android:id="@+id/liczba_ciastek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/jedzeniebutton"
-            android:layout_alignRight="@+id/jedzeniebutton"
             android:layout_alignTop="@id/rzeczimg"
+            android:layout_alignRight="@+id/jedzeniebutton"
+            android:layout_alignBottom="@id/jedzeniebutton"
             android:fontFamily="@font/londrina_solid"
             android:padding="7dp"
-            android:textSize="35dp"
             android:text="150"
-            android:textColor="@color/ckbez" />
+            android:textColor="@color/ckbez"
+            android:textSize="35dp" />
+
         <TextView
             android:id="@+id/liczba_ciastekShadow"
             android:layout_width="wrap_content"
@@ -198,82 +199,81 @@
             android:textSize="35dp"
             android:textStyle="bold" />
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/strzalki"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:orientation="horizontal"
+        android:layout_height="48dp"
+        android:layout_above="@id/menu"
         android:layout_alignLeft="@+id/karmieniecontainer"
         android:layout_alignRight="@+id/karmieniecontainer"
-        android:layout_above="@id/menu"
-        android:visibility="gone"
-        >
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:adjustViewBounds="false"
             android:background="#00FFFFFF"
             android:cropToPadding="false"
-            android:scaleType="fitCenter"
-            android:layout_weight="1"
-            android:src="@drawable/strzalka"
-            android:rotation="180"
             android:onClick="ZmienPrzedmiotDec"
-            >
+            android:rotation="180"
+            android:scaleType="fitCenter"
+            android:src="@drawable/strzalka">
 
         </ImageButton>
+
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:adjustViewBounds="false"
             android:background="#00FFFFFF"
             android:cropToPadding="false"
-            android:scaleType="fitCenter"
-            android:layout_weight="1"
-            android:src="@drawable/strzalka"
             android:onClick="ZmienPrzedmiotInc"
-            >
+            android:scaleType="fitCenter"
+            android:src="@drawable/strzalka">
 
         </ImageButton>
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/selectJedzenie"
         android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:orientation="horizontal"
+        android:layout_height="48dp"
         android:layout_above="@id/menu"
         android:layout_alignEnd="@id/menu_top"
-        android:visibility="gone"
-        >
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:adjustViewBounds="false"
             android:background="#00FFFFFF"
             android:cropToPadding="false"
-            android:scaleType="fitCenter"
-            android:layout_weight="1"
-            android:src="@drawable/strzalka"
-            android:rotation="180"
             android:onClick="ZmienListeDec"
-            >
+            android:rotation="180"
+            android:scaleType="fitCenter"
+            android:src="@drawable/strzalka">
 
         </ImageButton>
+
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:adjustViewBounds="false"
             android:background="#00FFFFFF"
             android:cropToPadding="false"
-            android:scaleType="fitCenter"
-            android:layout_weight="1"
-            android:src="@drawable/strzalka"
             android:onClick="ZmienListeInc"
-            >
-        </ImageButton>
+            android:scaleType="fitCenter"
+            android:src="@drawable/strzalka"></ImageButton>
 
     </LinearLayout>
     <LinearLayout

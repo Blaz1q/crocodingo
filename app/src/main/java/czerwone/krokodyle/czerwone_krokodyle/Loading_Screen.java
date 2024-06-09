@@ -19,6 +19,7 @@ public class Loading_Screen extends AppCompatActivity {
     private RelativeLayout bgimg;
     private ImageView ckrkdl;
     Handler handler = new Handler();
+    Handler handler1 = new Handler();
     Runnable runnable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +75,28 @@ public class Loading_Screen extends AppCompatActivity {
                 }
             }
         }, 400);
+        handler1.postDelayed(runnable = new Runnable() {
+            @Override
+            public void run() {
+                handler1.postDelayed(runnable, 400);
+                try{
+                    TextView loadingtext = findViewById(R.id.text_loading);
+                    String dots="";
+                    for(int j = i%3; j>=0 %3; j--){
+                        dots+=".";
+                    }
+                    String finalDots = dots;
+                    loadingtext.setText(("Loading"+ finalDots));
+
+                    i++;
+                }catch (Exception ee){
+
+                }
+            }
+        }, 400);
     }
     public void KrokodylKlikaj(View v){
         //musiałem to dodać bo crashuje w tym widoku
     }
+
 }

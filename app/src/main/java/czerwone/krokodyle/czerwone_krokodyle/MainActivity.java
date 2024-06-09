@@ -7,6 +7,7 @@ przyszłe wersje:
 * */
 package czerwone.krokodyle.czerwone_krokodyle;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 
@@ -15,9 +16,16 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,8 +38,10 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -98,6 +108,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -160,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     Handler handler = new Handler();
     Handler handler2 = new Handler();
     Handler handler3 = new Handler();
+    Handler bgloadinghandler = new Handler();
     boolean czyZalogowany = false;
     boolean isExitEnabled = true;
     Switch sw1;
@@ -230,22 +242,46 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean spinning = false;
     Random random = new Random();
     Runnable loadingrunnable;
+    Runnable loadingrunnablebg;
     @Override
     protected void onResume() {
         handler.postDelayed(loadingrunnable = new Runnable() {
             @Override
             public void run() {
+                kropki++;
                 handler.postDelayed(loadingrunnable, 400);
                 try{
                     TextView loadingtext = findViewById(R.id.text_loading);
                     String dots="";
-                    for(int j = kropki%3; j>=0 %3; j--){
+                    if(kropki>3) kropki=0;
+                    for(int j = 0; j<kropki ; j++){
                         dots+=".";
                     }
                     String finalDots = dots;
                     loadingtext.setText(("Loading"+ finalDots));
 
-                    kropki++;
+                    Log.d("kropki",String.valueOf(kropki));
+                }catch (Exception ee){
+
+                }
+            }
+        }, 400);
+        bgloadinghandler.postDelayed(loadingrunnablebg = new Runnable() {
+            @Override
+            public void run() {
+                bgloadinghandler.postDelayed(loadingrunnablebg, 1000);
+                try{
+                    RelativeLayout bgimg = findViewById(R.id.MAIN_LOADING_BG);
+                    TextView loadingtext = findViewById(R.id.text_loading);
+                    if(kropki2>4) kropki2=0;
+                    switch (kropki2){
+                        case 0: bgimg.setBackground(getResources().getDrawable(R.drawable.cktlo_loading1));break;
+                        case 1: bgimg.setBackground(getResources().getDrawable(R.drawable.cktlo_loading2));break;
+                        case 2: bgimg.setBackground(getResources().getDrawable(R.drawable.cktlo_loading3));break;
+                        case 3: bgimg.setBackground(getResources().getDrawable(R.drawable.cktlo));break;
+                        default: bgimg.setBackground(getResources().getDrawable(R.drawable.cktlo_loading1));break;
+                    }
+                    kropki2++;
                 }catch (Exception ee){
 
                 }
@@ -290,6 +326,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);  /* <----- Tutaj ustawić główny widok aplikacji */
+        scheduleDailyNotification(this);
+        Math_syn.set_Math("\\text{rozruch}");
         //Toast.makeText(getApplicationContext(), "onload", Toast.LENGTH_SHORT).show();
         bgsong = MediaPlayer.create(MainActivity.this,R.raw.cktheme_1);
         login_name = findViewById(R.id.usernick);
@@ -313,39 +351,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         loadPotkiFromAsset();
         loadJedzenieFromAsset();
         loadOsiagnieciaFromAsset();
-        fetchData(0);
+        fetchData(0); //pobierz pytania
         RelativeLayout bgimg = findViewById(R.id.MAIN_LOADING_BG);
         ImageView ckrkdl = findViewById(R.id.krokodyl_loading);
 
         try{
-            YoYo.with(Techniques.Shake).duration(1000).repeat(2).playOn(ckrkdl);
-            new Handler(getMainLooper()).postDelayed(() -> {
-                bgimg.setBackground(getResources().getDrawable(R.drawable.cktlo_loading2));
-                //YoYo.with(Techniques.Flash).duration(200).playOn(bgimg);
-                new Handler(getMainLooper()).postDelayed(() -> {
-                    //YoYo.with(Techniques).duration(200).playOn(bgimg);
-                    bgimg.setBackground(getResources().getDrawable(R.drawable.cktlo_loading3));
-                    new Handler(getMainLooper()).postDelayed(() -> {
-                        bgimg.setBackground(getResources().getDrawable(R.drawable.cktlo));
-                        TextView cosiedzieje = findViewById(R.id.cosiedzieje);
-                        cosiedzieje.setText("Uruchamianie");
-                        new Handler(getMainLooper()).postDelayed(() -> {
-                            setContentView(R.layout.main_page);
-                            canplayanimations = true;
-                            UstawKrokodyla();
-                            Math_syn.set_Math("\\text{rozruch}");
-                            ResumeOnLongListener();
-                            showUpdatePopup();
-                            updateAccInfo();
-                            PierwszeUruchomienie();
-                            Uruchomienie_animajca();
-                            ustawCzapke();
-
-                            handler.removeCallbacks(loadingrunnable);
-                        }, 500);
-                    }, 500);
-                }, 500);
-            }, 500);
+            YoYo.with(Techniques.Shake).duration(1000).repeat(5).playOn(ckrkdl);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -366,6 +377,26 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 });
         wyjscie = builder.create();
 
+    }
+    int LoadedCounter=0;
+    private void isEverythingLoaded(){
+        if(zaladowanodb){
+            handler.removeCallbacks(loadingrunnable);
+            bgloadinghandler.removeCallbacks(loadingrunnablebg);
+            RelativeLayout bgimg = findViewById(R.id.MAIN_LOADING_BG);
+            bgimg.setBackground(getResources().getDrawable(R.drawable.cktlo));
+            TextView cosiedzieje = findViewById(R.id.cosiedzieje);
+            cosiedzieje.setText("Uruchamianie");
+            setContentView(R.layout.main_page);
+            canplayanimations = true;
+            UstawKrokodyla();
+            ResumeOnLongListener();
+            showUpdatePopup();
+            updateAccInfo();
+            PierwszeUruchomienie();
+            Uruchomienie_animajca();
+            ustawCzapke();
+        }
     }
     private void checkForUpdates(){
         AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(getApplicationContext());
@@ -721,6 +752,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     boolean canplayanimations = true;
     int kropki=0;
+    int kropki2=0;
     @Override
     public void onPause() {
         super.onPause();
@@ -1342,6 +1374,81 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         mainRelativeLayout.addView(Progress);
         mainRelativeLayout.addView(TextProgress);
         parent.addView(mainRelativeLayout);
+    }
+    public void Notification() {
+        NotificationManager mNotificationManager;
+        String channelId = "notify_003";
+        Uri soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/" + R.raw.hapaba2);
+
+        Log.d("NotificationSound", "Sound URI: " + soundUri.toString());
+
+        // Create NotificationCompat.Builder
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("Croco jest głodny :(")
+                .setContentText("Wróć i nakarm go!!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Wróć i nakarm go!!")
+                        .setBigContentTitle("Croco jest głodny :("));
+
+        // Create an Intent for the notification tap action
+        Intent ii = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ii, PendingIntent.FLAG_IMMUTABLE);
+        mBuilder.setContentIntent(pendingIntent);
+
+        // Get the Notification Manager
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // For Android O and above, create a Notification Channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+
+            // Set the custom sound for the channel
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            channel.setSound(soundUri, audioAttributes);
+
+            // Create the notification channel
+            if (mNotificationManager != null) {
+                Log.d("NotificationSound", "Creating Notification Channel with custom sound");
+                mNotificationManager.createNotificationChannel(channel);
+            }
+        }
+        Notification notification = mBuilder.build();
+        notification.sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+                + getPackageName() + "/" + R.raw.hapaba1);
+        // Show the notification
+        if (mNotificationManager != null) {
+            Log.d("NotificationSound", "Displaying Notification");
+            mNotificationManager.notify(0, notification);
+        }
+    }
+    public void scheduleDailyNotification(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        // Set the alarm to start at approximately 12:00 a.m.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        //calendar.add(Calendar.HOUR_OF_DAY, 1);  // Start at the next hour
+
+        // Set the alarm to repeat daily at 12:00 a.m.
+        if (alarmManager != null) {
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_HOUR*2,
+                    pendingIntent);
+        }
     }
     public Button Generuj_Przedmiot(LinearLayout parent,int PlikResID,String TytulText,int CenaText,boolean premium,boolean dostepne,String Opis,boolean odblokowana,boolean czywidoczne){
         RelativeLayout mainRelativeLayout = new RelativeLayout(this);
@@ -2956,6 +3063,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void Set_Ids_List(String response){
         int katIDs=0;
         if(response.equals("")){
+            TextView cosiedzieje = findViewById(R.id.cosiedzieje);
+            cosiedzieje.setText("Błąd połączenia.\nŁadowanie Lokalnych pytań..");
             String id,poprawne,tresc,wyjasnienie,A,B,C,D,kategoria,KatID;
             Log.w("WarningDBError","DBCONNECTIONFAILED");
             Toast.makeText(this,"Wystąpił bład, wczytano lokalne pytania",Toast.LENGTH_SHORT).show();
@@ -2975,8 +3084,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         D = jsonObject2.getString("D");
                         PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria,0);
                         listaPytan.add(pytanie);
-                        zaladowanodb=true;
+
                     }
+                zaladowanodb=true;
+                isEverythingLoaded();
                 updateLoader();
             }catch (Exception ee){
                 zaladowanodb=false;
@@ -2986,6 +3097,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         else {
             try {
+                TextView cosiedzieje = findViewById(R.id.cosiedzieje);
+                cosiedzieje.setText("Ładowanie pytań..");
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray jsonArray = jsonObject.getJSONArray("API");
                 String id, poprawne, tresc, wyjasnienie, A, B, C, D,kategoria,KatID;
@@ -3020,6 +3133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     pytanie.Wypisz();
                     zaladowanodb=true;
                 }
+                isEverythingLoaded();
                 updateLoader();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -3791,6 +3905,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void fetchData(int action){
         RequestQueue queue = Volley.newRequestQueue(this);
         String url =final_connection;
+        TextView cosiedzieje = findViewById(R.id.cosiedzieje);
+        cosiedzieje.setText("Pobieranie Pytań..");
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -3799,8 +3915,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         //Log.d("JSON_DATA",response);
                         switch (action){
                             case 0:
-                                //TextView cosiedzieje = findViewById(R.id.cosiedzieje);
-                                //cosiedzieje.setText("Pobieranie Pytań..");
                                 Set_Ids_List(response);
                                 break;
                             case 1:

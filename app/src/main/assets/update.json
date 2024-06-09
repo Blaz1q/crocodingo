@@ -9,6 +9,10 @@
   },
   {
     "Wersja": "BETA 1.6.4",
-    "Opis": [["Poprawiono popupy","seks"],["kruAAs popupy","seks"]]
+    "Opis": [["Poprawiono popupy"],["Improved popups"]]
+  },
+  {
+    "Wersja": "BETA 1.6.5",
+    "Opis": [["Dodano cząsteczki","Poprawiono ekran ładowania","Dodano powiadomienia"],["Added particles","Improved loading screen","Added notifications"]]
   }
 ]
