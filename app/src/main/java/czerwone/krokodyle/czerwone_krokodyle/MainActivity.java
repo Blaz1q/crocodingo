@@ -192,8 +192,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public Boolean switchstate = true;
     public Boolean switchstatewibracje = false;
     int SET_TEST_ID = 1;
-    int gloduje_co = -14400;
-    int umiera_po = -172800;
+    int gloduje_co = -43200; //12h
+    int umiera_po = -259200; //72h
+    int przekarm_po = 86400; //24h
     MediaPlayer bgsong;
     MediaPlayer buttonsong;
     long currentTime = new Date().getTime();
@@ -227,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private static final String PURCHASEDCZAPKA = "PURCHASEDCZAPKA";
     private static final String SAVED_LEVEL = "SAVED_LEVEL";
     private static final String SAVED_EXP = "SAVED_EXP";
-    private static final String final_connection= "https://jncrew.5v.pl/androidAPI.php";
+    private static final String final_connection= "https://blaz1q.github.io/crocodingo/androidAPI.json"; //"https://jncrew.5v.pl/androidAPI.php";
     AppUpdateManager appUpdateManager;
     Dialog dialog;
     Dialog myDialog;
@@ -1498,12 +1499,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             public void onClick(View v) {
                 POPUP_EXCEPTION_MODE = 1;
                 ShowPopup(R.layout.popup_layout);
+                try{
                 ImageView czapaImage = myDialog.findViewById(R.id.czapa_image);
                 TextView czapaNazwa = myDialog.findViewById(R.id.czapa_nazwa);
                 TextView czapaOpis = myDialog.findViewById(R.id.czapa_opis);
                 czapaImage.setImageResource(PlikResID);
                 czapaNazwa.setText(TytulText);
                 czapaOpis.setText(Opis);
+                }catch (Exception e){
+
+                }
                 myDialog.show();
                 POPUP_EXCEPTION_MODE = 0;
             }
@@ -1942,20 +1947,27 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         PokazMiske(v);
     }
     public void PokazMiske(View v){
+        RelativeLayout status_jedzenia = findViewById(R.id.status_jedzenia);
+        ImageView current_status_jedzenia = findViewById(R.id.current_status_jedzenia);
+        RelativeLayout container = findViewById(R.id.karmieniecontainer);
+        LinearLayout strzalki = findViewById(R.id.strzalki);
         if(czypokazana){
-            RelativeLayout container = findViewById(R.id.karmieniecontainer);
-            LinearLayout strzalki = findViewById(R.id.strzalki);
             YoYo.with(Techniques.SlideOutLeft)
                     .duration(300)
                     .playOn(container);
             YoYo.with(Techniques.SlideOutLeft)
                     .duration(300)
                     .playOn(strzalki);
-
+            YoYo.with(Techniques.SlideOutLeft)
+                    .duration(300)
+                    .playOn(status_jedzenia);
+            YoYo.with(Techniques.FadeOut).duration(300).playOn(current_status_jedzenia);
             new Handler(getMainLooper()).postDelayed(() -> {
                 try{
                     container.setVisibility(View.GONE);
                     strzalki.setVisibility(View.GONE);
+                    status_jedzenia.setVisibility(View.GONE);
+                    current_status_jedzenia.setVisibility(View.GONE);
                 } catch (Exception ignored) {
                     throw new RuntimeException(ignored);
                 }
@@ -1963,20 +1975,51 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             czypokazana = false;
         }
         else{
-            RelativeLayout container = findViewById(R.id.karmieniecontainer);
-            LinearLayout strzalki = findViewById(R.id.strzalki);
             container.setVisibility(View.VISIBLE);
             strzalki.setVisibility(View.VISIBLE);
-
+            status_jedzenia.setVisibility(View.VISIBLE);
+            current_status_jedzenia.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.SlideInLeft)
                     .duration(300)
                     .playOn(container);
             YoYo.with(Techniques.SlideInLeft)
                     .duration(300)
                     .playOn(strzalki);
+            YoYo.with(Techniques.SlideInLeft)
+                    .duration(300)
+                    .playOn(status_jedzenia);
+            YoYo.with(Techniques.FadeIn).duration(300).playOn(current_status_jedzenia);
             czypokazana = true;
+            new Handler(getMainLooper()).postDelayed(() -> {
+            UstawStatusJedzenia();
+            },300);
         }
         ustawMiche();
+    }
+    public void UstawStatusJedzenia(){
+        if(czypokazana){
+            ImageView strzaleczka = findViewById(R.id.current_status_jedzenia);
+            RelativeLayout status_jedzenia = findViewById(R.id.status_jedzenia);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    strzaleczka.getWidth(),
+                    strzaleczka.getHeight()
+            );
+            int skala = Math.abs((umiera_po-10000)-(przekarm_po+10000));
+            long odleglosc = Math.abs(lastFeed-umiera_po-10000);
+            double procent = odleglosc*100/skala;
+            double szerokosc = (procent/100)*status_jedzenia.getWidth();
+            //Toast.makeText(this,String.valueOf(procent)+" "+String.valueOf(status_jedzenia.getWidth())+" "+String.valueOf(szerokosc),Toast.LENGTH_SHORT).show();
+            if(lastFeed>=umiera_po-10000){
+                params.setMargins((int) szerokosc ,0,0,0);
+            }else{
+                params.setMargins(0,0,0,0);
+            }
+            if(lastFeed>przekarm_po+10000) {
+                params.setMargins(status_jedzenia.getWidth()-10,0,0,0);
+            }
+
+            strzaleczka.setLayoutParams(params);
+        }
     }
     public void ZmienPrzedmiotInc(View v){
         int ListSize=0;
@@ -2076,6 +2119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             ustawCzapke();
                             User.Stats("ZJEDZONE_JEDZENIE",1);
                             addProgressOsiagniecia(12);
+                            UstawStatusJedzenia();
                         }
                     }else{
                         Toast.makeText(getApplicationContext(),"brak ciasteczek :(",Toast.LENGTH_SHORT).show();
@@ -2089,6 +2133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             case 0:
                                 editor.putLong(LAST_FEED, 0);
                                 editor.apply();
+                                UstawStatusJedzenia();
                                 break;
                         }
                         listaPotek.get(SELECTED_FOOD).Zjedz();

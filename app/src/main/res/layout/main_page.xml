@@ -69,6 +69,7 @@
         android:layout_marginEnd="10dp"
         android:text="Username"
         android:textAlignment="center" />
+
     <ImageView
         android:id="@+id/krokodyl"
         android:layout_width="match_parent"
@@ -149,12 +150,65 @@
         />
 
     <RelativeLayout
+        android:id="@+id/status_jedzenia"
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"
+        android:layout_above="@id/strzalki"
+        android:layout_alignLeft="@+id/karmieniecontainer"
+        android:layout_alignRight="@+id/karmieniecontainer"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2.73"
+                android:src="@drawable/box"
+                app:tint="@color/ckpink" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="59.08"
+                android:src="@drawable/box"
+                app:tint="@color/ckgolden" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="35.46"
+                android:src="@drawable/box" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2.73"
+                android:src="@drawable/box"
+                app:tint="#00F" />
+        </LinearLayout>
+
+        <ImageView
+            android:visibility="invisible"
+            android:id="@+id/current_status_jedzenia"
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/box"
+            app:tint="@color/black" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/karmieniecontainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/strzalki"
+        android:layout_above="@id/status_jedzenia"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:visibility="gone">
 
         <ImageView
@@ -273,7 +327,7 @@
             android:cropToPadding="false"
             android:onClick="ZmienListeInc"
             android:scaleType="fitCenter"
-            android:src="@drawable/strzalka"></ImageButton>
+            android:src="@drawable/strzalka" />
 
     </LinearLayout>
     <LinearLayout
