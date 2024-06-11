@@ -14,5 +14,9 @@
   {
     "Wersja": "BETA 1.6.5",
     "Opis": [["Dodano cząsteczki","Poprawiono ekran ładowania","Dodano powiadomienia"],["Added particles","Improved loading screen","Added notifications"]]
+  },
+  {
+    "Wersja": "RELEASE 1.7.0",
+    "Opis": [["Dodano popup 'dostępna aktualizacja'","Poprawiono dzienne zadania","Poprawiono powiadomienia"],["Added popup 'update available'","Improved daily quests","Improved notifications"]]
   }
 ]

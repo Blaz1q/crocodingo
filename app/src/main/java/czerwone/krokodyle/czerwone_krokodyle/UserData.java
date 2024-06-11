@@ -47,6 +47,7 @@ public class UserData {
     private static final String SAVED_LEVEL = "SAVED_LEVEL";
     private static final String SAVED_EXP = "SAVED_EXP";
     private static final String CROCODINGO_VERSION = "CROCODINGO_VERSION";
+    private static final String CROCODINGO_CONTROLL= "CROCODINGO_CONTROLL";
     private final SharedPreferences sharedPreferences;
     private static final String SHARED_PREFS = "sharedPrefs"; //NIE ZMIENIAĆ!
     private final SharedPreferences.Editor editor;
@@ -140,15 +141,19 @@ public class UserData {
     public String getVersion(){
         return sharedPreferences.getString(CROCODINGO_VERSION,"VERSION");
     }
+    public String getControll(){
+        return sharedPreferences.getString(CROCODINGO_VERSION,"CONTROLL");
+    }
     public boolean checkVersion(){
         String ver = sharedPreferences.getString(CROCODINGO_VERSION,"VERSION");
         Log.d("ver",ver);
-        if(ver.equals(context.getString(R.string.version))) return true;
+        if(ver.equals(context.getString(R.string.priority)+" "+context.getString(R.string.version))) return true;
         updateVersion();
         return false;
     }
     public void updateVersion(){
-        editEditor(CROCODINGO_VERSION,context.getString(R.string.version));
+        editEditor(CROCODINGO_VERSION,context.getString(R.string.priority)+" "+context.getString(R.string.version));
+        editEditor(CROCODINGO_CONTROLL,context.getString(R.string.priority));
     }
     public int getFood(){
         return this.Food;

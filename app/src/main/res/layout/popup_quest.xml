@@ -16,7 +16,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="10dp"
-        android:background="@android:drawable/dialog_holo_light_frame"
+        android:background="@drawable/custom_quest_popup"
         android:orientation="vertical"
         android:padding="15dp">
 
@@ -76,7 +76,7 @@
                     android:layout_toRightOf="@id/nagrodaimg1"
                     android:padding="10dp"
                     android:paddingEnd="5dp"
-                    android:text="quest1"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -106,8 +106,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/nagroda1"
-                    android:layout_alignParentTop="true"
-                    />
+                    android:layout_alignParentTop="true" />
             </RelativeLayout>
 
             <TextView
@@ -190,7 +189,7 @@
                     android:layout_toRightOf="@id/nagrodaimg2"
                     android:padding="10dp"
                     android:paddingEnd="5dp"
-                    android:text="quest1"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -214,13 +213,13 @@
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:text="@string/claim" />
+
                 <RelativeLayout
                     android:id="@+id/confettireward2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/nagroda2"
-                    android:layout_alignParentTop="true"
-                    />
+                    android:layout_alignParentTop="true" />
 
             </RelativeLayout>
 
@@ -304,7 +303,7 @@
                     android:layout_toRightOf="@id/nagrodaimg3"
                     android:padding="10dp"
                     android:paddingEnd="5dp"
-                    android:text="quest1"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -328,13 +327,13 @@
                     android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:text="@string/claim" />
+
                 <RelativeLayout
                     android:id="@+id/confettireward3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/nagroda3"
-                    android:layout_alignParentTop="true"
-                    />
+                    android:layout_alignParentTop="true" />
 
             </RelativeLayout>
 
@@ -361,14 +360,20 @@
                 android:progressTint="@color/ckred" />
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/welcome_button_testy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:backgroundTint="#333333"
-            android:onClick="Zamknij_Popup"
-            android:text="Zaczynajmy!" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/welcome_button_testy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="48dp"
+                android:backgroundTint="#333333"
+                android:onClick="Zamknij_Popup"
+                android:text="@string/wroc" />
+        </RelativeLayout>
 
 
     </LinearLayout>

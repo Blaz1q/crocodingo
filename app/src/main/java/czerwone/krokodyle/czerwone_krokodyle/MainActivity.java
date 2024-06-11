@@ -87,6 +87,7 @@ import com.google.android.gms.common.api.ApiException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import ru.noties.jlatexmath.JLatexMathDrawable;
 
@@ -174,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     Handler bgloadinghandler = new Handler();
     boolean czyZalogowany = false;
     boolean isExitEnabled = true;
+    boolean IGNORE_UPDATES = false;
     Switch sw1;
     Switch sw2;
     int radioButtonChecked = 0;
@@ -229,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private static final String SAVED_LEVEL = "SAVED_LEVEL";
     private static final String SAVED_EXP = "SAVED_EXP";
     private static final String final_connection= "https://blaz1q.github.io/crocodingo/androidAPI.json"; //"https://jncrew.5v.pl/androidAPI.php";
+    String[] SERVER_VERSION = {"",""};
     AppUpdateManager appUpdateManager;
     Dialog dialog;
     Dialog myDialog;
@@ -312,10 +315,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         handler.postDelayed(runnable = new Runnable() {
             public void run() {
                 handler.postDelayed(runnable, UpdateTimer);
+                currentTime = new Date().getTime();
                 Log.w("powinno_odjac",String.valueOf((currentTime-savedTime)/1000));
                 Log.w("lastFeed_przed",String.valueOf(lastFeed));
                 lastFeed -= (currentTime-savedTime)/1000;
+                //lastFeed-=UpdateTimer/1000;
                 Log.w("lastFeed_po",String.valueOf(lastFeed));
+                UstawStatusJedzenia();
                 SaveData();
             }
         }, UpdateTimer);
@@ -342,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         database = FirebaseDatabase.getInstance();
         User = new UserData(getApplicationContext());
         canplayanimations = false;
+        //ResumeTimePassage(); DEBUG ŚMIERĆ CROCO
         checkForUpdates();
         LoadData();
         UpdateLocale();
@@ -352,6 +359,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         loadPotkiFromAsset();
         loadJedzenieFromAsset();
         loadOsiagnieciaFromAsset();
+
         fetchData(0); //pobierz pytania
         RelativeLayout bgimg = findViewById(R.id.MAIN_LOADING_BG);
         ImageView ckrkdl = findViewById(R.id.krokodyl_loading);
@@ -507,6 +515,29 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         LoadData();
         Wibracje();
     }
+    public int checkPriority(String controll){
+        int priority;
+        switch (controll){
+            case "ALPHA":{priority=0;} break;
+            case "BETA":{priority=1;} break;
+            case "RELEASE":{priority=2;} break;
+            default: {priority=0;} break;
+        }
+        return priority;
+    }
+    public void checkForUpdateOnServer(String controll,String version){
+        if(!IGNORE_UPDATES){
+            if(checkPriority(User.getControll())<=checkPriority(controll))
+            if(!(controll+" "+version).equals(User.getVersion())) {
+                POPUP_EXCEPTION_MODE = 1;
+                ShowPopup(R.layout.popup_update_available);
+                TextView wersja = myDialog.findViewById(R.id.dostepna_wersja);
+                wersja.setText(version+"!");
+                myDialog.show();
+                POPUP_EXCEPTION_MODE = 0;
+            }
+        }
+    }
     public void showUpdatePopup(){
         if(!User.checkVersion()){
             CoNowego update = loadUpdateFromAsset();
@@ -534,6 +565,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 myDialog.show();
                 POPUP_EXCEPTION_MODE =0;
             }
+        }
+        if(!SERVER_VERSION[0].equals("")){
+            checkForUpdateOnServer(SERVER_VERSION[1],SERVER_VERSION[0]);
         }
     }
     public int LevelEq(int x){
@@ -2004,17 +2038,18 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     strzaleczka.getWidth(),
                     strzaleczka.getHeight()
             );
-            int skala = Math.abs((umiera_po-10000)-(przekarm_po+10000));
-            long odleglosc = Math.abs(lastFeed-umiera_po-10000);
+            int skala = Math.abs((umiera_po-30000)-(przekarm_po+30000));
+            //Toast.makeText(this,String.valueOf(skala),Toast.LENGTH_SHORT).show();
+            long odleglosc = Math.abs(-lastFeed+umiera_po-30000);
             double procent = odleglosc*100/skala;
             double szerokosc = (procent/100)*status_jedzenia.getWidth();
-            //Toast.makeText(this,String.valueOf(procent)+" "+String.valueOf(status_jedzenia.getWidth())+" "+String.valueOf(szerokosc),Toast.LENGTH_SHORT).show();
-            if(lastFeed>=umiera_po-10000){
+            //Toast.makeText(this,String.valueOf(odleglosc)+" "+String.valueOf(skala)+" "+String.valueOf(procent)+" "+String.valueOf(status_jedzenia.getWidth())+" "+String.valueOf(szerokosc),Toast.LENGTH_SHORT).show();
+            if(lastFeed>=umiera_po-30000){
                 params.setMargins((int) szerokosc ,0,0,0);
             }else{
                 params.setMargins(0,0,0,0);
             }
-            if(lastFeed>przekarm_po+10000) {
+            if(lastFeed>przekarm_po+30000) {
                 params.setMargins(status_jedzenia.getWidth()-10,0,0,0);
             }
 
@@ -2119,7 +2154,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             ustawCzapke();
                             User.Stats("ZJEDZONE_JEDZENIE",1);
                             addProgressOsiagniecia(12);
-                            UstawStatusJedzenia();
                         }
                     }else{
                         Toast.makeText(getApplicationContext(),"brak ciasteczek :(",Toast.LENGTH_SHORT).show();
@@ -2153,6 +2187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
 
         }
+        UstawStatusJedzenia();
     }
     public void loadCurrentCzapka(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -2167,10 +2202,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         } else if(lastFeed>umiera_po&&lastFeed<gloduje_co){
             czerwony_krokodyl.setImageResource(R.drawable.glodnykroko);
             User.CrocoState = 1;
-        }else{
+
+        }
+        else{
             czerwony_krokodyl.setImageResource(R.drawable.ripcroco);
             User.CrocoState = 2;
             addProgressOsiagniecia(4);
+        }
+        if(lastFeed>przekarm_po){
+            addProgressOsiagniecia(1);
         }
         //Toast.makeText(this, String.valueOf(User.CrocoState), Toast.LENGTH_SHORT).show();
     }
@@ -2344,18 +2384,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         LoadData();
     }
     public void ResumeTimePassage(){
+        //Toast.makeText(this,"Resume time passage",Toast.LENGTH_SHORT).show();
+        Log.d("func_name","RESUMETIMEPASSAGE");
         currentTime = new Date().getTime();
         Log.w("saved_time",String.valueOf(savedTime));
         Log.w("current_time",String.valueOf(currentTime));
         Log.w("time_calc",String.valueOf(currentTime-savedTime));
         Log.w("lastFeed_przed",String.valueOf(lastFeed));
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-        savedTime = sharedPreferences.getLong(SAVED_DATE,currentTime);
         lastFeed -= (currentTime-savedTime)/1000;
         Log.w("lastFeed_po",String.valueOf(lastFeed));
         SaveData();
     }
     public void LoadData(){
+        //Toast.makeText(this,"loaddata",Toast.LENGTH_SHORT).show();
         currentTime = new Date().getTime();
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         switchstate = sharedPreferences.getBoolean(SWITCH,true);
@@ -2366,6 +2407,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(lastFeed==0){
             lastFeed = sharedPreferences.getLong(LAST_FEED,0);
         }
+        Log.d("func_name","LOADDATA");
         Log.w("saved_time",String.valueOf(savedTime));
         Log.w("current_time",String.valueOf(currentTime));
         Log.w("time_calc",String.valueOf(currentTime-savedTime));
@@ -2373,10 +2415,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(canplayanimations) {
             UstawKrokodyla();
         }
-
+        //ResumeTimePassage();
         //Toast.makeText(this,"D:"+String.valueOf(lastFeed),Toast.LENGTH_SHORT).show();
         //DebugSetGlodny();
-        //Toast.makeText(this,"date diff: "+String.valueOf(currentTime-sharedPreferences.getLong(SAVED_DATE,currentTime)),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"date diff: "+String.valueOf(currentTime-sharedPreferences.getLong(SAVED_DATE,currentTime))+" | "+String.valueOf(currentTime-savedTime),Toast.LENGTH_SHORT).show();
     }
     public void UpdateUserProfile(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
@@ -3105,6 +3147,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    public void getServerVersion(String response){
+        if(!response.equals("")){
+            //Log.d("res",response);
+            try{
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray version = jsonObject.getJSONArray("VERSION");
+                SERVER_VERSION[0] = version.get(0).toString();
+                SERVER_VERSION[1] = version.get(1).toString();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
     public void Set_Ids_List(String response){
         int katIDs=0;
         if(response.equals("")){
@@ -3146,6 +3201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 cosiedzieje.setText("Ładowanie pytań..");
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray jsonArray = jsonObject.getJSONArray("API");
+                getServerVersion(response);
                 String id, poprawne, tresc, wyjasnienie, A, B, C, D,kategoria,KatID;
                 boolean helper=false;
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -3961,6 +4017,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         switch (action){
                             case 0:
                                 Set_Ids_List(response);
+
                                 break;
                             case 1:
                                 parseJson(response);

@@ -55,8 +55,8 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSound(soundUri)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(Naglowki[losuj])
-                        .setBigContentTitle(Tekst[losuj]));
+                        .bigText(Tekst[losuj])
+                        .setBigContentTitle(Naglowki[losuj]));
 
         // Create an Intent for the notification tap action
         Intent ii = new Intent(context, MainActivity.class);

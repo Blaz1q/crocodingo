@@ -5,43 +5,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/kolo_fortuny_box"
+    android:padding="20dp"
+    android:background="@color/black_fade"
     >
-    <ImageView
-        android:id="@+id/kolopaski"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/welcome_button_testy2"
-        android:layout_marginBottom="-48dp"
-        android:src="@drawable/srodekkolo" />
-    <ImageView
-        android:id="@+id/obramowanie"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/welcome_button_testy2"
-        android:layout_marginBottom="-48dp"
-        android:src="@drawable/kolofortunyramka"
-        android:onClick="krec"/>
+        android:background="@drawable/patchnotesbg"
+        android:backgroundTint="@color/ckgolden"
+        android:backgroundTintMode="screen"
+        >
+        <ImageView
+            android:id="@+id/kolopaski"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/welcome_button_testy2"
+            android:layout_below="@id/nagroda"
+            android:src="@drawable/srodekkolo" />
+        <ImageView
+            android:id="@+id/obramowanie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxHeight="30dp"
+            android:layout_above="@+id/welcome_button_testy2"
+            android:src="@drawable/kolofortunyramka"
+            android:layout_below="@id/nagroda"
+            android:onClick="krec"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/welcome_button_testy2"
+            android:layout_alignParentBottom="true"
+            >
+            <Button
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:backgroundTint="#333333"
+                android:gravity="center"
+                android:onClick="Zamknij_Popup"
+                android:text="Wyjdź"
+                />
+        </RelativeLayout>
 
 
-    <Button
-        android:id="@+id/welcome_button_testy2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:backgroundTint="#333333"
-        android:gravity="center"
-        android:onClick="Zamknij_Popup"
-        android:text="Wyjdź" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Twoja Nagroda: "
+            android:textSize="25dp"
+            android:id="@+id/nagroda"
+            />
+    </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Twoje wylosowane rzeczy: "
-        android:textSize="25dp"
-        android:id="@+id/nagroda"
-        />
 
 
 

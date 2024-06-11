@@ -157,6 +157,7 @@
         android:layout_alignLeft="@+id/karmieniecontainer"
         android:layout_alignRight="@+id/karmieniecontainer"
         android:layout_marginBottom="5dp"
+        android:background="@drawable/custom_quest_bg"
         android:visibility="gone">
 
         <LinearLayout
@@ -167,27 +168,27 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="2.73"
+                android:layout_weight="7.39"
                 android:src="@drawable/box"
                 app:tint="@color/ckpink" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="59.08"
+                android:layout_weight="53.25"
                 android:src="@drawable/box"
                 app:tint="@color/ckgolden" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="35.46"
+                android:layout_weight="31.73"
                 android:src="@drawable/box" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="2.73"
+                android:layout_weight="7.39"
                 android:src="@drawable/box"
                 app:tint="#00F" />
         </LinearLayout>
