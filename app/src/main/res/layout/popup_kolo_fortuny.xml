@@ -22,15 +22,20 @@
             android:layout_above="@+id/welcome_button_testy2"
             android:layout_below="@id/nagroda"
             android:src="@drawable/srodekkolo" />
+
         <ImageView
             android:id="@+id/obramowanie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="30dp"
             android:layout_above="@+id/welcome_button_testy2"
-            android:src="@drawable/kolofortunyramka"
             android:layout_below="@id/nagroda"
-            android:onClick="krec"/>
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:filterTouchesWhenObscured="false"
+            android:maxHeight="30dp"
+            android:onClick="krec"
+            android:scaleType="centerInside"
+            android:src="@drawable/kolofortunyramka" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

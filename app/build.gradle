@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.example.czerwone_krokodyle'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "czerwone.krokodyle.czerwone_krokodyle"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 8
         versionName "CD1.7.0"
 
@@ -52,5 +52,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'com.github.jinatonic.confetti:confetti:1.1.2' //particles
+    implementation 'com.google.android.gms:play-services-ads:23.1.0' //ads
 }
 apply plugin: 'com.google.gms.google-services'

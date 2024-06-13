@@ -79,6 +79,13 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.example.czerwone_krokodyle.R;
 import com.github.jinatonic.confetti.CommonConfetti;
 import com.github.jinatonic.confetti.ConfettiView;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -176,8 +183,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean czyZalogowany = false;
     boolean isExitEnabled = true;
     boolean IGNORE_UPDATES = false;
-    Switch sw1;
-    Switch sw2;
+
+    private static final boolean canShowAds = true;
     int radioButtonChecked = 0;
     int currentVol = -1;
     int current_item_index=-1;
@@ -333,6 +340,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);  /* <----- Tutaj ustawić główny widok aplikacji */
+        new Thread(
+                () -> {
+                    // Initialize the Google Mobile Ads SDK on a background thread.
+                    MobileAds.initialize(this, initializationStatus -> {});
+                })
+                .start(); //init ads
+        LoadAd();
         scheduleDailyNotification(this);
         Math_syn.set_Math("\\text{rozruch}");
         //Toast.makeText(getApplicationContext(), "onload", Toast.LENGTH_SHORT).show();
@@ -347,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         User = new UserData(getApplicationContext());
+        Log.d("LANG",getLang());
         canplayanimations = false;
         //ResumeTimePassage(); DEBUG ŚMIERĆ CROCO
         checkForUpdates();
@@ -397,6 +412,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             TextView cosiedzieje = findViewById(R.id.cosiedzieje);
             cosiedzieje.setText("Uruchamianie");
             setContentView(R.layout.main_page);
+            loadLang();
             canplayanimations = true;
             UstawKrokodyla();
             ResumeOnLongListener();
@@ -604,18 +620,21 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         else if(v.getId()==R.id.radioLangEng){
             User.setLang("En");
         }
-        setLocale(User.getLang());
+        setLocale();
     }
-    public void setLocale(String lang) {
+    public void setLocale() {
+        loadLang();
+        SaveSettings();
+        setContentView(R.layout.settings);
+        UpdateSettings();
+    }
+    public void loadLang(){
         Locale myLocale = new Locale(getLang());
         Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
-        SaveSettings();
-        setContentView(R.layout.settings);
-        UpdateSettings();
     }
     public void generateSectorDegrees() {
         int sectorDegree = 360/sectors.length;
@@ -2030,6 +2049,46 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         ustawMiche();
     }
+    InterstitialAd mInterstitialAd = null;
+    String adStatus = "";
+    public void LoadAd(){
+        if(adStatus.equals("FAILED")||adStatus.equals("")){
+            final String TAG = "MainActivity";
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adStatus = "LOADING";
+            InterstitialAd.load(this,"ca-app-pub-5519052361423402/4618487300", adRequest,
+
+                    new InterstitialAdLoadCallback() {
+                        @Override
+                        public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                            // The mInterstitialAd reference will be null until
+                            // an ad is loaded.
+                            mInterstitialAd = interstitialAd;
+                            Log.i(TAG, "onAdLoaded");
+                            adStatus="LOADED";
+                        }
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            // Handle the error
+                            Log.d(TAG, loadAdError.toString());
+                            mInterstitialAd = null;
+                            adStatus="";
+                        }
+                    });
+        }
+    }
+    public void ShowAds(){
+        if(canShowAds){
+            if (mInterstitialAd != null) {
+                mInterstitialAd.show(MainActivity.this);
+                adStatus="";
+            } else {
+                Log.d("TAG", "The interstitial ad wasn't ready yet.");
+            }
+            LoadAd();
+        }
+    }
+
     public void UstawStatusJedzenia(){
         if(czypokazana){
             ImageView strzaleczka = findViewById(R.id.current_status_jedzenia);
@@ -2041,8 +2100,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             int skala = Math.abs((umiera_po-30000)-(przekarm_po+30000));
             //Toast.makeText(this,String.valueOf(skala),Toast.LENGTH_SHORT).show();
             long odleglosc = Math.abs(-lastFeed+umiera_po-30000);
-            double procent = odleglosc*100/skala;
-            double szerokosc = (procent/100)*status_jedzenia.getWidth();
+            double procent = odleglosc*100d/skala;
+            double szerokosc = (procent/100d)*status_jedzenia.getWidth();
             //Toast.makeText(this,String.valueOf(odleglosc)+" "+String.valueOf(skala)+" "+String.valueOf(procent)+" "+String.valueOf(status_jedzenia.getWidth())+" "+String.valueOf(szerokosc),Toast.LENGTH_SHORT).show();
             if(lastFeed>=umiera_po-30000){
                 params.setMargins((int) szerokosc ,0,0,0);
@@ -2346,8 +2405,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         try{
+            Switch sw1 = findViewById(R.id.switch1);
+            Switch sw2 = findViewById(R.id.switch2);
+            Switch sw3 = findViewById(R.id.switch3);
             editor.putBoolean(SWITCH, sw1.isChecked());
             editor.putBoolean(SWITCHWIBRACJE, sw2.isChecked());
+            editor.putBoolean("notification_enabled", sw3.isChecked());
             editor.putString(USERNAME,username.getText().toString());
             for(int i=0;i<radioButtonsIds.length;i++){
                 RadioButton radiobutton = findViewById(radioButtonsIds[i]);
@@ -2360,7 +2423,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         editor.apply();
     }
     public void Wibracje(){
-        if(switchstatewibracje) {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        if(sharedPreferences.getBoolean(SWITCHWIBRACJE,false)) {
             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -2467,8 +2531,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         EditText username = findViewById(R.id.editUsername);
         ImageView userPic = findViewById(R.id.user_profile_pic);
-        sw1 = findViewById(R.id.switch1);
-        sw2 = findViewById(R.id.switch2);
+        Switch sw1 = findViewById(R.id.switch1);
+        Switch sw2 = findViewById(R.id.switch2);
+        Switch sw3 = findViewById(R.id.switch3);
         try{
             if(!Objects.equals(UserProfileUrl, "")){
                 Glide.with(getApplicationContext()).load(UserProfileUrl).into(userPic);
@@ -2498,8 +2563,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 ee.printStackTrace();
             }
             username.setText(sharedPreferences.getString(USERNAME,defaultUsername));
-            sw1.setChecked(switchstate);
-            sw2.setChecked(switchstatewibracje);
+            sw1.setChecked(sharedPreferences.getBoolean(SWITCH,false));
+            sw2.setChecked(sharedPreferences.getBoolean(SWITCHWIBRACJE,false));
+            sw3.setChecked(sharedPreferences.getBoolean("notification_enabled",true));
             int idradio = 0;
             idradio = GetRadioButtonChecked();
             RadioButton radiobutton = findViewById(radioButtonsIds[GetRadioButtonChecked()]);
@@ -2626,7 +2692,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void Siema2(View v){
         if(v.getId()==R.id.switch1){
             try{
-                sw1 = findViewById(R.id.switch1);
+                Switch sw1 = findViewById(R.id.switch1);
                 if(sw1.isChecked()){
                     switchstate=true;
                     bgmusicnormal();
@@ -2639,6 +2705,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             catch (Exception e){
                 e.printStackTrace();
             }
+        }
+        else if(v.getId()==R.id.switch3){
+            Switch sw1 = findViewById(R.id.switch1);
         }
     }
     public void bgmusictesty(){
@@ -3734,6 +3803,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(v.getId()==R.id.Zakoncz_test_popup){
             ClosePopup();
             Oblicz_Poprawne();
+            ShowAds();
             bgmusicnormal();
             setContentView(R.layout.test_final);
             addProgress(1);

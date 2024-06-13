@@ -12,6 +12,7 @@
         android:id="@+id/hiddentop"
         android:orientation="horizontal"
         ></LinearLayout>
+
     <Button
         android:layout_below="@id/hiddentop"
         android:id="@+id/wroc"
@@ -25,226 +26,265 @@
         android:backgroundTint="#333333"
         android:onClick="Zmien_widoki"
         android:text="@string/wroc_do_startu" />
-
-
-    <LinearLayout
-        android:id="@+id/layout_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal"
-        android:paddingLeft="30dp"
+    <ScrollView
         android:layout_below="@id/wroc"
-        android:gravity="center"
-        >
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/user_profile_pic"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/usernotfound"
-            app:shapeAppearanceOverlay="@style/circleImageView"
-            app:strokeColor="@android:color/darker_gray"
-            app:strokeWidth="2dp"
-            android:padding="2dp"
-            />
-
-        <EditText
-            android:id="@+id/editUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="text"
-            android:text="Przykładowy nick"
-            android:layout_marginLeft="10dp"
-            />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textDzwiek"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layout_user"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/sounds_and_vibrations"
-        android:textColor="#494949"
-        android:textSize="20sp" />
-
-    <LinearLayout
-        android:id="@+id/layout_seekbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textDzwiek"
-
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal"
-        android:paddingLeft="30dp"
-        >
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/volume_icon" />
-
-        <SeekBar
-            android:id="@+id/seekBar"
+        android:layout_height="match_parent">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:max="100"
-            android:min="0"
-            android:progress="50" />
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/layout_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp"
+                android:gravity="center"
+                >
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/user_profile_pic"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/usernotfound"
+                    app:shapeAppearanceOverlay="@style/circleImageView"
+                    app:strokeColor="@android:color/darker_gray"
+                    app:strokeWidth="2dp"
+                    android:padding="2dp"
+                    />
+
+                <EditText
+                    android:id="@+id/editUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:text="Przykładowy nick"
+                    android:layout_marginLeft="10dp"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textDzwiek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_user"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/sounds_and_vibrations"
+                android:textColor="#494949"
+                android:textSize="20sp" />
 
 
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/layout_switch1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_seekbar"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal"
-        android:paddingLeft="30dp">
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/switchContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textDzwiek"
+                android:paddingTop="10dp"
+                android:paddingLeft="30dp"
+                >
+                <LinearLayout
+                    android:id="@+id/layout_seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textDzwiek"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
 
-        <Switch
-            android:id="@+id/switch1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="Siema2"
-            tools:checked="true"
-            android:theme="@style/SCBSwitch"
-            />
+                    >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:text="@string/dzwiek_w_menu"
-            android:textSize="20dp"
-            />
-    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/volume_icon" />
 
-    <LinearLayout
-        android:id="@+id/layout_switch2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_switch1"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal"
-        android:paddingLeft="30dp">
+                    <SeekBar
+                        android:id="@+id/seekBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:max="100"
+                        android:min="0"
+                        android:progress="50" />
 
-        <Switch
-            android:id="@+id/switch2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="Siema2" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wibracje"
-            android:textSize="20dp"
-            android:theme="@style/SCBSwitch"
-            />
-    </LinearLayout>
-    <TextView
-        android:id="@+id/textJęzyk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layout_switch2"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/language"
-        android:textColor="#494949"
-        android:textSize="20sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
 
-    <RadioGroup
-        android:id="@+id/selectlangcontainer"
-        android:layout_below="@id/textJęzyk"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:paddingLeft="30dp"
-        >
+                    <Switch
+                        android:id="@+id/switch1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="Siema2"
+                        tools:checked="true"
+                        android:theme="@style/SCBSwitch"
+                        />
 
-        <RadioButton
-            android:id="@+id/radioLangPl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/Polski"
-            android:onClick="ChangeLang"
-            />
-        <RadioButton
-            android:id="@+id/radioLangEng"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/Angielski"
-            android:onClick="ChangeLang"
-            />
-        <RadioButton
-            android:id="@+id/radioLangEsp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/Hiszpanski" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="@string/dzwiek_w_menu"
+                        android:textSize="20dp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
 
-    </RadioGroup>
+                    <Switch
+                        android:id="@+id/switch2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="Siema2"
+                        android:theme="@style/SCBSwitch"
+                        />
 
-    <TextView
-        android:id="@+id/textRealizacja"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/selectlangcontainer"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/Credits"
-        android:textColor="#494949"
-        android:textSize="20sp" />
-    <LinearLayout
-        android:id="@+id/layout_switch3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textRealizacja"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal"
-        android:paddingLeft="30dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wibracje"
+                        android:textSize="20dp"
+                        android:theme="@style/SCBSwitch"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/creditsbtn"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#333333"
-            android:onClick="Zmien_widoki"
-            android:text="Przejdź do realizacji"/>
-    </LinearLayout>
+                    <Switch
+                        android:id="@+id/switch3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="Siema2"
+                        android:theme="@style/SCBSwitch"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/powiadomienia"
+                        android:textSize="20dp"
+                        android:theme="@style/SCBSwitch"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textJęzyk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/switchContainer"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/language"
+                android:textColor="#494949"
+                android:textSize="20sp" />
+
+            <RadioGroup
+                android:id="@+id/selectlangcontainer"
+                android:layout_below="@id/textJęzyk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="30dp"
+                >
+
+                <RadioButton
+                    android:id="@+id/radioLangPl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Polski"
+                    android:onClick="ChangeLang"
+                    />
+                <RadioButton
+                    android:id="@+id/radioLangEng"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Angielski"
+                    android:onClick="ChangeLang"
+                    />
+                <RadioButton
+                    android:id="@+id/radioLangEsp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Hiszpanski" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/textRealizacja"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/selectlangcontainer"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/Credits"
+                android:textColor="#494949"
+                android:textSize="20sp" />
+            <LinearLayout
+                android:id="@+id/layout_switch3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textRealizacja"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp">
+
+                <Button
+                    android:id="@+id/creditsbtn"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#333333"
+                    android:onClick="Zmien_widoki"
+                    android:text="Przejdź do realizacji"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+
 
 
 </RelativeLayout>

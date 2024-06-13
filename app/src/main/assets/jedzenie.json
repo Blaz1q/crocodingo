@@ -54,5 +54,13 @@
         "opis": ["Ciastko, ale w kształcie rybki","A cookie, but in the shape of a fish"],
         "nasycenie": 9000,
         "cena": 260
+    },
+    {
+        "id": 7,
+        "plik": "zepsutejapko",
+        "nazwa": ["Zepsute Jabłko","Spoiled apple"],
+        "opis": ["Croco nie chce tego jeść..","Croco doesn't want to eat it.."],
+        "nasycenie": -3600,
+        "cena": 0
     }
 ]
