@@ -8,4 +8,4 @@ Aplikacja do szybkiej nauki matematyki :)
 
 Ta aplikacja została napisana w javie, jeśli chcesz zostać testerem, kliknij [tutaj](https://blaz1q.github.io/crocodingo/) 
 
-Kopiowanie lub modyfikowanie kodu źródłowego nie jest dozwolone bez zgody właściciela.
+Kopiowanie, modyfikowanie i/lub dystrybucja kodu źródłowego nie jest dozwolone bez zgody właściciela.
