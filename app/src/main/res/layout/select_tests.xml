@@ -122,6 +122,17 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ckbudowa"
                 android:visibility="gone" />
+            <ImageButton
+                android:id="@+id/pytanianew_debug"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:backgroundTint="@android:color/transparent"
+                android:contentDescription="super"
+                android:onClick="Zmien_widoki"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ckbudowa" />
         </LinearLayout>
     </ScrollView>
     <LinearLayout

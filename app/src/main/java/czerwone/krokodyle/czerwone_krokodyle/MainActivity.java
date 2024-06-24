@@ -40,6 +40,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -61,9 +62,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,9 +101,11 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import ru.noties.jlatexmath.JLatexMathDrawable;
+import ru.noties.jlatexmath.JLatexMathView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
@@ -137,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private List<Achievements> listaOsiagniec = new ArrayList<>();
     private List<Integer> listaKategorii = new ArrayList<>();
     private List<List<PytaniaDB>> podzielonaListaPytan = new ArrayList<>();
+    private List<PytaniaNewFormat> nowaListaPytan = new ArrayList<>();
     // zmienne do akcji
     private List<String> actions = new ArrayList<>();
     private List<Integer> popups = new ArrayList<>();
@@ -374,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         loadPotkiFromAsset();
         loadJedzenieFromAsset();
         loadOsiagnieciaFromAsset();
-
+        loadTestPytania();
         fetchData(0); //pobierz pytania
         RelativeLayout bgimg = findViewById(R.id.MAIN_LOADING_BG);
         ImageView ckrkdl = findViewById(R.id.krokodyl_loading);
@@ -838,11 +845,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void KrokodylKlikaj(View v){
-        ViewGroup testconfetti = findViewById(R.id.pierwsze_uruchomienie_animacja);
-        Rect bounding_box=new Rect(testconfetti.getLeft(),testconfetti.getTop(),testconfetti.getRight(),testconfetti.getBottom());
-        int[] colors = {getColor(R.color.ckgolden),getColor(R.color.ckred)};
-        CommonConfetti.explosion(testconfetti,testconfetti.getWidth()/2,testconfetti.getHeight()/2,colors).oneShot().setBound(bounding_box).animate();
-        if(lastFeed>umiera_po){
+       if(lastFeed>umiera_po){
             addProgress(4);
             addProgressOsiagniecia(9);
         }
@@ -1012,6 +1015,28 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+    public void loadTestPytania(){
+        try {
+            InputStream is = getAssets().open("pytania.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+            //Log.d("MojaAplikacja", "Prawidłowo wczytano JSON: " + json);
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray jsonArray = jsonObject.getJSONArray("API");
+            PytaniaNewFormat pytanie = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject pytania = jsonArray.getJSONObject(i);
+                //Log.d("pytanie"+i,""+pytania);
+                pytanie = new PytaniaNewFormat(pytania);
+                nowaListaPytan.add(pytanie);
+            }
+        } catch (Exception e){
+
         }
     }
     public void loadOsiagnieciaFromAsset() {
@@ -1495,10 +1520,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         //calendar.add(Calendar.HOUR_OF_DAY, 1);  // Start at the next hour
-
+        //Toast.makeText(this,String.valueOf(alarmManager),Toast.LENGTH_SHORT).show();
         // Set the alarm to repeat daily at 12:00 a.m.
+        //SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        //Toast.makeText(context,String.valueOf(sharedPreferences.getBoolean("notification_enabled", true)),Toast.LENGTH_SHORT).show();
         if (alarmManager != null) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                     calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_HOUR*2,
                     pendingIntent);
@@ -2744,6 +2771,214 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    int newpytaniacounterdebug=0;
+    public void debugplus(View v){
+        if(newpytaniacounterdebug<nowaListaPytan.size()-1) newpytaniacounterdebug++;
+        GenerujNewPytania();
+    }
+    public void debugminus(View v){
+        if(newpytaniacounterdebug>0) newpytaniacounterdebug--;
+        GenerujNewPytania();
+    }
+    public void setSelectedNewPytaniaOTWARTE(RadioButton radioButton[],PytaniaNewFormat pytanie){
+        boolean isselected;
+        int[] odpowiedzi = pytanie.getOdpowiedziUzytkownika();
+        for(int i=0;i<radioButton.length;i++){
+            isselected = false;
+            for(int j=0;j<odpowiedzi.length;j++){
+                if(odpowiedzi[j]==i) isselected = true;
+            }
+            radioButton[i].setChecked(isselected);
+        }
+    }
+    public void setSelectedNewPytaniaDOKONCZ(Button button[],PytaniaNewFormat pytanie){
+
+        boolean isselected;
+        int[] odpowiedzi = pytanie.getOdpowiedziUzytkownika();
+        for(int i=0;i<button.length;i++){
+            isselected = false;
+            for(int j=0;j<odpowiedzi.length;j++){
+                if(odpowiedzi[j]==i) isselected = true;
+            }
+            if(isselected) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getOdpowiedzi(getLang())[i],0xffbebebe,0xffffffff));
+            else button[i].setBackground(Math_syn.set_Math(pytanie.getOdpowiedzi(getLang())[i]));
+        }
+    }
+    public void setSelectedNewPytaniaPF(Button button[],PytaniaNewFormat pytanie,int index){
+        boolean isselected;
+        int[] odpowiedzi = pytanie.getOdpowiedziUzytkownika();
+        for(int i=0;i<button.length;i++){
+            isselected = (odpowiedzi[index]==i);
+            if(isselected) button[i].setBackgroundColor(0xffbebebe);
+            else button[i].setBackgroundColor(0x00ffffff);
+        }
+    }
+    public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout){
+        switch (pytanie.getTyp()){
+            case "DOKONCZ":
+            {
+                TextView info = new TextView(this);
+                ImageView zdj = new ImageView(this);
+                TextView polecenie = new TextView(this);
+                TextView tresc = new TextView(this);
+                TextView wyjasnienie = new TextView(this);
+                polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
+                info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
+                tresc.setBackground(Math_syn.set_Math(pytanie.getTresc(getLang())));
+                wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
+                mainlayout.addView(info);
+                mainlayout.addView(zdj);
+                mainlayout.addView(polecenie);
+                mainlayout.addView(tresc);
+                Button[] odpowiedz = new Button[pytanie.getOdpowiedzi(getLang()).length];
+                for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
+                    odpowiedz[i] = new Button(this);
+                    odpowiedz[i].setBackground(Math_syn.set_Math(pytanie.getOdpowiedzi(getLang())[i]));
+
+                    for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
+                        if(pytanie.getPoprawnaOdp()[j]==i){
+                            odpowiedz[i].setBackground(Math_syn.set_Fancy_Math(pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
+                        }
+                    }
+                }
+                for(int i=0;i<odpowiedz.length;i++){
+                    int finalI = i;
+                    odpowiedz[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{
+                            pytanie.setOdpowiedziUzytkownika(finalI,0);
+                            setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                    mainlayout.addView(odpowiedz[i]);
+                }
+                setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie);
+                mainlayout.addView(wyjasnienie);
+
+            }break;
+            case "PF":
+            {
+                TextView info = new TextView(this);
+                ImageView zdj = new ImageView(this);
+                TextView polecenie = new TextView(this);
+                TextView wyjasnienie = new TextView(this);
+                polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
+                info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
+                wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
+                mainlayout.addView(info);
+                mainlayout.addView(zdj);
+                mainlayout.addView(polecenie);
+                TableLayout.LayoutParams tableparams = new TableLayout.LayoutParams(
+                        TableLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f
+                );
+                for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
+
+                    LinearLayout tabela = new LinearLayout(this);
+                    tabela.setLayoutParams(tableparams);
+                    tabela.setOrientation(LinearLayout.HORIZONTAL);
+                    TextView odpowiedz = new TextView(this);
+                    odpowiedz.setBackground(Math_syn.set_Math(pytanie.getOdpowiedzi(getLang())[i],JLatexMathDrawable.ALIGN_LEFT));
+                    Button prawda = new Button(this);
+                    Button falsz = new Button(this);
+                    prawda.setLayoutParams(tableparams);
+                    falsz.setLayoutParams(tableparams);
+                    prawda.setText("P");
+                    falsz.setText("F");
+                    Button[] prawdafalsz = new Button[]{prawda, falsz};
+                    final int finalI = i;
+                    prawda.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try{
+                                pytanie.setOdpowiedziUzytkownika(0,finalI);
+                                setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI);
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    falsz.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try{
+                                pytanie.setOdpowiedziUzytkownika(1,finalI);
+                                setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI);
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    if(pytanie.getPoprawnaOdp()[i]==0) falsz.setBackgroundColor(0xff00ff00);
+                    else prawda.setBackgroundColor(0xff00ff00);
+                    mainlayout.addView(odpowiedz);
+                    tabela.addView(prawda);
+                    tabela.addView(falsz);
+                    mainlayout.addView(tabela);
+                    setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI);
+                }
+                mainlayout.addView(wyjasnienie);
+            }break;
+            case "OTWARTE": {
+                TextView info = new TextView(this);
+                ImageView zdj = new ImageView(this);
+                TextView polecenie = new TextView(this);
+                TextView wyjasnieniemini = new TextView(this);
+                TextView wyjasnienie = new TextView(this);
+                wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
+                wyjasnieniemini.setBackground(Math_syn.set_Math(pytanie.getPoprawnaOdpMini(getLang())));
+                polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
+                info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
+                mainlayout.addView(info);
+                mainlayout.addView(zdj);
+                mainlayout.addView(polecenie);
+                RadioGroup radioGroup = new RadioGroup(this);
+                RadioButton[] radioButtons = new RadioButton[pytanie.getPkt()+1];
+                for (int i = 0; i <= pytanie.getPkt(); i++) {
+                    radioButtons[i] = new RadioButton(this);
+                    radioButtons[i].setText("Punkt " + i);
+                    final int finalI = i;
+                    radioButtons[i].setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try{
+                                pytanie.setOdpowiedziUzytkownika(finalI,0);
+
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    radioGroup.addView(radioButtons[i]);
+                }
+                setSelectedNewPytaniaOTWARTE(radioButtons,pytanie);
+                mainlayout.addView(radioGroup);
+                mainlayout.addView(wyjasnieniemini);
+                mainlayout.addView(wyjasnienie);
+            }break;
+            case "ZLOZONE":{
+                TextView info = new TextView(this);
+                ImageView zdj = new ImageView(this);
+                info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
+                mainlayout.addView(info);
+                mainlayout.addView(zdj);
+                for(int i=0;i<pytanie.getListaZlozone().size();i++){
+                    addNewPytania(pytanie.getListaZlozone().get(i),mainlayout);
+                }
+            }break;
+        }
+    }
+    public void GenerujNewPytania(){
+        PytaniaNewFormat pytanie = nowaListaPytan.get(newpytaniacounterdebug);
+        LinearLayout mainlayout = findViewById(R.id.pytanienew_container);
+        mainlayout.removeAllViews();
+        TextView counet = findViewById(R.id.debugcounter);
+        counet.setText(String.valueOf(newpytaniacounterdebug));
+        addNewPytania(pytanie,mainlayout);
+    }
     public void DefaultMainPageActions(){
         setContentView(R.layout.main_page);
         updateAccInfo();
@@ -2965,6 +3200,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             AddActions("testy_debug");
             fetchData(1);
         }//do testowania, nie będzie wspierane w późniejszych wersjach
+        else if(v.getId()==R.id.pytanianew_debug){
+            setContentView(R.layout.newpytaniaformat);
+            AddActions("testy_debug");
+            GenerujNewPytania();
+        }
         else if(v.getId()==R.id.testychallenge){
             setContentView(R.layout.pytanie_wyglad_challenge);
             CHALLENGE_MODE = true;

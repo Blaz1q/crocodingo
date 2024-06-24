@@ -1,0 +1,66 @@
+{"API": [
+    {
+      "typ": "DOKONCZ",
+      "kat": "Liczby Rzeczywiste",
+      "katID": 1,
+      "pkt": 1,
+      "id": 0,
+      "polecenie": ["\\text{Dokończ zdanie. Zaznacz odpowiedź spośród podanych}"],
+      "tresc": ["\\text{Równość }  \\frac{1}{4} + \\frac{1}{5}+ \\frac{1}{a} = 1 \\text{ jest prawdziwa dla:} "],
+      "odp": [["a=\\frac{11}{20}","a=\\frac{8}{9}","a=\\frac{9}{8}","a=\\frac{20}{11}"]],
+      "poprawna": [2,3],
+      "wyjasnienie": ["\\text{Krok 1}\\\\\\frac{1}{4} + \\frac{1}{5} + \\frac{1}{a} = 1\\\\\\frac{5}{20} + \\frac{4}{20} + \\frac{1}{a} = \\frac{20}{20}\\\\\\frac{9}{20} + \\frac{1}{a} = \\frac{20}{20}\\\\\\frac{1}{a} = \\frac{11}{20}\\\\\\text{Krok 2}\\\\1 \\cdot 20 = 11a\\\\11a = 20\\\\a = \\frac{20}{11}"]
+    },
+    {
+      "typ": "PF",
+      "kat": "Ciąg geometryczny",
+      "katID": 22,
+      "pkt": 1,
+      "id": 1,
+      "info": ["\\text{Ciąg \\(a_n\\) jest określony wzorem \\(a_n = (n−1)^n \\cdot (n − 5)\\) dla każdej liczby naturalnej \\(n \\geq 1\\).}"],
+      "polecenie": ["\\text{Oceń prawdziwość poniższych stwierdzeń. Wybierz P, jeśli stwierdzenie jest\nprawdziwe, albo F – jeśli jest fałszywe.}"],
+      "odp": [["\\text{Pierwszy wyraz ciągu (\\(a_n\\)) \\\\jest dwa razy większy od \\\\trzeciego wyrazu tego ciągu.}","\\text{Wszystkie wyrazy ciągu (\\(a_n\\)) są dodatnie}"]],
+      "poprawna": [1,0],
+      "wyjasnienie": ["\\text{yeah}"]
+    },
+    {
+      "typ": "OTWARTE",
+      "kat": "Wykaz",
+      "katID": 2,
+      "pkt":4,
+      "id": 2,
+      "polecenie": ["\\text{Wykaż, że dla każdej liczby naturalnej \\(n\\geq1\\) liczba \\(n^2 + (n + 1)^2 + (n + 2)^2 \\) przy dzieleniu przez 3 daje resztę 2.}"],
+      "poprawna": ["\\text{poprawna skrocona}"],
+      "wyjasnienie": ["\\text{eyah}"]
+    },
+    {
+      "typ": "ZLOZONE",
+      "id": 3,
+      "zdj": "",
+      "info": ["\\text{w kartezjańskim układzie twojej starej masz raka}"],
+      "ilosc_podpunktow": 2,
+      "podpunkt1":{
+        "typ": "OTWARTE",
+        "kat": "Wykaz",
+        "katID": 2,
+        "pkt":4,
+        "id": 2,
+        "polecenie": ["\\text{Wykaż, że dla każdej liczby naturalnej \\(n\\geq1\\) liczba \\(n^2 + (n + 1)^2 + (n + 2)^2 \\) przy dzieleniu przez 3 daje resztę 2.}"],
+        "poprawna": ["\\text{poprawna skrocona}"],
+        "wyjasnienie": ["\\text{eyah}"]
+      },
+      "podpunkt2":{
+        "typ": "PF",
+        "kat": "Ciąg geometryczny",
+        "katID": 22,
+        "pkt": 1,
+        "id": 1,
+        "info": ["\\text{Ciąg \\(a_n\\) jest określony wzorem \\(a_n = (n−1)^n \\cdot (n − 5)\\) dla każdej liczby naturalnej \\(n \\geq 1\\).}"],
+        "polecenie": ["\\text{Oceń prawdziwość poniższych stwierdzeń. Wybierz P, jeśli stwierdzenie jest\nprawdziwe, albo F – jeśli jest fałszywe.}"],
+        "odp": [["\\text{Pierwszy wyraz ciągu (\\(a_n\\)) jest dwa razy większy od trzeciego wyrazu tego ciągu.}","\\text{Wszystkie wyrazy ciągu (\\(a_n\\)) są dodatnie}"]],
+        "poprawna": [1,0],
+        "wyjasnienie": ["\\text{yeah}"]
+      }
+    }
+  ]
+}

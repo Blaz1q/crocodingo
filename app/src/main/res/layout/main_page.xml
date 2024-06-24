@@ -13,7 +13,7 @@
         android:layout_height="35dp"
         android:id="@+id/hiddentop"
         android:orientation="horizontal"
-        ></LinearLayout>
+        />
     <LinearLayout
         android:layout_below="@id/hiddentop"
         android:id="@+id/menu_top"

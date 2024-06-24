@@ -34,7 +34,7 @@
         android:layout_marginBottom="10dp"
         android:layout_toEndOf="@id/wroc_z_creditsow"
         android:gravity="center"
-        android:text="@string/version"
+        android:text="@string/priority_version"
         android:textSize="17sp" />
     <ScrollView
         android:layout_below="@id/wroc_z_creditsow"
@@ -228,7 +228,7 @@
                     android:id="@+id/ps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fullstack Developer, Tester"
+                    android:text="Backend Developer, Tester"
                     android:textAlignment="center" />
             </LinearLayout>
             <TextView

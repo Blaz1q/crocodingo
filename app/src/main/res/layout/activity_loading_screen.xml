@@ -8,7 +8,6 @@
     android:id="@+id/MAIN_LOADING_BG"
     tools:context="czerwone.krokodyle.czerwone_krokodyle.Loading_Screen">
 
-
     <ImageView
         android:id="@+id/krokodyl_loading"
         android:layout_width="353dp"
@@ -25,7 +24,8 @@
         android:layout_below="@id/krokodyl_loading"
         android:layout_centerHorizontal="true"
         android:text="Loading..."
-        android:textSize="34sp" />
+        android:textSize="34sp"
+        tools:ignore="HardcodedText" />
     <TextView
         android:layout_below="@id/text_loading"
         android:id="@+id/cosiedzieje"
@@ -33,14 +33,15 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:textSize="28sp"
-        android:text="TextView" />
+        android:text="TextView"
+        tools:ignore="HardcodedText" />
     <TextView
         android:id="@+id/Version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         android:layout_centerHorizontal="true"
-        android:text="@string/version"
+        android:text="@string/priority_version"
         android:textSize="20sp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
