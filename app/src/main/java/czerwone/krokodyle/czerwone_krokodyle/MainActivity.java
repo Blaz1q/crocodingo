@@ -1032,7 +1032,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject pytania = jsonArray.getJSONObject(i);
                 //Log.d("pytanie"+i,""+pytania);
+                try{
                 pytanie = new PytaniaNewFormat(pytania);
+                } catch (JSONException e){
+                    Log.d("exception", String.valueOf(e));
+                }
                 nowaListaPytan.add(pytanie);
             }
         } catch (Exception e){
@@ -4236,7 +4240,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             for(int j=0;j<4;j++){
                 CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
                 if(listaShuffled.get(CURRENT_INDEX).getOdpUzytkownikaInt()==j+1){
-                    CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],0xff4f5d75,0xffffffff);
+                    CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff);
                 }
                 buttony[j].setBackground(CurrentQuestion[j]);
             }

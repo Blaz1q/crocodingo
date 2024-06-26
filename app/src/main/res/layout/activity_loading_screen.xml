@@ -15,7 +15,10 @@
         android:layout_centerInParent="true"
         android:contentDescription="@string/app_name"
         android:onClick="KrokodylKlikaj"
-        android:src="@drawable/corcodoingo_loading" />
+        android:src="@drawable/corcodoingo_loading"
+        android:foreground="@drawable/corcodoingo_loading"
+
+        />
 
     <TextView
         android:id="@+id/text_loading"

@@ -52,6 +52,7 @@ public class PytaniaNewFormat {
             Arrays.fill(this.OdpowiedziUzytkownika,-1);
             this.Wyjasnienie = initS1D(pytanie.getJSONArray("wyjasnienie"));
             this.Polecenie = initS1D(pytanie.getJSONArray("polecenie")); hasPolecenie=true;
+            if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("odp_zdj")) this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp_zdj"));
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
@@ -67,6 +68,7 @@ public class PytaniaNewFormat {
             this.Polecenie = initS1D(pytanie.getJSONArray("polecenie")); hasPolecenie=true;
             this.OdpowiedziUzytkownika = new int[PoprawnaOdp.length];
             Arrays.fill(this.OdpowiedziUzytkownika,-1);
+            if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
@@ -77,6 +79,7 @@ public class PytaniaNewFormat {
             this.KatID = pytanie.getInt("katID");
             this.OdpowiedziUzytkownika = new int[1];
             Arrays.fill(this.OdpowiedziUzytkownika,-1);
+            if(pytanie.has("tresc")) this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;
             this.PoprawnaOdpMini = initS1D(pytanie.getJSONArray("poprawna"));
             this.Wyjasnienie = initS1D(pytanie.getJSONArray("wyjasnienie"));
             this.Polecenie = initS1D(pytanie.getJSONArray("polecenie")); hasPolecenie = true;
@@ -87,6 +90,7 @@ public class PytaniaNewFormat {
             this.Podpunkty = pytanie.getInt("ilosc_podpunktow");
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
+            if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
             for(int i=0;i<this.Podpunkty;i++){
                 //Log.d("forloop","podpunkt"+(i+1));
                 JSONObject podpunkt = pytanie.getJSONObject("podpunkt"+(i+1));

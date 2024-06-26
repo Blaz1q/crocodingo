@@ -4,6 +4,8 @@
     <solid android:color="@color/ckbez"></solid>
     <stroke
         android:width="2dp"
+        android:dashGap="0.2dp"
+        android:dashWidth="20dp"
         android:color="@android:color/black" />
     <corners android:radius="20dp"/>
 </shape>
