@@ -37,6 +37,7 @@ public class PytaniaNewFormat {
     boolean hasPolecenie = false;
     boolean hasZdj = false;
     boolean hasOdpowiedzi = false;
+    JSONObject translatable = null;
 
     public PytaniaNewFormat(JSONObject pytanie) throws JSONException {
         //Log.d("Loading","kapi kapi kapiciulo");
@@ -57,6 +58,9 @@ public class PytaniaNewFormat {
             if(pytanie.has("odp_zdj")) this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp_zdj"));
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
+            if(pytanie.has("translatable_info")){
+                translatable = pytanie.getJSONObject("translatable_info");
+            }
             //Log.d("length",""+Info.length);
         }
         if(Typ.equals("PF")){
@@ -78,13 +82,49 @@ public class PytaniaNewFormat {
             this.Kategoria = pytanie.getString("kat");
             this.KatID = pytanie.getInt("katID");
             this.OdpowiedziUzytkownika = new int[1];
-            Arrays.fill(this.OdpowiedziUzytkownika,-1);
-            if(pytanie.has("tresc")) this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;
+            Arrays.fill(this.OdpowiedziUzytkownika, -1);
+            if (pytanie.has("tresc")) this.Tresc = initS1D(pytanie.getJSONArray("tresc"));
+            hasTresc = true;
             this.PoprawnaOdpMini = initS1D(pytanie.getJSONArray("poprawna"));
             this.Wyjasnienie = initS1D(pytanie.getJSONArray("wyjasnienie"));
-            this.Polecenie = initS1D(pytanie.getJSONArray("polecenie")); hasPolecenie = true;
-            if (pytanie.has("info")) { this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo = true;}
-            if (pytanie.has("zdj")) { this.Zdj = pytanie.getString("zdj"); hasZdj = true; }
+            this.Polecenie = initS1D(pytanie.getJSONArray("polecenie"));
+            hasPolecenie = true;
+            if (pytanie.has("info")) {
+                this.Info = initS1D(pytanie.getJSONArray("info"));
+                hasInfo = true;
+            }
+            if (pytanie.has("zdj")) {
+                this.Zdj = pytanie.getString("zdj");
+                hasZdj = true;
+            }
+        }
+        if(Typ.equals("DOPASUJ_NTON")){
+            this.Pkt = pytanie.getInt("pkt");
+            this.Kategoria = pytanie.getString("kat");
+            this.KatID = pytanie.getInt("katID");
+            this.PoprawnaOdp = initI1D(pytanie.getJSONArray("poprawna"));
+            this.Wyjasnienie = initS1D(pytanie.getJSONArray("wyjasnienie"));
+            this.Polecenie = initS1D(pytanie.getJSONArray("polecenie")); hasPolecenie=true;
+            this.OdpowiedziUzytkownika = new int[PoprawnaOdp.length];
+            Arrays.fill(this.OdpowiedziUzytkownika,-1);
+            if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
+            if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
+            if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
+            if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
+        }
+        if(Typ.equals("DOPASUJ_NTO1")){
+            this.Pkt = pytanie.getInt("pkt");
+            this.Kategoria = pytanie.getString("kat");
+            this.KatID = pytanie.getInt("katID");
+            this.PoprawnaOdp = initI1D(pytanie.getJSONArray("poprawna"));
+            this.Wyjasnienie = initS1D(pytanie.getJSONArray("wyjasnienie"));
+            this.Polecenie = initS1D(pytanie.getJSONArray("polecenie")); hasPolecenie=true;
+            this.OdpowiedziUzytkownika = new int[PoprawnaOdp.length];
+            Arrays.fill(this.OdpowiedziUzytkownika,-1);
+            if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
+            if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
+            if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
+            if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
         }
         if(Typ.equals("ZLOZONE")){
             this.Podpunkty = pytanie.getInt("ilosc_podpunktow");
@@ -157,7 +197,16 @@ public class PytaniaNewFormat {
         return PoprawnaOdp;
     }
 
-    public String[] getOdpowiedzi(String lang) {
+    public String[] getOdpowiedzi(String lang){
+        if(translatable!=null){
+            if(translatable.has("odp")){
+                try {
+                    if(!translatable.getBoolean("odp")) return Odpowiedzi[0];
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         switch (lang){
             case "En":
                 if(Odpowiedzi.length>=2) return Odpowiedzi[1];
@@ -168,6 +217,15 @@ public class PytaniaNewFormat {
         return new String[]{s};
     }
     public String getPoprawnaOdpMini(String lang) {
+        if(translatable!=null){
+            if(translatable.has("poprawna")){
+                try {
+                    if(!translatable.getBoolean("poprawna")) return PoprawnaOdpMini[0];
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         switch (lang){
             case "En":
                 if(PoprawnaOdpMini.length>=2) return PoprawnaOdpMini[1];
@@ -177,6 +235,15 @@ public class PytaniaNewFormat {
         return "";
     }
     public String getWyjasnienie(String lang){
+        if(translatable!=null){
+            if(translatable.has("wyjasnienie")){
+                try {
+                    if(!translatable.getBoolean("wyjasnienie")) return Wyjasnienie[0];
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         switch (lang){
             case "En":
                 if(Wyjasnienie.length>=2) return Wyjasnienie[1];
@@ -188,6 +255,15 @@ public class PytaniaNewFormat {
 
     public String getInfo(String lang) {
         if(!hasInfo) return "";
+        if(translatable!=null){
+            if(translatable.has("info")){
+                try {
+                    if(!translatable.getBoolean("info")) return Info[0];
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         switch (lang){
             case "En":
                 if(Info.length>=2) return Info[1];
@@ -199,6 +275,15 @@ public class PytaniaNewFormat {
 
     public String getTresc(String lang) {
         if(!hasTresc) return "";
+        if(translatable!=null){
+            if(translatable.has("tresc")){
+                try {
+                    if(!translatable.getBoolean("tresc")) return Tresc[0];
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         switch (lang){
             case "En":
                 if(Tresc.length>=2) return Tresc[1];
@@ -210,6 +295,15 @@ public class PytaniaNewFormat {
 
     public String getPolecenie(String lang) {
         if(!hasPolecenie) return "";
+        if(translatable!=null){
+            if(translatable.has("polecenie")){
+                try {
+                    if(!translatable.getBoolean("polecenie")) return Polecenie[0];
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         switch (lang){
             case "En":
                 if(Polecenie.length>=2) return Polecenie[1];
@@ -230,11 +324,24 @@ public class PytaniaNewFormat {
     public boolean checkPoprawna(){
         boolean poprawna = true;
         for(int i=0;i<PoprawnaOdp.length;i++){
-            if(PoprawnaOdp[i]!=OdpowiedziUzytkownika[i]) poprawna = false;
+            if (PoprawnaOdp[i] != OdpowiedziUzytkownika[i]) {
+                poprawna = false;
+                break;
+            }
+        }
+        return poprawna;
+    }
+    public boolean checkPoprawnaAny(int index){
+        boolean poprawna = false;
+        for (int i : PoprawnaOdp) {
+            if (OdpowiedziUzytkownika[index] == i) {
+                poprawna = true;
+                break;
+            }
         }
         return poprawna;
     }
     public boolean checkPoprawna(int index){
-        return PoprawnaOdp[index]==OdpowiedziUzytkownika[index];
+        return (PoprawnaOdp[index]==OdpowiedziUzytkownika[index]);
     }
 }

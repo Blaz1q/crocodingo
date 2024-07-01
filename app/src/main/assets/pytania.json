@@ -5,11 +5,16 @@
       "katID": 1,
       "pkt": 1,
       "id": 0,
-      "polecenie": ["\\text{Dokończ zdanie. Zaznacz odpowiedź spośród podanych}"],
+      "polecenie": ["\\text{Dokończ zdanie. Zaznacz odpowiedź spośród podanych}","\\text{Finish the sentence. Check the correct answer.}"],
       "tresc": ["\\text{Równość }  \\frac{1}{4} + \\frac{1}{5}+ \\frac{1}{a} = 1 \\text{ jest prawdziwa dla:} "],
       "odp": [["a=\\frac{11}{20}","a=\\frac{8}{9}","a=\\frac{9}{8}","a=\\frac{20}{11}"]],
       "poprawna": [2,3],
-      "wyjasnienie": ["\\text{Krok 1}\\\\\\frac{1}{4} + \\frac{1}{5} + \\frac{1}{a} = 1\\\\\\frac{5}{20} + \\frac{4}{20} + \\frac{1}{a} = \\frac{20}{20}\\\\\\frac{9}{20} + \\frac{1}{a} = \\frac{20}{20}\\\\\\frac{1}{a} = \\frac{11}{20}\\\\\\text{Krok 2}\\\\1 \\cdot 20 = 11a\\\\11a = 20\\\\a = \\frac{20}{11}"]
+      "wyjasnienie": ["\\text{Krok 1}\\\\\\frac{1}{4} + \\frac{1}{5} + \\frac{1}{a} = 1\\\\\\frac{5}{20} + \\frac{4}{20} + \\frac{1}{a} = \\frac{20}{20}\\\\\\frac{9}{20} + \\frac{1}{a} = \\frac{20}{20}\\\\\\frac{1}{a} = \\frac{11}{20}\\\\\\text{Krok 2}\\\\1 \\cdot 20 = 11a\\\\11a = 20\\\\a = \\frac{20}{11}"],
+      "translatable_info": {
+        "tresc": false,
+        "odp": false,
+        "wyjasnienie": false
+      }
     },
     {
       "typ": "PF",
@@ -33,6 +38,43 @@
       "poprawna": ["\\text{poprawna skrocona}"],
       "wyjasnienie": ["\\text{eyah}"]
     },
+    {
+      "typ": "DOPASUJ_NTO1",
+      "kat": "zbiór",
+      "katID": 3,
+      "id": 3,
+      "pkt": 2,
+      "info": ["\\text{super info}"],
+      "polecenie": ["\\text{kutas}"],
+      "poprawna": [1,2],
+      "odp": [["1","2","3","4","5"]],
+      "wyjasnienie": ["\\text{mega wyjasnienie}"]
+    },
+    {
+      "typ": "DOPASUJ_TABELA",
+      "kat": "zbiór",
+      "katID": 3,
+      "id": 4,
+      "pkt": 1,
+      "info": ["\\text{super info}"],
+      "polecenie": ["\\text{kutas}"],
+      "poprawna": [1,2],
+      "odp": ["\\text{mega polecenie do tabeli}"],
+      "tabela": [[["k1z1","k1z2"],["k2z1"],["k3z1","k3z2","k3z3"]]],
+      "wyjasnienie": ["\\text{mega wyjasnienie}"]
+    },
+  {
+    "typ": "DOPASUJ_NTON",
+    "kat": "zbiór",
+    "katID": 3,
+    "id": 3,
+    "pkt": 2,
+    "info": ["\\text{super info}"],
+    "polecenie": ["\\text{kutas}"],
+    "poprawna": [1,2],
+    "odp": [["1","2","3","4","5"]],
+    "wyjasnienie": ["\\text{mega wyjasnienie}"]
+  },
     {
       "typ": "ZLOZONE",
       "id": 3,

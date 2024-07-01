@@ -33,9 +33,14 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
@@ -54,7 +59,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -65,6 +74,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -80,9 +90,15 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.daimajia.androidanimations.library.fading_exits.FadeOutDownAnimator;
 import com.example.czerwone_krokodyle.R;
 import com.github.jinatonic.confetti.CommonConfetti;
+import com.github.jinatonic.confetti.ConfettiManager;
+import com.github.jinatonic.confetti.ConfettiSource;
 import com.github.jinatonic.confetti.ConfettiView;
+import com.github.jinatonic.confetti.ConfettoGenerator;
+import com.github.jinatonic.confetti.confetto.BitmapConfetto;
+import com.github.jinatonic.confetti.confetto.Confetto;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
@@ -370,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         User = new UserData(getApplicationContext());
         Log.d("LANG",getLang());
         canplayanimations = false;
-        //ResumeTimePassage(); DEBUG ŚMIERĆ CROCO
+        //ResumeTimePassage(); //DEBUG ŚMIERĆ CROCO
         checkForUpdates();
         LoadData();
         UpdateLocale();
@@ -527,6 +543,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     break;
                 case "pytania_wybor_kategoria":
                     DefaultMainPageActions();break;
+                case "testy_debug": DefaultMainPageActions();break;
                 default:
                     wyjscie.show();
                     break;
@@ -845,7 +862,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void KrokodylKlikaj(View v){
-       if(lastFeed>umiera_po){
+        if(lastFeed>umiera_po){
             addProgress(4);
             addProgressOsiagniecia(9);
         }
@@ -2244,9 +2261,35 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             ustawCzapke();
                             User.Stats("ZJEDZONE_JEDZENIE",1);
                             addProgressOsiagniecia(12);
+                            if(listaZarcia.get(SELECTED_FOOD).getId()!=7){
+                            int size = getResources().getDimensionPixelSize(com.github.jinatonic.confetti.R.dimen.big_confetti_size);
+                            Bitmap bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.serce),size,size,false);
+                            final ConfettoGenerator confettoGenerator = new ConfettoGenerator() {
+                                @Override
+                                public Confetto generateConfetto(Random random) {
+                                    return new BitmapConfetto(bitmap);
+                                }
+                            };
+                            ViewGroup container = findViewById(R.id.pierwsze_uruchomienie_animacja);
+                            final int containerMiddleX = container.getWidth() / 2;
+                            final int containerMiddleY = container.getHeight() / 2;
+                            Random random1 = new Random();
+                            final ConfettiSource confettiSource = new ConfettiSource(containerMiddleX+random1.nextInt(500)-250, containerMiddleY+random1.nextInt(10));
+                            ConfettiManager cm = new ConfettiManager(this, confettoGenerator, confettiSource, container)
+                                    .setEmissionDuration(1000)
+                                    .setEmissionRate(2)
+                                    .setVelocityY(-100)
+                                    .setVelocityX(20-random1.nextInt(20),20-random1.nextInt(20))
+                                    .setRotationalVelocity(10-random1.nextInt(20), 10-random1.nextInt(20)).enableFadeOut(new DecelerateInterpolator())
+                                    .animate();
+                            new Handler(getMainLooper()).postDelayed(() -> {
+                                cm.terminate();
+                            }, 20000);
+                            }
                         }
                     }else{
-                        Toast.makeText(getApplicationContext(),"brak ciasteczek :(",Toast.LENGTH_SHORT).show();
+                        listaZarcia.get(SELECTED_FOOD).Zjedz(getLang());
+                        //Toast.makeText(getApplicationContext(),"brak ciasteczek :(",Toast.LENGTH_SHORT).show();
                     }
                 }
                     break;
@@ -2258,6 +2301,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                 editor.putLong(LAST_FEED, 0);
                                 editor.apply();
                                 UstawStatusJedzenia();
+                                ViewGroup testconfetti = findViewById(R.id.pierwsze_uruchomienie_animacja);
+                                Rect bounding_box=new Rect(testconfetti.getLeft(),testconfetti.getTop(),testconfetti.getRight(),testconfetti.getBottom());
+                                int[] colors = {getColor(R.color.ckdarkred)};
+                                CommonConfetti.explosion(testconfetti,testconfetti.getWidth()/2,testconfetti.getHeight()/2,colors).oneShot().setBound(bounding_box).animate();
                                 break;
                         }
                         listaPotek.get(SELECTED_FOOD).Zjedz();
@@ -2795,8 +2842,20 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             radioButton[i].setChecked(isselected);
         }
     }
+    public void setSelectedNewPytaniaDOPASUJ_NTO1(Spinner spinner[],PytaniaNewFormat pytanie){
+        for(int i=0;i<spinner.length;i++){
+            if(pytanie.getOdpowiedziUzytkownika()[i]!=-1){
+                spinner[i].setSelection(pytanie.getOdpowiedziUzytkownika()[i]);
+                if(pytanie.checkPoprawnaAny(i)){
+                    spinner[i].setBackgroundColor(0xff00ff00);
+                }
+                else{
+                    spinner[i].setBackgroundColor(0x00000000);
+                }
+            }
+        }
+    }
     public void setSelectedNewPytaniaDOKONCZ(Button button[],PytaniaNewFormat pytanie){
-
         boolean isselected;
         int[] odpowiedzi = pytanie.getOdpowiedziUzytkownika();
         for(int i=0;i<button.length;i++){
@@ -2804,7 +2863,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             for(int j=0;j<odpowiedzi.length;j++){
                 if(odpowiedzi[j]==i) isselected = true;
             }
-            if(isselected) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getOdpowiedzi(getLang())[i],0xffbebebe,0xffffffff));
+            if(isselected) {
+                button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getOdpowiedzi(getLang())[i],0xffbebebe,0xffffffff));
+                for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
+                    if(pytanie.checkPoprawna(j)) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getOdpowiedzi(getLang())[i],0xffbeffbe,0xffffffff));
+                }
+            }
             else button[i].setBackground(Math_syn.set_Math(pytanie.getOdpowiedzi(getLang())[i]));
         }
     }
@@ -2813,7 +2877,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         int[] odpowiedzi = pytanie.getOdpowiedziUzytkownika();
         for(int i=0;i<button.length;i++){
             isselected = (odpowiedzi[index]==i);
-            if(isselected) button[i].setBackgroundColor(0xffbebebe);
+            if(isselected) {
+                button[i].setBackgroundColor(0xffbebebe);
+                    if(pytanie.checkPoprawna(index)){
+                        button[i].setBackgroundColor(0xffbeffbe);
+                    }
+            }
             else button[i].setBackgroundColor(0x00ffffff);
         }
     }
@@ -2962,6 +3031,55 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 mainlayout.addView(radioGroup);
                 mainlayout.addView(wyjasnieniemini);
                 mainlayout.addView(wyjasnienie);
+            }break;
+            case "DOPASUJ_NTO1":{
+                TextView info = new TextView(this);
+                ImageView zdj = new ImageView(this);
+                TextView polecenie = new TextView(this);
+                TextView wyjasnienie = new TextView(this);
+                Spinner[] dropdown = new Spinner[pytanie.getPoprawnaOdp().length];
+                polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
+                info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
+                wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
+                mainlayout.addView(info);
+                mainlayout.addView(zdj);
+                mainlayout.addView(polecenie);
+                TextView[] odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
+                String alfabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                for(int i=0;i<pytanie.getPoprawnaOdp().length;i++){
+                    dropdown[i] = new Spinner(this,null,android.R.style.Widget_Spinner,Spinner.MODE_DROPDOWN);
+                    String[] items = new String[pytanie.getOdpowiedzi(getLang()).length];
+                    for(int j=0;j<pytanie.getOdpowiedzi(getLang()).length;j++){
+                        items[j] = String.valueOf(alfabet.charAt(j));
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+                    dropdown[i].setAdapter(adapter);
+                    int finalI = i;
+                    dropdown[i].setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view,
+                                                   int position, long id) {
+                            pytanie.setOdpowiedziUzytkownika(parent.getSelectedItemPosition(), finalI);
+                            setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie);
+                        }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
+                    mainlayout.addView(dropdown[i]);
+                }
+                setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie);
+                for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
+                    odpowiedz[i] = new TextView(this);
+                    odpowiedz[i].setBackground(Math_syn.set_Math(pytanie.getOdpowiedzi(getLang())[i]));
+
+                    for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
+                        if(pytanie.getPoprawnaOdp()[j]==i){
+                            odpowiedz[i].setBackground(Math_syn.set_Fancy_Math(pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
+                        }
+                    }
+                    mainlayout.addView(odpowiedz[i]);
+                }
             }break;
             case "ZLOZONE":{
                 TextView info = new TextView(this);

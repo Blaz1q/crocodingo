@@ -69,7 +69,6 @@
         android:layout_marginEnd="10dp"
         android:text="Username"
         android:textAlignment="center" />
-
     <ImageView
         android:id="@+id/krokodyl"
         android:layout_width="match_parent"
@@ -85,8 +84,6 @@
         android:onClick="KrokodylKlikaj"
         android:src="@drawable/logo"
         tools:ignore="ImageContrastCheck" />
-
-
     <ImageView
         android:id="@+id/current_czapka_image"
         android:layout_width="match_parent"
@@ -102,6 +99,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/czapa_2_idle"
         android:visibility="gone" />
+
    <ImageButton
     android:id="@+id/questy"
     android:layout_width="72dp"

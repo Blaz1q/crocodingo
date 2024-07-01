@@ -33,7 +33,11 @@ public class Jedzenie extends Przedmiot{
             this.ZapisanaIlosc = sharedPreferences.getInt(ITEMNAME+this.id,0);
         }
         else{
-            Toast.makeText(context, "Brak "+getNazwa(Lang)+" :(", Toast.LENGTH_SHORT).show();
+            String brak = "brak";
+            if(Lang.equals("Pl")) brak = "brak";
+            if(Lang.equals("En")) brak = "no";
+
+            Toast.makeText(context, brak+" "+getNazwa(Lang)+" :(", Toast.LENGTH_SHORT).show();
         }
     }
 
