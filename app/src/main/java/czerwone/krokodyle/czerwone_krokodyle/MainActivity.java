@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             R.id.radioLangEsp
     };
     String defaultUsername = "SuperKrokodyl26";
+    String alfabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     //zabezpieczenia
     boolean zaladowano_czapki = false;
     boolean zaladowano_questy = false;
@@ -2850,7 +2851,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     spinner[i].setBackgroundColor(0xff00ff00);
                 }
                 else{
-                    spinner[i].setBackgroundColor(0x00000000);
+                    spinner[i].setBackgroundColor(0xffffffff);
                 }
             }
         }
@@ -2864,12 +2865,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 if(odpowiedzi[j]==i) isselected = true;
             }
             if(isselected) {
-                button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getOdpowiedzi(getLang())[i],0xffbebebe,0xffffffff));
+                button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+" }:"+pytanie.getOdpowiedzi(getLang())[i],0xffbebebe,0xffffffff));
                 for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
-                    if(pytanie.checkPoprawna(j)) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getOdpowiedzi(getLang())[i],0xffbeffbe,0xffffffff));
+                    if(pytanie.checkPoprawna(j)) button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xffbeffbe,0xffffffff));
                 }
             }
-            else button[i].setBackground(Math_syn.set_Math(pytanie.getOdpowiedzi(getLang())[i]));
+            else button[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
         }
     }
     public void setSelectedNewPytaniaPF(Button button[],PytaniaNewFormat pytanie,int index){
@@ -2906,11 +2907,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 Button[] odpowiedz = new Button[pytanie.getOdpowiedzi(getLang()).length];
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
                     odpowiedz[i] = new Button(this);
-                    odpowiedz[i].setBackground(Math_syn.set_Math(pytanie.getOdpowiedzi(getLang())[i]));
+                    odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
 
                     for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
                         if(pytanie.getPoprawnaOdp()[j]==i){
-                            odpowiedz[i].setBackground(Math_syn.set_Fancy_Math(pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
+                            odpowiedz[i].setBackground(Math_syn.set_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
                         }
                     }
                 }
@@ -3045,9 +3046,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 mainlayout.addView(zdj);
                 mainlayout.addView(polecenie);
                 TextView[] odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
-                String alfabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 for(int i=0;i<pytanie.getPoprawnaOdp().length;i++){
-                    dropdown[i] = new Spinner(this,null,android.R.style.Widget_Spinner,Spinner.MODE_DROPDOWN);
+                    dropdown[i] = new Spinner(this);
+                    LinearLayout.LayoutParams dropdownparams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    dropdown[i].setLayoutParams(dropdownparams);
+                    dropdown[i].setBackgroundColor(getColor(R.color.white));
+                    dropdown[i].setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     String[] items = new String[pytanie.getOdpowiedzi(getLang()).length];
                     for(int j=0;j<pytanie.getOdpowiedzi(getLang()).length;j++){
                         items[j] = String.valueOf(alfabet.charAt(j));
@@ -3071,11 +3078,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie);
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
                     odpowiedz[i] = new TextView(this);
-                    odpowiedz[i].setBackground(Math_syn.set_Math(pytanie.getOdpowiedzi(getLang())[i]));
+                    odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
 
                     for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
                         if(pytanie.getPoprawnaOdp()[j]==i){
-                            odpowiedz[i].setBackground(Math_syn.set_Fancy_Math(pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
+                            odpowiedz[i].setBackground(Math_syn.set_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
                         }
                     }
                     mainlayout.addView(odpowiedz[i]);
