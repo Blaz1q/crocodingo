@@ -112,7 +112,7 @@ public class PytaniaNewFormat {
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
         }
-        if(Typ.equals("DOPASUJ_NTO1")){
+        if(Typ.equals("DOPASUJ_NTO1")||Typ.equals("DOPASUJ_1TO1")){
             this.Pkt = pytanie.getInt("pkt");
             this.Kategoria = pytanie.getString("kat");
             this.KatID = pytanie.getInt("katID");
@@ -365,6 +365,7 @@ public class PytaniaNewFormat {
     public void setOdpowiedziUzytkownika(int odpowiedz,int index){
         if(index<OdpowiedziUzytkownika.length)
             this.OdpowiedziUzytkownika[index] = odpowiedz;
+        Log.d("pkty: ",""+ObliczPkty());
     }
 
     public int[] getOdpowiedziUzytkownika() {
@@ -393,5 +394,38 @@ public class PytaniaNewFormat {
     }
     public boolean checkPoprawna(int index){
         return (PoprawnaOdp[index]==OdpowiedziUzytkownika[index]);
+    }
+    public int ObliczPkty(){
+        switch (Typ){
+            case "OTWARTE":
+                if(OdpowiedziUzytkownika[0]==-1) return 0;
+                else return OdpowiedziUzytkownika[0];
+            case "PF":
+            case "DOPASUJ_1TO1":
+                int incorrect=0;
+                int localpkty = Pkt;
+                for(int i=0;i<OdpowiedziUzytkownika.length;i++){
+                    if(!checkPoprawna(i)) incorrect++;
+                }
+                localpkty-=incorrect;
+                if(localpkty<0) localpkty=0;
+                return  localpkty;
+            case "DOPASUJ_NTO1":
+                boolean duplicates=false;
+                int dupe_number =0;
+                for (int j=0;j<OdpowiedziUzytkownika.length;j++)
+                    for (int k=j+1;k<OdpowiedziUzytkownika.length;k++){
+                        if (k!=j && OdpowiedziUzytkownika[k] == OdpowiedziUzytkownika[j]){
+                        duplicates=true;
+                        dupe_number++;
+                        }
+                    }
+                //todo: dokończ to później bo już dostaje pierdolca
+            case "DOKONCZ":
+            case "DOPASUJ_TABELA":
+                if(checkPoprawna()) return Pkt;
+                return 0;
+        }
+        return 0;
     }
 }

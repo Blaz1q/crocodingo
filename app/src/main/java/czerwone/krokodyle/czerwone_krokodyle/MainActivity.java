@@ -2856,6 +2856,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    public void setSelectedNewPytaniaDOPASUJ_1TO1(Spinner spinner[],PytaniaNewFormat pytanie){
+        for(int i=0;i<spinner.length;i++){
+            if(pytanie.getOdpowiedziUzytkownika()[i]!=-1){
+                spinner[i].setSelection(pytanie.getOdpowiedziUzytkownika()[i]);
+                if(pytanie.checkPoprawna(i)){
+                    spinner[i].setBackgroundColor(0xff00ff00);
+                }
+                else{
+                    spinner[i].setBackgroundColor(0xffffffff);
+                }
+            }
+        }
+    }
     public void setSelectedNewPytaniaDOKONCZ(Button button[],PytaniaNewFormat pytanie){
         boolean isselected;
         int[] odpowiedzi = pytanie.getOdpowiedziUzytkownika();
@@ -3049,7 +3062,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 mainlayout.addView(wyjasnieniemini);
                 mainlayout.addView(wyjasnienie);
             }break;
-            case "DOPASUJ_NTO1":{
+            case "DOPASUJ_NTO1":
+            case "DOPASUJ_1TO1":
+            {
                 TextView info = new TextView(this);
                 ImageView zdj = new ImageView(this);
                 TextView polecenie = new TextView(this);
@@ -3083,7 +3098,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         public void onItemSelected(AdapterView<?> parent, View view,
                                                    int position, long id) {
                             pytanie.setOdpowiedziUzytkownika(parent.getSelectedItemPosition(), finalI);
+                            if(pytanie.getTyp().equals("DOPASUJ_NTO1")){
                             setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie);
+                            }else{
+                                setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie);
+                            }
                         }
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
@@ -3091,7 +3110,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     });
                     mainlayout.addView(dropdown[i]);
                 }
-                setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie);
+                if(pytanie.getTyp().equals("DOPASUJ_NTO1")){
+                    setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie);
+                }else{
+                    setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie);
+                }
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
                     odpowiedz[i] = new TextView(this);
                     odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
