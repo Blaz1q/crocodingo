@@ -26,11 +26,11 @@ public class PytaniaNewFormat {
     private String[] Tresc;
     private String[][] Odpowiedzi;
     private String[] OdpowiedziZdj;
-    private String[] ZdjMain = {""};
     private int[] PoprawnaOdp;
     private String[] PoprawnaOdpMini;
     private int[] OdpowiedziUzytkownika;
     private String[] Wyjasnienie; //Rózne języki
+    private String[][][] Tabela;
     private int Podpunkty;
     boolean hasInfo = false;
     boolean hasTresc = false;
@@ -126,6 +126,21 @@ public class PytaniaNewFormat {
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
         }
+        if(Typ.equals("DOPASUJ_TABELA")){
+            this.Pkt = pytanie.getInt("pkt");
+            this.Kategoria = pytanie.getString("kat");
+            this.KatID = pytanie.getInt("katID");
+            this.PoprawnaOdp = initI1D(pytanie.getJSONArray("poprawna"));
+            this.Wyjasnienie = initS1D(pytanie.getJSONArray("wyjasnienie"));
+            this.Polecenie = initS1D(pytanie.getJSONArray("polecenie")); hasPolecenie=true;
+            this.Tabela = initS3D(pytanie.getJSONArray("tabela"));
+            this.OdpowiedziUzytkownika = new int[PoprawnaOdp.length];
+            Arrays.fill(this.OdpowiedziUzytkownika,-1);
+            if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
+            if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
+            if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
+            if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
+        }
         if(Typ.equals("ZLOZONE")){
             this.Podpunkty = pytanie.getInt("ilosc_podpunktow");
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
@@ -141,6 +156,22 @@ public class PytaniaNewFormat {
     }
     public List<PytaniaNewFormat> getListaZlozone() {
         return ListaZlozone;
+    }
+    private String[][][] initS3D(JSONArray array) throws JSONException {
+        String[][][] zmienna = new String[array.length()][][];
+        for (int j = 0; j < array.length(); j++) {
+            JSONArray Innerarray = array.getJSONArray(j);
+            zmienna[j] = new String[Innerarray.length()][];
+            for(int k=0; k<Innerarray.length(); k++){
+                JSONArray InnerInnerarray = Innerarray.getJSONArray(k);
+                zmienna[j][k] = new String[InnerInnerarray.length()];
+                for(int h=0;h<InnerInnerarray.length();h++){
+                    zmienna[j][k][h] = InnerInnerarray.getString(h);
+                    Log.d("cos+sie+dzieje", zmienna[j][k][h]); // co tu się kurwa odpierdala
+                }
+            }
+        }
+        return zmienna;
     }
 
     private String[][] initS2D(JSONArray array) throws JSONException {
@@ -215,6 +246,25 @@ public class PytaniaNewFormat {
         }
         String s = "";
         return new String[]{s};
+    }
+    public String[][] getTabela(String lang){
+        if(translatable!=null){
+            if(translatable.has("tabela")){
+                try {
+                    if(!translatable.getBoolean("tabela")) return Tabela[0];
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        switch (lang){
+            case "En":
+                if(Tabela.length>=2) return Tabela[1];
+            case "Pl":
+                if(Tabela.length>=1) return Tabela[0];
+        }
+        String s = "";
+        return new String[][]{{s},{s}};
     }
     public String getPoprawnaOdpMini(String lang) {
         if(translatable!=null){

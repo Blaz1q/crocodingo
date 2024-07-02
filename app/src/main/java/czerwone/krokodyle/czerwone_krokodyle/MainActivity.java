@@ -2873,6 +2873,22 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             else button[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
         }
     }
+    public void setSelectedNewPytaniaDOPASUJ_TABELA(Button button[],PytaniaNewFormat pytanie,int index){
+        boolean isselected;
+        int odpowiedzi;
+        int firstlast;
+        if(index>0) firstlast=1;
+        else firstlast=0;
+        odpowiedzi = pytanie.getOdpowiedziUzytkownika()[firstlast];
+        for(int i=0;i<button.length;i++){
+            if(i==odpowiedzi){
+                button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],0xffbebebe,0xffffffff));
+                if(pytanie.getPoprawnaOdp()[firstlast]==i) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],0xffbeffbe,0xffffffff));
+            }else{
+                button[i].setBackground(Math_syn.set_Math(pytanie.getTabela(getLang())[index][i]));
+            }
+        }
+    }
     public void setSelectedNewPytaniaPF(Button button[],PytaniaNewFormat pytanie,int index){
         boolean isselected;
         int[] odpowiedzi = pytanie.getOdpowiedziUzytkownika();
@@ -3088,6 +3104,75 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     mainlayout.addView(odpowiedz[i]);
                 }
             }break;
+            case "DOPASUJ_TABELA":{
+                TextView info = new TextView(this);
+                ImageView zdj = new ImageView(this);
+                TextView polecenie = new TextView(this);
+                TextView wyjasnienie = new TextView(this);
+                polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
+                info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
+                wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
+                mainlayout.addView(info);
+                mainlayout.addView(zdj);
+                mainlayout.addView(polecenie);
+                LinearLayout TabelaContainer = new LinearLayout(this);
+                TabelaContainer.setOrientation(LinearLayout.HORIZONTAL);
+                LinearLayout.LayoutParams TabelaConatinerParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                LinearLayout.LayoutParams TabelaColumnParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        1.0f
+                );
+                TabelaContainer.setLayoutParams(TabelaConatinerParams);
+                String[][] TabelaData = pytanie.getTabela(getLang());
+                for(int i=0;i<pytanie.getTabela(getLang()).length;i++){
+                    int finalI = i;
+                    LinearLayout TabelaColumn = new LinearLayout(this);
+                    TabelaColumn.setOrientation(LinearLayout.VERTICAL);
+                    TabelaColumn.setLayoutParams(TabelaColumnParams);
+                    if(i==0||i==pytanie.getTabela(getLang()).length-1){
+                        Button[] odp = new Button[TabelaData[i].length];
+                        for(int j=0;j<pytanie.getTabela(getLang())[i].length;j++){
+                            odp[j] = new Button(this);
+                            odp[j].setBackground(Math_syn.set_Math(TabelaData[i][j]));
+                            odp[j].setLayoutParams(TabelaColumnParams);
+                            int finalJ = j;
+                            odp[j].setOnClickListener(new View.OnClickListener(){
+                                @Override
+                                public void onClick(View v) {
+                                    if(finalI==0){
+                                        pytanie.setOdpowiedziUzytkownika(finalJ,0);
+                                        setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0);
+                                    }else{
+                                        pytanie.setOdpowiedziUzytkownika(finalJ,1);
+                                        setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length-1);
+                                    }
+                                }
+                            });
+                            TabelaColumn.addView(odp[j]);
+                            //Log.d("data",TabelaData[i][j]);
+                        }
+                        if(finalI==0){
+                            setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0);
+                        }else{
+                            setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,2);
+                        }
+                    }else{
+                        TextView filler = new TextView(this);
+                        for(int j=0;j<pytanie.getTabela(getLang())[i].length;j++){
+                            filler.setBackground(Math_syn.set_Math(TabelaData[i][j]));
+                            filler.setLayoutParams(TabelaColumnParams);
+                            TabelaColumn.addView(filler);
+                        }
+                    }
+                    TabelaContainer.addView(TabelaColumn);
+                }
+                mainlayout.addView(TabelaContainer);
+            }
+            break;
             case "ZLOZONE":{
                 TextView info = new TextView(this);
                 ImageView zdj = new ImageView(this);

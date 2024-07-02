@@ -58,8 +58,8 @@
       "pkt": 1,
       "info": ["\\text{super info}"],
       "polecenie": ["\\text{kutas}"],
+      "tresc": ["\\text{tresc do tabeli}"],
       "poprawna": [1,2],
-      "odp": ["\\text{mega polecenie do tabeli}"],
       "tabela": [[["k1z1","k1z2"],["k2z1"],["k3z1","k3z2","k3z3"]]],
       "wyjasnienie": ["\\text{mega wyjasnienie}"]
     },
