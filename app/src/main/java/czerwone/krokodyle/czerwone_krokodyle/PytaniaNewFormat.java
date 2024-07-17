@@ -37,6 +37,7 @@ public class PytaniaNewFormat {
     boolean hasPolecenie = false;
     boolean hasZdj = false;
     boolean hasOdpowiedzi = false;
+    boolean hasOdpowiedziZdj = false;
     JSONObject translatable = null;
 
     public PytaniaNewFormat(JSONObject pytanie) throws JSONException {
@@ -110,6 +111,7 @@ public class PytaniaNewFormat {
             if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
+            if(pytanie.has("odp_zdj")) {this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp")); hasOdpowiedziZdj=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
         }
         if(Typ.equals("DOPASUJ_NTO1")||Typ.equals("DOPASUJ_1TO1")){
@@ -302,6 +304,10 @@ public class PytaniaNewFormat {
                 if(Wyjasnienie.length>=1) return Wyjasnienie[0];
         }
         return "";
+    }
+
+    public int getKatID() {
+        return KatID;
     }
 
     public String getInfo(String lang) {

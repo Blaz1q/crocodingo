@@ -17,9 +17,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.SortedList;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -35,17 +35,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -59,9 +55,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -77,7 +71,6 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,18 +83,14 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.daimajia.androidanimations.library.fading_exits.FadeOutDownAnimator;
 import com.example.czerwone_krokodyle.R;
 import com.github.jinatonic.confetti.CommonConfetti;
 import com.github.jinatonic.confetti.ConfettiManager;
 import com.github.jinatonic.confetti.ConfettiSource;
-import com.github.jinatonic.confetti.ConfettiView;
 import com.github.jinatonic.confetti.ConfettoGenerator;
 import com.github.jinatonic.confetti.confetto.BitmapConfetto;
 import com.github.jinatonic.confetti.confetto.Confetto;
-import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
@@ -114,14 +103,11 @@ import com.google.android.gms.common.api.ApiException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import ru.noties.jlatexmath.JLatexMathDrawable;
-import ru.noties.jlatexmath.JLatexMathView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
@@ -145,7 +131,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
@@ -158,8 +143,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private List<Integer> listaQuestowId = new ArrayList<>();
     private List<Achievements> listaOsiagniec = new ArrayList<>();
     private List<Integer> listaKategorii = new ArrayList<>();
+    private List<Integer> listaKategoriiNew = new ArrayList<>();
     private List<List<PytaniaDB>> podzielonaListaPytan = new ArrayList<>();
     private List<PytaniaNewFormat> nowaListaPytan = new ArrayList<>();
+
+    private List<List<PytaniaNewFormat>> podzielonanowaListaPytan = new ArrayList<>();
     // zmienne do akcji
     private List<String> actions = new ArrayList<>();
     private List<Integer> popups = new ArrayList<>();
@@ -1055,7 +1043,26 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 } catch (JSONException e){
                     Log.d("exception", String.valueOf(e));
                 }
+                if(!pytanie.getTyp().equals("ZLOZONE")) {
+                    boolean hasKat = false;
+                    while (i < listaKategoriiNew.size()) {
+                        if (listaKategoriiNew.get(i) == Integer.valueOf(pytanie.getKatID())) {
+                            hasKat = true;
+                        }
+                        i++;
+                    }
+                    if (!hasKat) {
+                        listaKategoriiNew.add(Integer.valueOf(pytanie.getKatID()));
+                        podzielonanowaListaPytan.add(new ArrayList<PytaniaNewFormat>());
+                    }
+                    podzielonanowaListaPytan.get(listaKategoriiNew.indexOf(Integer.valueOf(pytanie.getKatID()))).add(pytanie);
+                }
                 nowaListaPytan.add(pytanie);
+            }
+            for(int i=0;i<podzielonanowaListaPytan.size();i++){
+                for(int j=0;j<podzielonanowaListaPytan.get(i).size();j++){
+                    Log.d("podzielona_"+podzielonanowaListaPytan.get(i).get(j).getKatID(),podzielonanowaListaPytan.get(i).get(j).getTyp());
+                }
             }
         } catch (Exception e){
 
