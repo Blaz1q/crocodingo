@@ -146,12 +146,13 @@ public class PytaniaNewFormat {
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
             if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
-            for(int i=0;i<this.Podpunkty;i++){
-                //Log.d("forloop","podpunkt"+(i+1));
-                JSONObject podpunkt = pytanie.getJSONObject("podpunkt"+(i+1));
+            JSONArray zlozone = pytanie.getJSONArray("ListaZlozone");
+            for(int i=0;i<zlozone.length();i++){
+                JSONObject podpunkt = zlozone.getJSONObject(i);
                 PytaniaNewFormat pytanieObj = new PytaniaNewFormat(podpunkt);
                 ListaZlozone.add(pytanieObj);
             }
+
         }
     }
     public List<PytaniaNewFormat> getListaZlozone() {
