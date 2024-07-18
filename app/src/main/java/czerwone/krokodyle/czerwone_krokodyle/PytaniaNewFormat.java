@@ -231,6 +231,10 @@ public class PytaniaNewFormat {
         return PoprawnaOdp;
     }
 
+    public String getKategoria() {
+        return Kategoria;
+    }
+
     public String[] getOdpowiedzi(String lang){
         if(translatable!=null){
             if(translatable.has("odp")){
@@ -377,6 +381,10 @@ public class PytaniaNewFormat {
 
     public int[] getOdpowiedziUzytkownika() {
         return OdpowiedziUzytkownika;
+    }
+    public boolean czy_cos_zaznaczyl(){
+        for(int i=0;i<OdpowiedziUzytkownika.length;i++) if(OdpowiedziUzytkownika[i]!=-1) return true;
+        return false;
     }
 
     public boolean checkPoprawna(){

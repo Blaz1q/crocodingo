@@ -136,6 +136,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
     private List<PytaniaDB> listaPytan = new ArrayList<>();
     private List<PytaniaDB> listaShuffled = new ArrayList<>();
+
     private List<Czapka> listaCzapek = new ArrayList<>();
     private List<Jedzenie> listaZarcia = new ArrayList<>();
     private List<Potka> listaPotek = new ArrayList<>();
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private List<PytaniaNewFormat> nowaListaPytan = new ArrayList<>();
 
     private List<List<PytaniaNewFormat>> podzielonanowaListaPytan = new ArrayList<>();
+    private List<PytaniaNewFormat> NewlistaShuffled = new ArrayList<>();
     // zmienne do akcji
     private List<String> actions = new ArrayList<>();
     private List<Integer> popups = new ArrayList<>();
@@ -1044,21 +1046,42 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     Log.d("exception", String.valueOf(e));
                 }
                 if(!pytanie.getTyp().equals("ZLOZONE")) {
+                    int h=0;
                     boolean hasKat = false;
-                    while (i < listaKategoriiNew.size()) {
-                        if (listaKategoriiNew.get(i) == Integer.valueOf(pytanie.getKatID())) {
+                    while (h < listaKategoriiNew.size()) {
+                        if (listaKategoriiNew.get(h) == Integer.valueOf(pytanie.getKatID())) {
                             hasKat = true;
+                            break;
                         }
-                        i++;
+                        h++;
                     }
                     if (!hasKat) {
                         listaKategoriiNew.add(Integer.valueOf(pytanie.getKatID()));
                         podzielonanowaListaPytan.add(new ArrayList<PytaniaNewFormat>());
                     }
                     podzielonanowaListaPytan.get(listaKategoriiNew.indexOf(Integer.valueOf(pytanie.getKatID()))).add(pytanie);
+                }else{
+                    boolean hasKat = false;
+                    for(int j=0;j<pytanie.getListaZlozone().size();j++){
+                        int h=0;
+                        while (h < listaKategoriiNew.size()) {
+                            if (listaKategoriiNew.get(h) == Integer.valueOf(pytanie.getListaZlozone().get(j).getKatID())) {
+                                hasKat = true;
+                                break;
+                            }
+                            h++;
+                        }
+                        if (!hasKat) {
+                            listaKategoriiNew.add(Integer.valueOf(pytanie.getListaZlozone().get(j).getKatID()));
+                            podzielonanowaListaPytan.add(new ArrayList<PytaniaNewFormat>());
+                        }
+                        Log.d("japierdole",""+pytanie.getListaZlozone().get(j).getKatID());
+                        podzielonanowaListaPytan.get(listaKategoriiNew.indexOf(Integer.valueOf(pytanie.getListaZlozone().get(j).getKatID()))).add(pytanie);
+                    }
                 }
                 nowaListaPytan.add(pytanie);
             }
+            Log.d("podzielona","kutas");
             for(int i=0;i<podzielonanowaListaPytan.size();i++){
                 for(int j=0;j<podzielonanowaListaPytan.get(i).size();j++){
                     Log.d("podzielona_"+podzielonanowaListaPytan.get(i).get(j).getKatID(),podzielonanowaListaPytan.get(i).get(j).getTyp());
@@ -2120,13 +2143,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             // The mInterstitialAd reference will be null until
                             // an ad is loaded.
                             mInterstitialAd = interstitialAd;
-                            Log.i(TAG, "onAdLoaded");
+                            //Log.i(TAG, "onAdLoaded");
                             adStatus="LOADED";
                         }
                         @Override
                         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                             // Handle the error
-                            Log.d(TAG, loadAdError.toString());
+                            //Log.d(TAG, loadAdError.toString());
                             mInterstitialAd = null;
                             adStatus="";
                         }
@@ -3243,6 +3266,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Set_pytanie_bledne();
             RemoveAction();
         }
+        else if(v.getId()==R.id.wroc_do_pytan_new_format){
+            setContentView(R.layout.newformattest);
+            GenerujTest();
+            RemoveAction();
+        }
         else if(v.getId()==R.id.Osiagniecia){
             setContentView(R.layout.osiagniecia);
             LinearLayout lin = findViewById(R.id.osiagniecia_scroll);
@@ -3411,8 +3439,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         else if (v.getId()==R.id.Rozpocznij_test1){
             ResetAllQuestions();
-            setContentView(R.layout.pytania_wybor);
-            Create_Question_Buttons();
+            setContentView(R.layout.newformattest);
+            prepTest();
             ClosePopup();
             bgmusictesty();
             AddActions("pytania_wybor");
@@ -3817,6 +3845,102 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public int CURRENT_INDEX;
     public int KATEGORIA_ID;
+    public void prepTest(){
+        poprawne = 0;
+        int localqnum=0;
+        //ResetAllQuestions();
+        List<PytaniaNewFormat> ListaPytan = new ArrayList<>();
+        List<PytaniaNewFormat> PreShuffle = new ArrayList<>();
+        for(int i=0;i<podzielonanowaListaPytan.size();i++){
+            PreShuffle.clear();
+            localqnum=0;
+            localqnum = rand_num.nextInt(3)+1;
+            PreShuffle.addAll(podzielonanowaListaPytan.get(i));
+            Collections.shuffle(PreShuffle);
+            if(localqnum<=podzielonanowaListaPytan.get(i).size()){
+                for(int j=0;j<localqnum;j++){
+                    ListaPytan.add(PreShuffle.get(j));
+                }
+            }
+            else{
+                for(int j=0;j<podzielonanowaListaPytan.get(i).size();j++){
+                    ListaPytan.add(PreShuffle.get(j));
+                }
+            }
+
+        }
+        q_num = ListaPytan.size();
+        NewlistaShuffled.clear();
+        NewlistaShuffled.addAll(ListaPytan);
+        setContentView(R.layout.newformattest);
+        GenerujTest();
+        Log.d("QNUM",""+q_num);
+    }
+    public void GenerujTest(){
+
+        Log.d("testaction","creatingKURWA");
+        try{
+            LinearLayout layout = findViewById(R.id.questions_select_new_format);
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(0, 0, 0, 20);
+            for(int i=0;i<q_num;i++){
+                Button btn_tests = new Button(this);
+                btn_tests.setLayoutParams(params);
+                btn_tests.setText(getString(R.string.pytanie)+" "+(i+1));
+                btn_tests.setTextSize(30);
+                btn_tests.setTag(i);
+                if(!NewlistaShuffled.get(i).getTyp().equals("ZLOZONE")){
+                    if(NewlistaShuffled.get(i).czy_cos_zaznaczyl()){
+                        btn_tests.setBackgroundColor(Color.parseColor("#4f5d75"));
+                        btn_tests.setTextColor(Color.parseColor("#ffffff"));
+                    } else{
+                        btn_tests.setBackgroundColor(Color.parseColor("#333333"));
+                        btn_tests.setTextColor(Color.parseColor("#ffffff"));
+                    }
+                }else{
+                    boolean helper=false;
+                    for(int j=0;j<NewlistaShuffled.get(i).getListaZlozone().size();j++){
+                        if(NewlistaShuffled.get(i).getListaZlozone().get(j).czy_cos_zaznaczyl()){
+                            helper=true;
+                            break;
+                        }
+                    }
+                    if(helper){
+                        btn_tests.setBackgroundColor(Color.parseColor("#4f5d75"));
+                        btn_tests.setTextColor(Color.parseColor("#ffffff"));
+                    }else{
+                        btn_tests.setBackgroundColor(Color.parseColor("#333333"));
+                        btn_tests.setTextColor(Color.parseColor("#ffffff"));
+                    }
+                }
+                int finalI = i;
+                btn_tests.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{
+                            AddActions("pytanie_wyglad");
+                            set_new_pytanie(NewlistaShuffled.get(finalI));
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                layout.addView(btn_tests);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void set_new_pytanie(PytaniaNewFormat pytanie){
+        setContentView(R.layout.newformattestpytanie);
+        LinearLayout mainlayout = findViewById(R.id.miejsce_na_pytanie);
+        mainlayout.removeAllViews();
+        addNewPytania(pytanie,mainlayout);
+    }
     public void Create_Kategoria_Buttons(){
         Log.d("testaction","creating kategoria");
         try{
