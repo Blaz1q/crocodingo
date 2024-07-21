@@ -2908,10 +2908,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 if(odpowiedzi[j]==i) isselected = true;
             }
             if(isselected) {
-                button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+" }:"+pytanie.getOdpowiedzi(getLang())[i],0xffbebebe,0xffffffff));
-                for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
-                    if(pytanie.checkPoprawna(j)) button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xffbeffbe,0xffffffff));
-                }
+                button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+" }:"+pytanie.getOdpowiedzi(getLang())[i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
+                //for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
+                 //   if(pytanie.checkPoprawna(j)) button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xffbeffbe,0xffffffff));
+                //}
             }
             else button[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
         }
@@ -2925,7 +2925,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         odpowiedzi = pytanie.getOdpowiedziUzytkownika()[firstlast];
         for(int i=0;i<button.length;i++){
             if(i==odpowiedzi){
-                button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],0xffbebebe,0xffffffff));
+                //button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+" }:"+pytanie.getOdpowiedzi(getLang())[i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
+
+                button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
                 if(pytanie.getPoprawnaOdp()[firstlast]==i) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],0xffbeffbe,0xffffffff));
             }else{
                 button[i].setBackground(Math_syn.set_Math(pytanie.getTabela(getLang())[index][i]));
@@ -2938,12 +2940,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         for(int i=0;i<button.length;i++){
             isselected = (odpowiedzi[index]==i);
             if(isselected) {
-                button[i].setBackgroundColor(0xffbebebe);
-                    if(pytanie.checkPoprawna(index)){
-                        button[i].setBackgroundColor(0xffbeffbe);
-                    }
+                button[i].setBackground(getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())));
+                button[i].setTextColor(0xffffffff);
+                    //if(pytanie.checkPoprawna(index)){
+                    //    button[i].setBackgroundColor(0xffbeffbe);
+                    //}
             }
-            else button[i].setBackgroundColor(0x00ffffff);
+            else{
+                button[i].setBackgroundColor(0x00ffffff);
+                button[i].setTextColor(0xff000000);
+            }
         }
     }
     public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout){
@@ -2967,12 +2973,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
                     odpowiedz[i] = new Button(this);
                     odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
-
+                    /*
                     for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
                         if(pytanie.getPoprawnaOdp()[j]==i){
                             odpowiedz[i].setBackground(Math_syn.set_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
                         }
-                    }
+                    }*/
                 }
                 for(int i=0;i<odpowiedz.length;i++){
                     int finalI = i;
@@ -2990,7 +2996,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     mainlayout.addView(odpowiedz[i]);
                 }
                 setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie);
-                mainlayout.addView(wyjasnienie);
+                //mainlayout.addView(wyjasnienie);
 
             }break;
             case "PF":
@@ -3045,15 +3051,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             }
                         }
                     });
-                    if(pytanie.getPoprawnaOdp()[i]==0) falsz.setBackgroundColor(0xff00ff00);
-                    else prawda.setBackgroundColor(0xff00ff00);
+                    //if(pytanie.getPoprawnaOdp()[i]==0) falsz.setBackgroundColor(0xff00ff00);
+                    //else prawda.setBackgroundColor(0xff00ff00);
                     mainlayout.addView(odpowiedz);
                     tabela.addView(prawda);
                     tabela.addView(falsz);
                     mainlayout.addView(tabela);
                     setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI);
                 }
-                mainlayout.addView(wyjasnienie);
+                //mainlayout.addView(wyjasnienie);
             }break;
             case "OTWARTE": {
                 TextView info = new TextView(this);
@@ -3089,8 +3095,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 }
                 setSelectedNewPytaniaOTWARTE(radioButtons,pytanie);
                 mainlayout.addView(radioGroup);
-                mainlayout.addView(wyjasnieniemini);
-                mainlayout.addView(wyjasnienie);
+                //mainlayout.addView(wyjasnieniemini);
+                //mainlayout.addView(wyjasnienie);
             }break;
             case "DOPASUJ_NTO1":
             case "DOPASUJ_1TO1":
@@ -3870,6 +3876,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
         }
         q_num = ListaPytan.size();
+        for(int i=0;i<q_num;i++){
+            ListaPytan.get(i).reset();
+        }
         NewlistaShuffled.clear();
         NewlistaShuffled.addAll(ListaPytan);
         setContentView(R.layout.newformattest);
@@ -3893,7 +3902,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 btn_tests.setText(getString(R.string.pytanie)+" "+(i+1));
                 btn_tests.setTextSize(30);
                 btn_tests.setTag(i);
-                if(!NewlistaShuffled.get(i).getTyp().equals("ZLOZONE")){
                     if(NewlistaShuffled.get(i).czy_cos_zaznaczyl()){
                         btn_tests.setBackgroundColor(Color.parseColor("#4f5d75"));
                         btn_tests.setTextColor(Color.parseColor("#ffffff"));
@@ -3901,29 +3909,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         btn_tests.setBackgroundColor(Color.parseColor("#333333"));
                         btn_tests.setTextColor(Color.parseColor("#ffffff"));
                     }
-                }else{
-                    boolean helper=false;
-                    for(int j=0;j<NewlistaShuffled.get(i).getListaZlozone().size();j++){
-                        if(NewlistaShuffled.get(i).getListaZlozone().get(j).czy_cos_zaznaczyl()){
-                            helper=true;
-                            break;
-                        }
-                    }
-                    if(helper){
-                        btn_tests.setBackgroundColor(Color.parseColor("#4f5d75"));
-                        btn_tests.setTextColor(Color.parseColor("#ffffff"));
-                    }else{
-                        btn_tests.setBackgroundColor(Color.parseColor("#333333"));
-                        btn_tests.setTextColor(Color.parseColor("#ffffff"));
-                    }
-                }
                 int finalI = i;
                 btn_tests.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try{
                             AddActions("pytanie_wyglad");
+                            CURRENT_INDEX=finalI;
                             set_new_pytanie(NewlistaShuffled.get(finalI));
+                            Zakoncz_new_test();
                         } catch (Exception e){
                             e.printStackTrace();
                         }
@@ -3939,6 +3933,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         setContentView(R.layout.newformattestpytanie);
         LinearLayout mainlayout = findViewById(R.id.miejsce_na_pytanie);
         mainlayout.removeAllViews();
+        TextView Nr_pytania = new TextView(this);
+        Nr_pytania.setText((getString(R.string.pytanie)+" "+(CURRENT_INDEX+1)).toUpperCase());
+        Nr_pytania.setBackgroundColor(getColor(R.color.gray_active));
+        Nr_pytania.setTextSize(30);
+        Nr_pytania.setTextColor(0xffffffff);
+        Nr_pytania.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        Nr_pytania.setPadding(0,20,0,20);
+        mainlayout.addView(Nr_pytania);
         addNewPytania(pytanie,mainlayout);
     }
     public void Create_Kategoria_Buttons(){
@@ -4133,6 +4135,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         else if(v.getId()==R.id.nextkatpytanie){
             Set_pytanie_kategoria();
+        }
+        else if(v.getId()==R.id.nextnewbutton){
+            if(CURRENT_INDEX<q_num-1){
+                try{
+                    CURRENT_INDEX++;
+                    set_new_pytanie(NewlistaShuffled.get(CURRENT_INDEX));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
     public void PrevPytanie(View v){
@@ -4406,6 +4418,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             return String.format("%d",(long)d);
         else
             return String.format("%s",d);
+    }
+    public void Zakoncz_new_test(){
+        int npoprawne=0;
+        int brak_odp = 0;
+        int pkt=0;
+        int laczne_pkt=0;
+        for(int i=0;i<q_num;i++){
+            PytaniaNewFormat pytanie = NewlistaShuffled.get(i);
+            pkt+=pytanie.ObliczPkty();
+            laczne_pkt+=pytanie.getPkt();
+            //if(!pytanie.czy_cos_zaznaczyl()) brak_odp++;
+        }
+        Toast.makeText(getApplicationContext(),("Pkt:"+pkt+" ŁącznePkt:"+laczne_pkt),Toast.LENGTH_SHORT).show();
     }
     public void Zakoncz_test(View v){
         if(v.getId()==R.id.Zakoncz_test_popup){

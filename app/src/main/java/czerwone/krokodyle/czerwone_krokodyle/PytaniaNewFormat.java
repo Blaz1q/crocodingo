@@ -206,7 +206,13 @@ public class PytaniaNewFormat {
     }
 
     public int getPkt() {
-        return Pkt;
+        if(!Typ.equals("ZLOZONE"))
+            return Pkt;
+        int localpkt=0;
+        for(int i=0;i<ListaZlozone.size();i++){
+            localpkt+=ListaZlozone.get(i).getPkt();
+        }
+        return localpkt;
     }
 
     public String getTyp() {
@@ -378,12 +384,28 @@ public class PytaniaNewFormat {
             this.OdpowiedziUzytkownika[index] = odpowiedz;
         Log.d("pkty: ",""+ObliczPkty());
     }
-
+    public void reset(){
+        if(!Typ.equals("ZLOZONE")){
+            Arrays.fill(OdpowiedziUzytkownika, -1);
+        }else{
+            for(int i=0;i<ListaZlozone.size();i++){
+                Arrays.fill(ListaZlozone.get(i).OdpowiedziUzytkownika, -1);
+            }
+        }
+    }
     public int[] getOdpowiedziUzytkownika() {
         return OdpowiedziUzytkownika;
     }
     public boolean czy_cos_zaznaczyl(){
-        for(int i=0;i<OdpowiedziUzytkownika.length;i++) if(OdpowiedziUzytkownika[i]!=-1) return true;
+        if(!Typ.equals("ZLOZONE")){
+            for (int j : OdpowiedziUzytkownika) if (j != -1) return true;
+            return false;
+        }
+        for(int i=0;i<ListaZlozone.size();i++){
+            for(int j=0;j<ListaZlozone.get(i).OdpowiedziUzytkownika.length;j++){
+                if(ListaZlozone.get(i).OdpowiedziUzytkownika[j]!=-1) return true;
+            }
+        }
         return false;
     }
 
@@ -440,6 +462,13 @@ public class PytaniaNewFormat {
             case "DOPASUJ_TABELA":
                 if(checkPoprawna()) return Pkt;
                 return 0;
+            case "ZLOZONE": {
+                int localpkt = 0;
+                for(int i=0;i<ListaZlozone.size();i++){
+                    localpkt+=ListaZlozone.get(i).ObliczPkty();
+                }
+                return  localpkt;
+            }
         }
         return 0;
     }

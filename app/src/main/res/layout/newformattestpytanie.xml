@@ -31,15 +31,17 @@
             android:backgroundTint="#333333"
             />
 
-        <TextView
-            android:id="@+id/numer_pytania"
+        <Button
+            android:layout_below="@id/hiddentop"
+            android:id="@+id/karta_wzorow"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:text="karta wzorów"
+            android:onClick="Zmien_widoki"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="Pytanie 1"
-            android:layout_marginLeft="3dp"
-            android:textSize="20sp" />
+            android:layout_marginRight="3dp"
+            android:backgroundTint="#333333"
+            />
     </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
@@ -61,7 +63,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/prevbutton"
+            android:id="@+id/prevnewbutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -72,7 +74,7 @@
             />
 
         <Button
-            android:id="@+id/nextbutton"
+            android:id="@+id/nextnewbutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

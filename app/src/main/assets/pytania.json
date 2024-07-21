@@ -22,8 +22,8 @@
       "katID": 22,
       "pkt": 1,
       "id": 1,
-      "info": ["\\text{Ciąg \\(a_n\\) jest określony wzorem \\(a_n = (n−1)^n \\cdot (n − 5)\\) dla każdej liczby naturalnej \\(n \\geq 1\\).}"],
-      "polecenie": ["\\text{Oceń prawdziwość poniższych stwierdzeń. Wybierz P, jeśli stwierdzenie jest\nprawdziwe, albo F – jeśli jest fałszywe.}"],
+      "info": ["\\text{Ciąg \\(a_n\\) \\\\jest określony wzorem \\(a_n = (n−1)^n \\cdot (n − 5)\\) \\\\dla każdej liczby naturalnej \\(n \\geq 1\\).}"],
+      "polecenie": ["\\text{Oceń prawdziwość poniższych stwierdzeń. \\\\Wybierz P, jeśli stwierdzenie jest prawdziwe,\\\\ albo F – jeśli jest fałszywe.}"],
       "odp": [["\\text{Pierwszy wyraz ciągu (\\(a_n\\)) \\\\jest dwa razy większy od \\\\trzeciego wyrazu tego ciągu.}","\\text{Wszystkie wyrazy ciągu (\\(a_n\\)) są dodatnie}"]],
       "poprawna": [1,0],
       "wyjasnienie": ["\\text{yeah}"]
