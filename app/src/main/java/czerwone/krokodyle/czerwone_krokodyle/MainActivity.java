@@ -2899,7 +2899,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
-    public void setSelectedNewPytaniaDOKONCZ(Button button[],PytaniaNewFormat pytanie){
+    public void setSelectedNewPytaniaDOKONCZ(Button button[],PytaniaNewFormat pytanie,boolean checkPoprawne){
         boolean isselected;
         int[] odpowiedzi = pytanie.getOdpowiedziUzytkownika();
         for(int i=0;i<button.length;i++){
@@ -2907,13 +2907,22 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             for(int j=0;j<odpowiedzi.length;j++){
                 if(odpowiedzi[j]==i) isselected = true;
             }
-            if(isselected) {
-                button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+" }:"+pytanie.getOdpowiedzi(getLang())[i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
-                //for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
-                 //   if(pytanie.checkPoprawna(j)) button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xffbeffbe,0xffffffff));
-                //}
+            if(checkPoprawne){
+                for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
+                    if(isselected){
+                        if(!pytanie.checkPoprawna(j))
+                            button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_npoprawna", "drawable", getPackageName())),getColor(R.color.black)));
+                    }
+                    else button[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
+                    if(pytanie.getPoprawnaOdp()[j]==i)
+                        button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_poprawna", "drawable", getPackageName())),getColor(R.color.ckcorrecttext)));
+                }
+            }else{
+                if(isselected) {
+                    button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
+                }
+                else button[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
             }
-            else button[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
         }
     }
     public void setSelectedNewPytaniaDOPASUJ_TABELA(Button button[],PytaniaNewFormat pytanie,int index){
@@ -2934,25 +2943,38 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
-    public void setSelectedNewPytaniaPF(Button button[],PytaniaNewFormat pytanie,int index){
+    public void setSelectedNewPytaniaPF(Button button[],PytaniaNewFormat pytanie,int index,boolean checkPoprawne){
         boolean isselected;
         int[] odpowiedzi = pytanie.getOdpowiedziUzytkownika();
         for(int i=0;i<button.length;i++){
             isselected = (odpowiedzi[index]==i);
-            if(isselected) {
-                button[i].setBackground(getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())));
-                button[i].setTextColor(0xffffffff);
-                    //if(pytanie.checkPoprawna(index)){
-                    //    button[i].setBackgroundColor(0xffbeffbe);
-                    //}
+            if(checkPoprawne){
+                if(isselected){
+                    if(!pytanie.checkPoprawna(index)){
+                        button[i].setBackground(getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_npoprawna", "drawable", getPackageName())));
+                        button[i].setTextColor(0xffffffff);
+                    }
+                }else{
+                    button[i].setBackgroundColor(0x00ffffff);
+                    button[i].setTextColor(0xff000000);
+                }
+                if(pytanie.getPoprawnaOdp()[index]==i){
+                    button[i].setBackground(getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_poprawna", "drawable", getPackageName())));
+                }
             }
             else{
-                button[i].setBackgroundColor(0x00ffffff);
-                button[i].setTextColor(0xff000000);
+                if(isselected) {
+                    button[i].setBackground(getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())));
+                    button[i].setTextColor(0xffffffff);
+                }
+                else{
+                    button[i].setBackgroundColor(0x00ffffff);
+                    button[i].setTextColor(0xff000000);
+                }
             }
         }
     }
-    public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout){
+    public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne){
         switch (pytanie.getTyp()){
             case "DOKONCZ":
             {
@@ -2973,29 +2995,33 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
                     odpowiedz[i] = new Button(this);
                     odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
-                    /*
-                    for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
-                        if(pytanie.getPoprawnaOdp()[j]==i){
-                            odpowiedz[i].setBackground(Math_syn.set_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
-                        }
-                    }*/
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(0, 10, 0, 10);
+                    odpowiedz[i].setLayoutParams(params);
+                    odpowiedz[i].setPadding(0,40,0,40);
                 }
+
                 for(int i=0;i<odpowiedz.length;i++){
+                    if(!checkpoprawne){
                     int finalI = i;
                     odpowiedz[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try{
                             pytanie.setOdpowiedziUzytkownika(finalI,0);
-                            setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie);
+                            setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,checkpoprawne);
                         } catch (Exception e){
                             e.printStackTrace();
                         }
                     }
                 });
+                }
                     mainlayout.addView(odpowiedz[i]);
                 }
-                setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie);
+                setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,checkpoprawne);
                 //mainlayout.addView(wyjasnienie);
 
             }break;
@@ -3014,6 +3040,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 TableLayout.LayoutParams tableparams = new TableLayout.LayoutParams(
                         TableLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f
                 );
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,1.0f
+                );
+                params.setMargins(10,0,10,0);
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
 
                     LinearLayout tabela = new LinearLayout(this);
@@ -3023,18 +3053,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     odpowiedz.setBackground(Math_syn.set_Math(pytanie.getOdpowiedzi(getLang())[i],JLatexMathDrawable.ALIGN_LEFT));
                     Button prawda = new Button(this);
                     Button falsz = new Button(this);
-                    prawda.setLayoutParams(tableparams);
-                    falsz.setLayoutParams(tableparams);
+                    prawda.setLayoutParams(params);
+                    falsz.setLayoutParams(params);
                     prawda.setText("P");
                     falsz.setText("F");
                     Button[] prawdafalsz = new Button[]{prawda, falsz};
                     final int finalI = i;
+                    if(!checkpoprawne){
                     prawda.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try{
                                 pytanie.setOdpowiedziUzytkownika(0,finalI);
-                                setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI);
+                                setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,checkpoprawne);
                             } catch (Exception e){
                                 e.printStackTrace();
                             }
@@ -3045,19 +3076,20 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         public void onClick(View v) {
                             try{
                                 pytanie.setOdpowiedziUzytkownika(1,finalI);
-                                setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI);
+                                setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,checkpoprawne);
                             } catch (Exception e){
                                 e.printStackTrace();
                             }
                         }
                     });
+                    }
                     //if(pytanie.getPoprawnaOdp()[i]==0) falsz.setBackgroundColor(0xff00ff00);
                     //else prawda.setBackgroundColor(0xff00ff00);
                     mainlayout.addView(odpowiedz);
                     tabela.addView(prawda);
                     tabela.addView(falsz);
                     mainlayout.addView(tabela);
-                    setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI);
+                    setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,checkpoprawne);
                 }
                 //mainlayout.addView(wyjasnienie);
             }break;
@@ -3080,6 +3112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     radioButtons[i] = new RadioButton(this);
                     radioButtons[i].setText("Punkt " + i);
                     final int finalI = i;
+                    if(!checkpoprawne){
                     radioButtons[i].setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -3091,6 +3124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             }
                         }
                     });
+                    }
+                    if(checkpoprawne) radioButtons[i].setEnabled(false);
                     radioGroup.addView(radioButtons[i]);
                 }
                 setSelectedNewPytaniaOTWARTE(radioButtons,pytanie);
@@ -3145,6 +3180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         }
                     });
                     mainlayout.addView(dropdown[i]);
+                    if(checkpoprawne) dropdown[i].setEnabled(false);
                 }
                 if(pytanie.getTyp().equals("DOPASUJ_NTO1")){
                     setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie);
@@ -3198,7 +3234,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             odp[j] = new Button(this);
                             odp[j].setBackground(Math_syn.set_Math(TabelaData[i][j]));
                             odp[j].setLayoutParams(TabelaColumnParams);
+                            if(!checkpoprawne){
                             int finalJ = j;
+
                             odp[j].setOnClickListener(new View.OnClickListener(){
                                 @Override
                                 public void onClick(View v) {
@@ -3211,6 +3249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                     }
                                 }
                             });
+                            }
                             TabelaColumn.addView(odp[j]);
                             //Log.d("data",TabelaData[i][j]);
                         }
@@ -3239,7 +3278,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 mainlayout.addView(info);
                 mainlayout.addView(zdj);
                 for(int i=0;i<pytanie.getListaZlozone().size();i++){
-                    addNewPytania(pytanie.getListaZlozone().get(i),mainlayout);
+                    addNewPytania(pytanie.getListaZlozone().get(i),mainlayout,checkpoprawne);
                 }
             }break;
         }
@@ -3250,7 +3289,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         mainlayout.removeAllViews();
         TextView counet = findViewById(R.id.debugcounter);
         counet.setText(String.valueOf(newpytaniacounterdebug));
-        addNewPytania(pytanie,mainlayout);
+        addNewPytania(pytanie,mainlayout,true);
     }
     public void DefaultMainPageActions(){
         setContentView(R.layout.main_page);
@@ -3259,6 +3298,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         ResumeOnLongListener();
         ustawCzapke();
         ResetActions();
+        UstawKrokodyla();
     }
     public void Zmien_widoki(View v) {
         canplayanimations = false;
@@ -3275,6 +3315,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         else if(v.getId()==R.id.wroc_do_pytan_new_format){
             setContentView(R.layout.newformattest);
             GenerujTest();
+            RemoveAction();
+        }
+        else if(v.getId()==R.id.wroc_do_pytan_new_format_bledne){
+            setContentView(R.layout.newformattest_bledne);
+            GenerujTestBledne();
             RemoveAction();
         }
         else if(v.getId()==R.id.Osiagniecia){
@@ -3425,8 +3470,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             AddActions("pytania_wybor_bledne");
         }
         else if(v.getId()==R.id.zobacz_bledne){
-            setContentView(R.layout.pytania_wybor_bledne);
-            Resume_Question_Buttons_Final();
+            setContentView(R.layout.newformattest_bledne);
+            GenerujTestBledne();
             AddActions("pytania_wybor_bledne");
         } else if (v.getId()==R.id.wroc_z_creditsow) {
             DefaultMainPageActions();
@@ -3885,53 +3930,91 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         GenerujTest();
         Log.d("QNUM",""+q_num);
     }
+    public Button[] GenerujPrzyciski(LinearLayout layout){
+        Button[] buttons = new Button[q_num];
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0, 0, 0, 20);
+        for(int i=0;i<q_num;i++){
+            Button btn_tests = new Button(this);
+            btn_tests.setLayoutParams(params);
+            btn_tests.setText(getString(R.string.pytanie)+" "+(i+1));
+            btn_tests.setTextSize(30);
+            btn_tests.setTag(i);
+            if(NewlistaShuffled.get(i).czy_cos_zaznaczyl()){
+                btn_tests.setBackgroundColor(Color.parseColor("#4f5d75"));
+                btn_tests.setTextColor(Color.parseColor("#ffffff"));
+            } else{
+                btn_tests.setBackgroundColor(Color.parseColor("#333333"));
+                btn_tests.setTextColor(Color.parseColor("#ffffff"));
+            }
+            buttons[i] = btn_tests;
+            layout.addView(btn_tests);
+        }
+        return buttons;
+    }
+    boolean checkPoprawne_global;
+    LinearLayout miejsceNaPytanie_global;
     public void GenerujTest(){
-
         Log.d("testaction","creatingKURWA");
         try{
             LinearLayout layout = findViewById(R.id.questions_select_new_format);
-
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(0, 0, 0, 20);
-            for(int i=0;i<q_num;i++){
-                Button btn_tests = new Button(this);
-                btn_tests.setLayoutParams(params);
-                btn_tests.setText(getString(R.string.pytanie)+" "+(i+1));
-                btn_tests.setTextSize(30);
-                btn_tests.setTag(i);
-                    if(NewlistaShuffled.get(i).czy_cos_zaznaczyl()){
-                        btn_tests.setBackgroundColor(Color.parseColor("#4f5d75"));
-                        btn_tests.setTextColor(Color.parseColor("#ffffff"));
-                    } else{
-                        btn_tests.setBackgroundColor(Color.parseColor("#333333"));
-                        btn_tests.setTextColor(Color.parseColor("#ffffff"));
-                    }
+            Button[] buttons = GenerujPrzyciski(layout);
+            checkPoprawne_global = false;
+            for(int i=0;i<buttons.length;i++){
                 int finalI = i;
-                btn_tests.setOnClickListener(new View.OnClickListener() {
+                buttons[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try{
                             AddActions("pytanie_wyglad");
                             CURRENT_INDEX=finalI;
-                            set_new_pytanie(NewlistaShuffled.get(finalI));
+                            setContentView(R.layout.newformattestpytanie);
+                            LinearLayout mainlayout = findViewById(R.id.miejsce_na_pytanie);
+                            miejsceNaPytanie_global = mainlayout;
+                            set_new_pytanie(NewlistaShuffled.get(finalI),mainlayout,false);
                             //Zakoncz_new_test();
                         } catch (Exception e){
                             e.printStackTrace();
                         }
                     }
                 });
-                layout.addView(btn_tests);
             }
         } catch (Exception e){
             e.printStackTrace();
         }
     }
-    public void set_new_pytanie(PytaniaNewFormat pytanie){
-        setContentView(R.layout.newformattestpytanie);
-        LinearLayout mainlayout = findViewById(R.id.miejsce_na_pytanie);
+    public void GenerujTestBledne(){
+        LinearLayout layout = findViewById(R.id.questions_select_new_format_bledne);
+        Button[] buttons = GenerujPrzyciski(layout);
+        checkPoprawne_global = true;
+        for(int i=0;i<buttons.length;i++){
+            int finalI = i;
+            buttons[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try{
+                        AddActions("pytanie_wyglad_bledne");
+                        CURRENT_INDEX=finalI;
+                        setContentView(R.layout.newformattestpytanie_bledne);
+                        LinearLayout mainlayout = findViewById(R.id.miejsce_na_pytanie_bledne);
+                        miejsceNaPytanie_global = mainlayout;
+                        set_new_pytanie(NewlistaShuffled.get(finalI),mainlayout,true);
+                        //Zakoncz_new_test();
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+            if(NewlistaShuffled.get(i).czyPoprawne()) buttons[i].setBackgroundColor(getColor(R.color.ckcorrect));
+            if(NewlistaShuffled.get(i).czyTrochePoprawne()) buttons[i].setBackgroundColor(getColor(R.color.ckgolden));
+            if(NewlistaShuffled.get(i).czyPominiete()) buttons[i].setBackgroundColor(getColor(R.color.ckgray));
+            else if(NewlistaShuffled.get(i).czyBledne()) buttons[i].setBackgroundColor(getColor(R.color.ckpink));
+        }
+    }
+    public void set_new_pytanie(PytaniaNewFormat pytanie,LinearLayout mainlayout,Boolean checkPoprawne){
         mainlayout.removeAllViews();
         TextView Nr_pytania = new TextView(this);
         Nr_pytania.setText((getString(R.string.pytanie)+" "+(CURRENT_INDEX+1)).toUpperCase());
@@ -3941,10 +4024,22 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Nr_pytania.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         Nr_pytania.setPadding(0,20,0,20);
         mainlayout.addView(Nr_pytania);
-        addNewPytania(pytanie,mainlayout);
+        addNewPytania(pytanie,mainlayout,checkPoprawne);
+
         if(CURRENT_INDEX==q_num-1){
-        Button zmientekst = findViewById(R.id.nextnewbutton);
-        zmientekst.setText(getString(R.string.zakoncz));
+            Button zmientekst = findViewById(R.id.nextnewbutton);
+            if(!checkPoprawne_global){
+                zmientekst.setText(getString(R.string.zakoncz));
+            }else{
+                zmientekst.setText(getString(R.string.wroc_do_startu));
+            }
+        }
+        if(CURRENT_INDEX==0){
+            Button btn = findViewById(R.id.prevnewbutton);
+            btn.setEnabled(false);
+        }else{
+            Button btn = findViewById(R.id.prevnewbutton);
+            btn.setEnabled(true);
         }
     }
     public void Create_Kategoria_Buttons(){
@@ -4144,13 +4239,17 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             if(CURRENT_INDEX<q_num-1){
                 try{
                     CURRENT_INDEX++;
-                    set_new_pytanie(NewlistaShuffled.get(CURRENT_INDEX));
+                    set_new_pytanie(NewlistaShuffled.get(CURRENT_INDEX),miejsceNaPytanie_global,checkPoprawne_global);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
             else if(CURRENT_INDEX==q_num-1){
-                PopupTestyZakoncz(v);
+                if(!checkPoprawne_global)
+                    PopupTestyZakoncz(v);
+                else{
+                    DefaultMainPageActions();
+                }
             }
         }
     }
@@ -4168,6 +4267,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 } catch (Exception e){
 
                 }
+            }
+        }
+        if(v.getId()==R.id.prevnewbutton){
+            if(CURRENT_INDEX>0){
+                CURRENT_INDEX--;
+                set_new_pytanie(NewlistaShuffled.get(CURRENT_INDEX),miejsceNaPytanie_global,checkPoprawne_global);
+                Button btn = findViewById(R.id.prevnewbutton);
+                btn.setEnabled(true);
+                if(CURRENT_INDEX==0) btn.setEnabled(false);
             }
         }
     }
@@ -4237,7 +4345,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         if(q_num-1==CURRENT_INDEX){
             Button zmientekst=findViewById(R.id.nextbutton);
-            zmientekst.setText(getString(R.string.zakoncz)); //#todo tłumacz
+            zmientekst.setText(getString(R.string.zakoncz));
             wywolajfunkcje=true;
         }else{
             Button zmientekst=findViewById(R.id.nextbutton);
@@ -4395,30 +4503,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         oneshot=false;
     }
-    public double oblicz_percenty;
     public int brak_odp=0;
-    void Oblicz_Poprawne(){
-        int npoprawne = 0;
-        brak_odp=0;
-        char odp;
-        for(int i=0;i<q_num;i++){
-            PytaniaDB pytanie = listaShuffled.get(i);
-            odp = pytanie.getOdpUzytkownika();
-            try{
-                int get_id = listaShuffled.get(i).getId();
-            if(pytanie.getPoprawnaOdp()!=odp){
-                npoprawne++;
-                if(odp=='-') brak_odp++;
-            }
-            else poprawne++;
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            }
-        if(poprawne!=0){
-            oblicz_percenty = poprawne*100/q_num;
-        }else oblicz_percenty = 0;
-    }
     public static String fmt(double d)
     {
         if(d == (long) d)
@@ -4440,14 +4525,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             PytaniaNewFormat pytanie = NewlistaShuffled.get(i);
             pkt+=pytanie.ObliczPkty();
             laczne_pkt+=pytanie.getPkt();
-            if(!pytanie.czy_cos_zaznaczyl()) brak_odp++;
-            else if(pytanie.ObliczPkty()==0) npoprawne++;
-            if(pytanie.ObliczPkty()!=pytanie.getPkt()&&pytanie.ObliczPkty()!=0){
+            if(pytanie.czyPominiete()) brak_odp++;
+            else if(pytanie.czyBledne()) npoprawne++;
+            if(pytanie.czyTrochePoprawne()){
                 troche_poprawne++;
             }
-            if(pytanie.ObliczPkty()==pytanie.getPkt()) poprawne++;
+            if(pytanie.czyPoprawne()) poprawne++;
         }
-        oblicz_percenty = poprawne*100/q_num;
+        double oblicz_percenty = pkt*100/q_num;
         setContentView(R.layout.test_final);
         addProgress(1);
         addProgressOsiagniecia(11);

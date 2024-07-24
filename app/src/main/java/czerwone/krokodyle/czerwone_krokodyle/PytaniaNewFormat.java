@@ -226,7 +226,7 @@ public class PytaniaNewFormat {
         for(int i=0;i<this.Odpowiedzi.length;i++){
             Log.d(("Odpowiedzi"+ i),Odpowiedzi[i][0]);
         }
-        Log.d("Poprawna",String.valueOf(this.PoprawnaOdp));
+        Log.d("Poprawna", Arrays.toString(this.PoprawnaOdp));
         for(int i=0;i<this.Wyjasnienie.length;i++){
             Log.d(("Odpowiedzi"+ i),Wyjasnienie[i]);
         }
@@ -408,7 +408,21 @@ public class PytaniaNewFormat {
         }
         return false;
     }
-
+    public boolean czyBledne(){
+        return ObliczPkty() == 0;
+    }
+    public boolean czyPoprawne(){
+        return Pkt == ObliczPkty();
+    }
+    public boolean czyTrochePoprawne(){
+        if(!czyBledne()){
+            return ObliczPkty() != Pkt;
+        }
+        return false;
+    }
+    public boolean czyPominiete(){
+        return !czy_cos_zaznaczyl();
+    }
     public boolean checkPoprawna(){
         boolean poprawna = true;
         for(int i=0;i<PoprawnaOdp.length;i++){
