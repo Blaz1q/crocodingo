@@ -4441,10 +4441,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             pkt+=pytanie.ObliczPkty();
             laczne_pkt+=pytanie.getPkt();
             if(!pytanie.czy_cos_zaznaczyl()) brak_odp++;
+            else if(pytanie.ObliczPkty()==0) npoprawne++;
             if(pytanie.ObliczPkty()!=pytanie.getPkt()&&pytanie.ObliczPkty()!=0){
                 troche_poprawne++;
             }
-            if(pytanie.ObliczPkty()==0) npoprawne++;
             if(pytanie.ObliczPkty()==pytanie.getPkt()) poprawne++;
         }
         oblicz_percenty = poprawne*100/q_num;
