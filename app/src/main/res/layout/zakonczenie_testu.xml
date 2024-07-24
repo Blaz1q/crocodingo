@@ -25,7 +25,7 @@
         android:text="@string/yes"
         android:textSize="18dp"
         android:textStyle="bold"
-        android:onClick="Zakoncz_test"
+        android:onClick="Zakoncz_new_test"
         />
 
     <TextView

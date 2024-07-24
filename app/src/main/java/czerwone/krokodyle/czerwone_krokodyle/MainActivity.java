@@ -3614,7 +3614,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void PopupTestyZakoncz(View v){
         if(isPopupVisible==false){
-            if(v.getId()==R.id.zakoncz_test||v.getId()==R.id.nextbutton){
+            if(v.getId()==R.id.zakoncz_test||v.getId()==R.id.nextbutton||v.getId()==R.id.nextnewbutton){
                 ShowPopup(R.layout.zakonczenie_testu);
             }
         }
@@ -3917,7 +3917,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             AddActions("pytanie_wyglad");
                             CURRENT_INDEX=finalI;
                             set_new_pytanie(NewlistaShuffled.get(finalI));
-                            Zakoncz_new_test();
+                            //Zakoncz_new_test();
                         } catch (Exception e){
                             e.printStackTrace();
                         }
@@ -3942,6 +3942,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Nr_pytania.setPadding(0,20,0,20);
         mainlayout.addView(Nr_pytania);
         addNewPytania(pytanie,mainlayout);
+        if(CURRENT_INDEX==q_num-1){
+        Button zmientekst = findViewById(R.id.nextnewbutton);
+        zmientekst.setText(getString(R.string.zakoncz));
+        }
     }
     public void Create_Kategoria_Buttons(){
         Log.d("testaction","creating kategoria");
@@ -4145,6 +4149,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     e.printStackTrace();
                 }
             }
+            else if(CURRENT_INDEX==q_num-1){
+                PopupTestyZakoncz(v);
+            }
         }
     }
     public void PrevPytanie(View v){
@@ -4230,7 +4237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         if(q_num-1==CURRENT_INDEX){
             Button zmientekst=findViewById(R.id.nextbutton);
-            zmientekst.setText("zakończ"); //#todo tłumacz
+            zmientekst.setText(getString(R.string.zakoncz)); //#todo tłumacz
             wywolajfunkcje=true;
         }else{
             Button zmientekst=findViewById(R.id.nextbutton);
@@ -4419,7 +4426,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         else
             return String.format("%s",d);
     }
-    public void Zakoncz_new_test(){
+    public void Zakoncz_new_test(View v){
+        ClosePopup();
+        ShowAds();
+        bgmusicnormal();
+        int poprawne=0;
+        int troche_poprawne=0;
         int npoprawne=0;
         int brak_odp = 0;
         int pkt=0;
@@ -4428,124 +4440,126 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             PytaniaNewFormat pytanie = NewlistaShuffled.get(i);
             pkt+=pytanie.ObliczPkty();
             laczne_pkt+=pytanie.getPkt();
-            //if(!pytanie.czy_cos_zaznaczyl()) brak_odp++;
+            if(!pytanie.czy_cos_zaznaczyl()) brak_odp++;
+            if(pytanie.ObliczPkty()!=pytanie.getPkt()&&pytanie.ObliczPkty()!=0){
+                troche_poprawne++;
+            }
+            if(pytanie.ObliczPkty()==0) npoprawne++;
+            if(pytanie.ObliczPkty()==pytanie.getPkt()) poprawne++;
         }
+        oblicz_percenty = poprawne*100/q_num;
+        setContentView(R.layout.test_final);
+        addProgress(1);
+        addProgressOsiagniecia(11);
+        AddActions("test_final");
         Toast.makeText(getApplicationContext(),("Pkt:"+pkt+" ŁącznePkt:"+laczne_pkt),Toast.LENGTH_SHORT).show();
-    }
-    public void Zakoncz_test(View v){
-        if(v.getId()==R.id.Zakoncz_test_popup){
-            ClosePopup();
-            Oblicz_Poprawne();
-            ShowAds();
-            bgmusicnormal();
-            setContentView(R.layout.test_final);
-            addProgress(1);
-            addProgressOsiagniecia(11);
-            AddActions("test_final");
-            try{
-                TextView wynik_pkt = findViewById(R.id.wynik_punktowy);
-                TextView ilosc_pytan = findViewById(R.id.iloscpytan);
-                TextView msg_text = findViewById(R.id.opisWyniku);
-                TextView procenty = findViewById(R.id.wynik_procentowy);
-                TextView poprawne_chart = findViewById(R.id.chart_pozytywne);
-                TextView negatywne_chart = findViewById(R.id.chart_negatywne);
-                TextView pominiete_chart = findViewById(R.id.chart_pominiete);
-                TextView nagroda1 = findViewById(R.id.nagroda1);
-                TextView nagrodashadow1 = findViewById(R.id.nagrodashadow1);
-                TextView nagrodaMultiplier = findViewById(R.id.nagrodamultiplier1);
+        try{
+            TextView wynik_pkt = findViewById(R.id.wynik_punktowy);
+            TextView ilosc_pytan = findViewById(R.id.iloscpytan);
+            TextView msg_text = findViewById(R.id.opisWyniku);
+            TextView procenty = findViewById(R.id.wynik_procentowy);
+            TextView poprawne_chart = findViewById(R.id.chart_pozytywne);
+            TextView negatywne_chart = findViewById(R.id.chart_negatywne);
+            TextView pominiete_chart = findViewById(R.id.chart_pominiete);
+            TextView troche_poprawne_chart = findViewById(R.id.chart_troche_poprawne);
+            TextView nagroda1 = findViewById(R.id.nagroda1);
+            TextView nagrodashadow1 = findViewById(R.id.nagrodashadow1);
+            TextView nagrodaMultiplier = findViewById(R.id.nagrodamultiplier1);
 
-                LinearLayout.LayoutParams poprawneWeight = (LinearLayout.LayoutParams) poprawne_chart.getLayoutParams();
-                LinearLayout.LayoutParams negatywneWeight = (LinearLayout.LayoutParams) negatywne_chart.getLayoutParams();
-                LinearLayout.LayoutParams pominieteWeight = (LinearLayout.LayoutParams) pominiete_chart.getLayoutParams();
+            LinearLayout.LayoutParams poprawneWeight = (LinearLayout.LayoutParams) poprawne_chart.getLayoutParams();
+            LinearLayout.LayoutParams negatywneWeight = (LinearLayout.LayoutParams) negatywne_chart.getLayoutParams();
+            LinearLayout.LayoutParams pominieteWeight = (LinearLayout.LayoutParams) pominiete_chart.getLayoutParams();
+            LinearLayout.LayoutParams trochepoprawneWeight = (LinearLayout.LayoutParams) troche_poprawne_chart.getLayoutParams();
 
-                poprawne_chart.setText(String.valueOf(poprawne));
-                negatywne_chart.setText(String.valueOf(q_num-poprawne-brak_odp));
-                pominiete_chart.setText(String.valueOf(brak_odp));
+            poprawne_chart.setText(String.valueOf(poprawne));
+            negatywne_chart.setText(String.valueOf(npoprawne));
+            pominiete_chart.setText(String.valueOf(brak_odp));
+            troche_poprawne_chart.setText(String.valueOf(troche_poprawne));
 
-                poprawneWeight.weight = (float) poprawne/q_num;
-                negatywneWeight.weight = (float) (q_num-poprawne-brak_odp)/q_num;
-                pominieteWeight.weight = (float) brak_odp/q_num;
-                double mnoznik = 1;
-                if(User.CrocoState==1){
-                    mnoznik=0.7;
-                }
-                if(User.CrocoState==2){
-                    mnoznik=0.5;
-                }
-                int finalnagroda;
-                procenty.setText(fmt(oblicz_percenty) +"%");
-                wynik_pkt.setText("("+String.valueOf(poprawne)+"/"+String.valueOf(q_num)+")");
-                if(oblicz_percenty>=30){
-                    SavePassedTest();
-                    AddStreak();
-                }
-                if(oblicz_percenty<30){
-                    nagroda1.setText("0");
-                    nagrodashadow1.setText("0");
-                    if(oblicz_percenty>20){
-
-                        //SaveFood(1);
-                        finalnagroda = (int) Math.round(100*mnoznik);
-                        SaveMoney(finalnagroda);
-                        nagroda1.setText(String.valueOf(finalnagroda));
-                        nagrodashadow1.setText(String.valueOf(finalnagroda));
-                        Pokaz_Topbar();
-                        Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
-                        Ukryj_Topbar();
-                    }
-                    msg_text.setText(Wynik_msg[0]);
-                    SaveFailedTest();
-                    ResetStreak();
-                } else if (oblicz_percenty>=30&&oblicz_percenty<60) {
-                    msg_text.setText(Wynik_msg[1]);
-                    SaveFood(3);
-                    finalnagroda = (int) Math.round(300*mnoznik);
-                    SaveMoney(finalnagroda);
-                    nagroda1.setText(String.valueOf(finalnagroda));
-                    nagrodashadow1.setText(String.valueOf(finalnagroda));
-                    Pokaz_Topbar();
-                    Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
-                    Ukryj_Topbar();
-                } else if (oblicz_percenty>=60&&oblicz_percenty<80) {
-                    msg_text.setText(Wynik_msg[2]);
-                    SaveFood(5);
-                    finalnagroda = (int) Math.round(500*mnoznik);
-                    SaveMoney(finalnagroda);
-                    nagroda1.setText(String.valueOf(finalnagroda));
-                    nagrodashadow1.setText(String.valueOf(finalnagroda));
-                    Pokaz_Topbar();
-                    Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
-                    Ukryj_Topbar();
-                } else if (oblicz_percenty>=80&&oblicz_percenty<100) {
-                    msg_text.setText(Wynik_msg[3]);
-                    SaveFood(7);
-                    finalnagroda = (int) Math.round(700*mnoznik);
-                    SaveMoney(finalnagroda);
-                    nagroda1.setText(String.valueOf(finalnagroda));
-                    nagrodashadow1.setText(String.valueOf(finalnagroda));
-                    Pokaz_Topbar();
-                    Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
-                    Ukryj_Topbar();
-                } else if (oblicz_percenty==100) {
-                    msg_text.setText(Wynik_msg[4]);
-                    SaveFood(10);
-                    finalnagroda = (int) Math.round(1000*mnoznik);
-                    SaveMoney(finalnagroda);
-                    nagroda1.setText(String.valueOf(finalnagroda));
-                    nagrodashadow1.setText(String.valueOf(finalnagroda));
-                    Pokaz_Topbar();
-                    Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
-                    Ukryj_Topbar();
-                }
-                if(czyZalogowany==true){
-                    updateFirebaseData(acct.getIdToken());
-                }
-                nagrodaMultiplier.setText(String.valueOf(mnoznik*100)+"%");
-            }catch (Exception e){
-                e.printStackTrace();
+            poprawneWeight.weight = (float) poprawne/q_num;
+            negatywneWeight.weight = (float) npoprawne/q_num;
+            pominieteWeight.weight = (float) brak_odp/q_num;
+            trochepoprawneWeight.weight = (float) troche_poprawne/q_num;
+            double mnoznik = 1;
+            if(User.CrocoState==1){
+                mnoznik=0.7;
             }
+            if(User.CrocoState==2){
+                mnoznik=0.5;
             }
+            int finalnagroda;
+            procenty.setText(fmt(oblicz_percenty) +"%");
+            wynik_pkt.setText("("+String.valueOf(pkt)+"/"+String.valueOf(laczne_pkt)+")");
+            if(oblicz_percenty>=30){
+                SavePassedTest();
+                AddStreak();
+            }
+            if(oblicz_percenty<30){
+                nagroda1.setText("0");
+                nagrodashadow1.setText("0");
+                if(oblicz_percenty>20){
+
+                    //SaveFood(1);
+                    finalnagroda = (int) Math.round(100*mnoznik);
+                    SaveMoney(finalnagroda);
+                    nagroda1.setText(String.valueOf(finalnagroda));
+                    nagrodashadow1.setText(String.valueOf(finalnagroda));
+                    Pokaz_Topbar();
+                    Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
+                    Ukryj_Topbar();
+                }
+                msg_text.setText(Wynik_msg[0]);
+                SaveFailedTest();
+                ResetStreak();
+            } else if (oblicz_percenty>=30&&oblicz_percenty<60) {
+                msg_text.setText(Wynik_msg[1]);
+                SaveFood(3);
+                finalnagroda = (int) Math.round(300*mnoznik);
+                SaveMoney(finalnagroda);
+                nagroda1.setText(String.valueOf(finalnagroda));
+                nagrodashadow1.setText(String.valueOf(finalnagroda));
+                Pokaz_Topbar();
+                Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
+                Ukryj_Topbar();
+            } else if (oblicz_percenty>=60&&oblicz_percenty<80) {
+                msg_text.setText(Wynik_msg[2]);
+                SaveFood(5);
+                finalnagroda = (int) Math.round(500*mnoznik);
+                SaveMoney(finalnagroda);
+                nagroda1.setText(String.valueOf(finalnagroda));
+                nagrodashadow1.setText(String.valueOf(finalnagroda));
+                Pokaz_Topbar();
+                Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
+                Ukryj_Topbar();
+            } else if (oblicz_percenty>=80&&oblicz_percenty<100) {
+                msg_text.setText(Wynik_msg[3]);
+                SaveFood(7);
+                finalnagroda = (int) Math.round(700*mnoznik);
+                SaveMoney(finalnagroda);
+                nagroda1.setText(String.valueOf(finalnagroda));
+                nagrodashadow1.setText(String.valueOf(finalnagroda));
+                Pokaz_Topbar();
+                Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
+                Ukryj_Topbar();
+            } else if (oblicz_percenty==100) {
+                msg_text.setText(Wynik_msg[4]);
+                SaveFood(10);
+                finalnagroda = (int) Math.round(1000*mnoznik);
+                SaveMoney(finalnagroda);
+                nagroda1.setText(String.valueOf(finalnagroda));
+                nagrodashadow1.setText(String.valueOf(finalnagroda));
+                Pokaz_Topbar();
+                Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
+                Ukryj_Topbar();
+            }
+            if(czyZalogowany==true){
+                updateFirebaseData(acct.getIdToken());
+            }
+            nagrodaMultiplier.setText(String.valueOf(mnoznik*100)+"%");
+        }catch (Exception e){
+            e.printStackTrace();
         }
+    }
     public void setBledneParent(Button[] buttony,PytaniaDB pytanie) {
         try{
             for(int j=0;j<4;j++){

@@ -447,17 +447,19 @@ public class PytaniaNewFormat {
                 localpkty-=incorrect;
                 if(localpkty<0) localpkty=0;
                 return  localpkty;
-            case "DOPASUJ_NTO1":
-                boolean duplicates=false;
+            case "DOPASUJ_NTO1":{
                 int dupe_number =0;
-                for (int j=0;j<OdpowiedziUzytkownika.length;j++)
+                int localpkt =Pkt;
+                for (int j=0;j<OdpowiedziUzytkownika.length;j++){
                     for (int k=j+1;k<OdpowiedziUzytkownika.length;k++){
                         if (k!=j && OdpowiedziUzytkownika[k] == OdpowiedziUzytkownika[j]){
-                        duplicates=true;
                         dupe_number++;
                         }
                     }
-                //todo: dokończ to później bo już dostaje pierdolca
+                }
+                localpkt-=dupe_number;
+                return Math.max(localpkt, 0);
+            }
             case "DOKONCZ":
             case "DOPASUJ_TABELA":
                 if(checkPoprawna()) return Pkt;
