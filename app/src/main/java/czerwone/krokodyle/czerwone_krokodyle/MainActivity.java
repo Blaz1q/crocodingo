@@ -3115,6 +3115,32 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             }
                         }//todo: dokończ logikę czy_wszystko_zaznaczyl() dla pytań pf, nto1, nton
                         break;
+                        case 1:{
+                            prawda.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try{
+                                        if(!pytanie.czy_zaznaczyl(finalI))
+                                            pytanie.setOdpowiedziUzytkownika(0,finalI);
+                                        setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,true);
+                                    } catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                            falsz.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try{
+                                        if(!pytanie.czy_zaznaczyl(finalI))
+                                            pytanie.setOdpowiedziUzytkownika(1,finalI);
+                                        setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,true);
+                                    } catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }break;
                     }
 
 

@@ -420,6 +420,12 @@ public class PytaniaNewFormat {
         }
         return true;
     }
+    public boolean czy_zaznaczyl(int index){
+        if(index<OdpowiedziUzytkownika.length){
+            return OdpowiedziUzytkownika[index] != -1;
+        }
+        return false;
+    }
     public boolean czyBledne(){
         return ObliczPkty() == 0;
     }
