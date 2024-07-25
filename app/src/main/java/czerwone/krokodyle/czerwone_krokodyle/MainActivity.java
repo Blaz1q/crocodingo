@@ -103,6 +103,7 @@ import com.google.android.gms.common.api.ApiException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import ru.noties.jlatexmath.JLatexMathDrawable;
 
@@ -150,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     private List<List<PytaniaNewFormat>> podzielonanowaListaPytan = new ArrayList<>();
     private List<PytaniaNewFormat> NewlistaShuffled = new ArrayList<>();
+    private List<PytaniaNewFormat> ListaPytanZlozone = new ArrayList<>();
     // zmienne do akcji
     private List<String> actions = new ArrayList<>();
     private List<Integer> popups = new ArrayList<>();
@@ -1061,23 +1063,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     }
                     podzielonanowaListaPytan.get(listaKategoriiNew.indexOf(Integer.valueOf(pytanie.getKatID()))).add(pytanie);
                 }else{
-                    boolean hasKat = false;
-                    for(int j=0;j<pytanie.getListaZlozone().size();j++){
-                        int h=0;
-                        while (h < listaKategoriiNew.size()) {
-                            if (listaKategoriiNew.get(h) == Integer.valueOf(pytanie.getListaZlozone().get(j).getKatID())) {
-                                hasKat = true;
-                                break;
-                            }
-                            h++;
-                        }
-                        if (!hasKat) {
-                            listaKategoriiNew.add(Integer.valueOf(pytanie.getListaZlozone().get(j).getKatID()));
-                            podzielonanowaListaPytan.add(new ArrayList<PytaniaNewFormat>());
-                        }
-                        Log.d("japierdole",""+pytanie.getListaZlozone().get(j).getKatID());
-                        podzielonanowaListaPytan.get(listaKategoriiNew.indexOf(Integer.valueOf(pytanie.getListaZlozone().get(j).getKatID()))).add(pytanie);
-                    }
+                    ListaPytanZlozone.add(pytanie);
                 }
                 nowaListaPytan.add(pytanie);
             }
@@ -3019,7 +3005,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                     @Override
                                     public void onClick(View v) {
                                         try{
-                                            oneshot=true;
                                             pytanie.setOdpowiedziUzytkownika(finalI,0);
                                             setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,checkpoprawne);
                                         } catch (Exception e){
@@ -3035,7 +3020,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                 @Override
                                 public void onClick(View v) {
                                     try{
-                                        oneshot=true;
                                         if(!pytanie.czy_wszystko_zaznaczyl())
                                             pytanie.setOdpowiedziUzytkownika(finalI,0);
                                         setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,true);
@@ -3104,7 +3088,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                     @Override
                                     public void onClick(View v) {
                                         try{
-                                            oneshot=true;
                                             pytanie.setOdpowiedziUzytkownika(1,finalI);
                                             setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,checkpoprawne);
                                         } catch (Exception e){
@@ -3113,7 +3096,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                     }
                                 });
                             }
-                        }//todo: dokończ logikę czy_wszystko_zaznaczyl() dla pytań pf, nto1, nton
+                        }
                         break;
                         case 1:{
                             prawda.setOnClickListener(new View.OnClickListener() {
@@ -3168,12 +3151,20 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 mainlayout.addView(zdj);
                 mainlayout.addView(polecenie);
                 RadioGroup radioGroup = new RadioGroup(this);
+                radioGroup.setOrientation(LinearLayout.HORIZONTAL);
                 RadioButton[] radioButtons = new RadioButton[pytanie.getPkt()+1];
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1.0f
+                );
                 for (int i = 0; i <= pytanie.getPkt(); i++) {
                     radioButtons[i] = new RadioButton(this);
-                    radioButtons[i].setText("Punkt " + i);
+                    radioButtons[i].setText(i+" pkt");
                     final int finalI = i;
                     if(!checkpoprawne){
+                        radioButtons[i].setLayoutParams(params);
+                        radioButtons[i].setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     radioButtons[i].setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -3189,8 +3180,24 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     if(checkpoprawne) radioButtons[i].setEnabled(false);
                     radioGroup.addView(radioButtons[i]);
                 }
+                Button wyjasnij_mini = new Button(this);
+                wyjasnij_mini.setText("Zasady Oceniania");
+                wyjasnij_mini.setBackgroundColor(getColor(R.color.gray_active));
+                wyjasnij_mini.setTextColor(getColor(R.color.white));
+                wyjasnij_mini.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        POPUP_EXCEPTION_MODE=1;
+                        ShowPopup(R.layout.popup_wyjasnienie_mini);
+                        TextView wyjasnienie = myDialog.findViewById(R.id.wyjasnienie_mini);
+                        wyjasnienie.setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getPoprawnaOdpMini(getLang()),0x00000000,getColor(R.color.white)));
+                        myDialog.show();
+                        POPUP_EXCEPTION_MODE=0;
+                    }
+                });
                 setSelectedNewPytaniaOTWARTE(radioButtons,pytanie);
                 mainlayout.addView(radioGroup);
+                mainlayout.addView(wyjasnij_mini);
                 //mainlayout.addView(wyjasnieniemini);
                 //mainlayout.addView(wyjasnienie);
             }break;
@@ -3300,7 +3307,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             odp[j].setOnClickListener(new View.OnClickListener(){
                                 @Override
                                 public void onClick(View v) {
-                                    oneshot=true;
                                     if(finalI==0){
                                         pytanie.setOdpowiedziUzytkownika(finalJ,0);
                                         setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,checkpoprawne);
@@ -3962,6 +3968,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         //ResetAllQuestions();
         List<PytaniaNewFormat> ListaPytan = new ArrayList<>();
         List<PytaniaNewFormat> PreShuffle = new ArrayList<>();
+        boolean hasZlozone=false;
+        Random r = new Random();
         for(int i=0;i<podzielonanowaListaPytan.size();i++){
             PreShuffle.clear();
             localqnum=0;
@@ -3978,9 +3986,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     ListaPytan.add(PreShuffle.get(j));
                 }
             }
-
+            if(!hasZlozone&&(podzielonanowaListaPytan.size()/2)==i){
+                hasZlozone=true;
+                ListaPytan.add(ListaPytanZlozone.get(r.nextInt(ListaPytanZlozone.size())));
+            }
         }
         q_num = ListaPytan.size();
+
         for(int i=0;i<q_num;i++){
             ListaPytan.get(i).reset();
         }
@@ -4083,7 +4095,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         set_new_pytanie_poj(podzielonanowaListaPytan.get(r1).get(r2),layout);
     }
     public void set_new_pytanie_poj(PytaniaNewFormat pytanie,LinearLayout mainlayout){
-        oneshot=false;
         mainlayout.removeAllViews();
         addNewPytania(pytanie,mainlayout,false,1);
     }

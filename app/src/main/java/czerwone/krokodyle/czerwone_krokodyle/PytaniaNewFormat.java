@@ -25,6 +25,7 @@ public class PytaniaNewFormat {
     private String[] Polecenie;
     private String[] Tresc;
     private String[][] Odpowiedzi;
+    private String[][] TrescMultiKulti;
     private String[] OdpowiedziZdj;
     private int[] PoprawnaOdp;
     private String[] PoprawnaOdpMini;
@@ -99,21 +100,6 @@ public class PytaniaNewFormat {
                 hasZdj = true;
             }
         }
-        if(Typ.equals("DOPASUJ_NTON")){
-            this.Pkt = pytanie.getInt("pkt");
-            this.Kategoria = pytanie.getString("kat");
-            this.KatID = pytanie.getInt("katID");
-            this.PoprawnaOdp = initI1D(pytanie.getJSONArray("poprawna"));
-            this.Wyjasnienie = initS1D(pytanie.getJSONArray("wyjasnienie"));
-            this.Polecenie = initS1D(pytanie.getJSONArray("polecenie")); hasPolecenie=true;
-            this.OdpowiedziUzytkownika = new int[PoprawnaOdp.length];
-            Arrays.fill(this.OdpowiedziUzytkownika,-1);
-            if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
-            if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
-            if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
-            if(pytanie.has("odp_zdj")) {this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp")); hasOdpowiedziZdj=true;}
-            if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
-        }
         if(Typ.equals("DOPASUJ_NTO1")||Typ.equals("DOPASUJ_1TO1")){
             this.Pkt = pytanie.getInt("pkt");
             this.Kategoria = pytanie.getString("kat");
@@ -127,7 +113,7 @@ public class PytaniaNewFormat {
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
-        }
+        }//todo: zrób treść multikulti tego typu kurwa
         if(Typ.equals("DOPASUJ_TABELA")){
             this.Pkt = pytanie.getInt("pkt");
             this.Kategoria = pytanie.getString("kat");
