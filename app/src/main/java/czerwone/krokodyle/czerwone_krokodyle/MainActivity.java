@@ -2925,7 +2925,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
-    public void setSelectedNewPytaniaDOPASUJ_TABELA(Button button[],PytaniaNewFormat pytanie,int index){
+    public void setSelectedNewPytaniaDOPASUJ_TABELA(Button button[],PytaniaNewFormat pytanie,int index,boolean checkPoprawne){
         boolean isselected;
         int odpowiedzi;
         int firstlast;
@@ -2933,13 +2933,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         else firstlast=0;
         odpowiedzi = pytanie.getOdpowiedziUzytkownika()[firstlast];
         for(int i=0;i<button.length;i++){
-            if(i==odpowiedzi){
-                //button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+" }:"+pytanie.getOdpowiedzi(getLang())[i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
+            if(checkPoprawne){
+                if(i==odpowiedzi){
+                    //button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+" }:"+pytanie.getOdpowiedzi(getLang())[i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
+                    button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_npoprawne", "drawable", getPackageName())),0xffffffff));
+                    if(pytanie.getPoprawnaOdp()[firstlast]==i) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_poprawne", "drawable", getPackageName())),0xffffffff));
+                }else{
+                    button[i].setBackground(Math_syn.set_Math(pytanie.getTabela(getLang())[index][i]));
+                }
+            }
+            else{
+                if(i==odpowiedzi) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
+                else button[i].setBackground(Math_syn.set_Math(pytanie.getTabela(getLang())[index][i]));
 
-                button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
-                if(pytanie.getPoprawnaOdp()[firstlast]==i) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],0xffbeffbe,0xffffffff));
-            }else{
-                button[i].setBackground(Math_syn.set_Math(pytanie.getTabela(getLang())[index][i]));
             }
         }
     }
@@ -2974,7 +2980,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
-    public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne){
+    public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){
         switch (pytanie.getTyp()){
             case "DOKONCZ":
             {
@@ -3005,25 +3011,46 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 }
 
                 for(int i=0;i<odpowiedz.length;i++){
-                    if(!checkpoprawne){
-                    int finalI = i;
-                    odpowiedz[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try{
-                            pytanie.setOdpowiedziUzytkownika(finalI,0);
-                            setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,checkpoprawne);
-                        } catch (Exception e){
-                            e.printStackTrace();
+                    switch (testMode){
+                        case 0:{
+                            if(!checkpoprawne){
+                                int finalI = i;
+                                odpowiedz[i].setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try{
+                                            oneshot=true;
+                                            pytanie.setOdpowiedziUzytkownika(finalI,0);
+                                            setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,checkpoprawne);
+                                        } catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+                        }break;
+                        case 1: {
+                            int finalI = i;
+                            odpowiedz[i].setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try{
+                                        oneshot=true;
+                                        if(!pytanie.czy_wszystko_zaznaczyl())
+                                            pytanie.setOdpowiedziUzytkownika(finalI,0);
+                                        setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,true);
+                                        } catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
                         }
+                        break;
                     }
-                });
-                }
                     mainlayout.addView(odpowiedz[i]);
                 }
                 setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,checkpoprawne);
                 //mainlayout.addView(wyjasnienie);
-
             }break;
             case "PF":
             {
@@ -3059,30 +3086,38 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     falsz.setText("F");
                     Button[] prawdafalsz = new Button[]{prawda, falsz};
                     final int finalI = i;
-                    if(!checkpoprawne){
-                    prawda.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try{
-                                pytanie.setOdpowiedziUzytkownika(0,finalI);
-                                setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,checkpoprawne);
-                            } catch (Exception e){
-                                e.printStackTrace();
+                    switch (testMode){
+                        case 0:{
+                            if(!checkpoprawne){
+                                prawda.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try{
+                                            pytanie.setOdpowiedziUzytkownika(0,finalI);
+                                            setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,checkpoprawne);
+                                        } catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                                falsz.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try{
+                                            oneshot=true;
+                                            pytanie.setOdpowiedziUzytkownika(1,finalI);
+                                            setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,checkpoprawne);
+                                        } catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
                             }
-                        }
-                    });
-                    falsz.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try{
-                                pytanie.setOdpowiedziUzytkownika(1,finalI);
-                                setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,checkpoprawne);
-                            } catch (Exception e){
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                        }//todo: dokończ logikę czy_wszystko_zaznaczyl() dla pytań pf, nto1, nton
+                        break;
                     }
+
+
                     //if(pytanie.getPoprawnaOdp()[i]==0) falsz.setBackgroundColor(0xff00ff00);
                     //else prawda.setBackgroundColor(0xff00ff00);
                     mainlayout.addView(odpowiedz);
@@ -3190,7 +3225,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
                     odpowiedz[i] = new TextView(this);
                     odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
-
                     for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
                         if(pytanie.getPoprawnaOdp()[j]==i){
                             odpowiedz[i].setBackground(Math_syn.set_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
@@ -3240,12 +3274,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             odp[j].setOnClickListener(new View.OnClickListener(){
                                 @Override
                                 public void onClick(View v) {
+                                    oneshot=true;
                                     if(finalI==0){
                                         pytanie.setOdpowiedziUzytkownika(finalJ,0);
-                                        setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0);
+                                        setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,checkpoprawne);
                                     }else{
                                         pytanie.setOdpowiedziUzytkownika(finalJ,1);
-                                        setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length-1);
+                                        setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length-1,checkpoprawne);
                                     }
                                 }
                             });
@@ -3254,9 +3289,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             //Log.d("data",TabelaData[i][j]);
                         }
                         if(finalI==0){
-                            setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0);
+                            setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,checkpoprawne);
                         }else{
-                            setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,2);
+                            setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,2,checkpoprawne);
                         }
                     }else{
                         TextView filler = new TextView(this);
@@ -3278,7 +3313,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 mainlayout.addView(info);
                 mainlayout.addView(zdj);
                 for(int i=0;i<pytanie.getListaZlozone().size();i++){
-                    addNewPytania(pytanie.getListaZlozone().get(i),mainlayout,checkpoprawne);
+                    addNewPytania(pytanie.getListaZlozone().get(i),mainlayout,checkpoprawne,testMode);
                 }
             }break;
         }
@@ -3289,7 +3324,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         mainlayout.removeAllViews();
         TextView counet = findViewById(R.id.debugcounter);
         counet.setText(String.valueOf(newpytaniacounterdebug));
-        addNewPytania(pytanie,mainlayout,true);
+        addNewPytania(pytanie,mainlayout,true,0);
     }
     public void DefaultMainPageActions(){
         setContentView(R.layout.main_page);
@@ -3498,9 +3533,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         else if (v.getId()==R.id.Rozpocznij_test2){
             ResetAllQuestions();
-            setContentView(R.layout.pojedyncze_pytanie);
-            CHALLENGE_MODE = false;
-            Set_pytanie_Poj();
+            setContentView(R.layout.newformattestpytanie_pojedyncze);
+            GenerujPojPytania(v);
             ClosePopup();
             bgmusictesty();
             AddActions("pojedyncze_pytanie");
@@ -4014,6 +4048,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             else if(NewlistaShuffled.get(i).czyBledne()) buttons[i].setBackgroundColor(getColor(R.color.ckpink));
         }
     }
+    public void GenerujPojPytania(View v){
+        Random r = new Random();
+        int r1 = r.nextInt(podzielonanowaListaPytan.size());
+        int r2 = r.nextInt(podzielonanowaListaPytan.get(r1).size());
+        LinearLayout layout = findViewById(R.id.miejsce_na_pytanie_pojedyncze);
+        podzielonanowaListaPytan.get(r1).get(r2).reset();
+        set_new_pytanie_poj(podzielonanowaListaPytan.get(r1).get(r2),layout);
+    }
+    public void set_new_pytanie_poj(PytaniaNewFormat pytanie,LinearLayout mainlayout){
+        oneshot=false;
+        mainlayout.removeAllViews();
+        addNewPytania(pytanie,mainlayout,false,1);
+    }
     public void set_new_pytanie(PytaniaNewFormat pytanie,LinearLayout mainlayout,Boolean checkPoprawne){
         mainlayout.removeAllViews();
         TextView Nr_pytania = new TextView(this);
@@ -4024,7 +4071,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Nr_pytania.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         Nr_pytania.setPadding(0,20,0,20);
         mainlayout.addView(Nr_pytania);
-        addNewPytania(pytanie,mainlayout,checkPoprawne);
+        addNewPytania(pytanie,mainlayout,checkPoprawne,0);
 
         if(CURRENT_INDEX==q_num-1){
             Button zmientekst = findViewById(R.id.nextnewbutton);
@@ -4169,37 +4216,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         } catch (Exception e){
             e.printStackTrace();
         }
-    }
-    public void Create_Question_Buttons(){
-        Log.d("testaction","creating");
-        poprawne = 0;
-        int localqnum=0;
-        ResetAllQuestions();
-        List<PytaniaDB> ListaPytan = new ArrayList<>();
-        List<PytaniaDB> PreShuffle = new ArrayList<>();
-        for(int i=0;i<podzielonaListaPytan.size();i++){
-            PreShuffle.clear();
-            localqnum=0;
-            localqnum = rand_num.nextInt(3)+1;
-            PreShuffle.addAll(podzielonaListaPytan.get(i));
-            Collections.shuffle(PreShuffle);
-            if(localqnum<=podzielonaListaPytan.get(i).size()){
-                for(int j=0;j<localqnum;j++){
-                    ListaPytan.add(PreShuffle.get(j));
-                }
-            }
-            else{
-                for(int j=0;j<podzielonaListaPytan.get(i).size();j++){
-                    ListaPytan.add(PreShuffle.get(j));
-                }
-            }
-
-        }
-        q_num = ListaPytan.size();
-        listaShuffled.clear();
-        listaShuffled.addAll(ListaPytan);
-        //Collections.shuffle(listaShuffled);
-        Resume_Question_Buttons();
     }
     public void ResetAllQuestions(){
         Log.d("testaction","reseting");

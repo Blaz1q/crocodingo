@@ -408,6 +408,18 @@ public class PytaniaNewFormat {
         }
         return false;
     }
+    public boolean czy_wszystko_zaznaczyl(){
+        if(!Typ.equals("ZLOZONE")){
+            for(int j : OdpowiedziUzytkownika) if(j==-1) return false;
+            return true;
+        }
+        for(int i=0;i<ListaZlozone.size();i++){
+            for(int j=0;j<ListaZlozone.get(i).OdpowiedziUzytkownika.length;j++){
+                if(getListaZlozone().get(i).OdpowiedziUzytkownika[j]==-1) return false;
+            }
+        }
+        return true;
+    }
     public boolean czyBledne(){
         return ObliczPkty() == 0;
     }
