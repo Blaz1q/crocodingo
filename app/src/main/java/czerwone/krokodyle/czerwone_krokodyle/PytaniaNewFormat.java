@@ -25,7 +25,7 @@ public class PytaniaNewFormat {
     private String[] Polecenie;
     private String[] Tresc;
     private String[][] Odpowiedzi;
-    private String[][] TrescMultiKulti;
+    private String[][] PolecenieMulti;
     private String[] OdpowiedziZdj;
     private int[] PoprawnaOdp;
     private String[] PoprawnaOdpMini;
@@ -100,7 +100,22 @@ public class PytaniaNewFormat {
                 hasZdj = true;
             }
         }
-        if(Typ.equals("DOPASUJ_NTO1")||Typ.equals("DOPASUJ_1TO1")){
+        if(Typ.equals("DOPASUJ_1TO1")){
+            this.Pkt = pytanie.getInt("pkt");
+            this.Kategoria = pytanie.getString("kat");
+            this.KatID = pytanie.getInt("katID");
+            this.PoprawnaOdp = initI1D(pytanie.getJSONArray("poprawna"));
+            this.Wyjasnienie = initS1D(pytanie.getJSONArray("wyjasnienie"));
+            this.Polecenie = initS1D(pytanie.getJSONArray("polecenie")); hasPolecenie=true;
+            this.PolecenieMulti = initS2D(pytanie.getJSONArray("polecenie_mini"));
+            this.OdpowiedziUzytkownika = new int[PoprawnaOdp.length];
+            Arrays.fill(this.OdpowiedziUzytkownika,-1);
+            if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
+            if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
+            if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
+            if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
+        }
+        if(Typ.equals("DOPASUJ_NTO1")){
             this.Pkt = pytanie.getInt("pkt");
             this.Kategoria = pytanie.getString("kat");
             this.KatID = pytanie.getInt("katID");
@@ -113,7 +128,7 @@ public class PytaniaNewFormat {
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
-        }//todo: zrób treść multikulti tego typu kurwa
+        }
         if(Typ.equals("DOPASUJ_TABELA")){
             this.Pkt = pytanie.getInt("pkt");
             this.Kategoria = pytanie.getString("kat");
@@ -365,7 +380,31 @@ public class PytaniaNewFormat {
         }
         return "";
     }
-    public void setOdpowiedziUzytkownika(int odpowiedz,int index){
+    public String[] getPolecenieMulti(String lang) {
+        if(!hasPolecenie) return new String[]{""};
+        if(translatable!=null){
+            if(translatable.has("polecenie")){
+                try {
+                    if(!translatable.getBoolean("polecenie")) return PolecenieMulti[0];
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        switch (lang){
+            case "En":
+                if(PolecenieMulti.length>=2) return PolecenieMulti[1];
+            case "Pl":
+                if(PolecenieMulti.length>=1) return PolecenieMulti[0];
+        }
+        return new String[]{""};
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setOdpowiedziUzytkownika(int odpowiedz, int index){
         if(index<OdpowiedziUzytkownika.length)
             this.OdpowiedziUzytkownika[index] = odpowiedz;
         Log.d("pkty: ",""+ObliczPkty());
