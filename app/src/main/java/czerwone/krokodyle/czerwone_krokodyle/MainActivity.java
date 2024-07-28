@@ -20,6 +20,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.SortedList;
+import androidx.webkit.internal.ApiFeature;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -2973,9 +2974,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
+        Bitmap bitmap;
+        PytaniaNewFormat pytanie;
 
-        public DownloadImageTask(ImageView bmImage) {
+        public DownloadImageTask(ImageView bmImage,PytaniaNewFormat pytanie) {
             this.bmImage = bmImage;
+            this.pytanie = pytanie;
         }
 
         protected Bitmap doInBackground(String... urls) {
@@ -2994,16 +2998,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         protected void onPostExecute(Bitmap result) {
             if(result==null) Toast.makeText(getApplicationContext(),"Can't load img.",Toast.LENGTH_SHORT).show();
             bmImage.setImageBitmap(result);
+            this.bitmap = result;
+            pytanie.setZdjBitmap(result);
         }
     }
     public void loadImgFromServer(ImageView img,PytaniaNewFormat pytanie,LinearLayout mainlayout){
         if(pytanie.hasZdj){
-            try{
-                new DownloadImageTask(img)
-                        .execute(imgs_server+pytanie.getZdj());
-                mainlayout.addView(img);
-            }catch (Exception e){
+            if(pytanie.getZdjBitmap()==null){
+                try{
+                    new DownloadImageTask(img,pytanie).execute(imgs_server+pytanie.getZdj());
+                    mainlayout.addView(img);
+                }catch (Exception e){
 
+                }
+            }
+            else{
+                img.setImageBitmap(pytanie.getZdjBitmap());
+                mainlayout.addView(img);
             }
         }
     }

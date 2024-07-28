@@ -1,5 +1,6 @@
 package czerwone.krokodyle.czerwone_krokodyle;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -40,6 +41,7 @@ public class PytaniaNewFormat {
     boolean hasOdpowiedzi = false;
     boolean hasOdpowiedziZdj = false;
     JSONObject translatable = null;
+    private Bitmap ZdjBitmap = null;
 
     public PytaniaNewFormat(JSONObject pytanie) throws JSONException {
         //Log.d("Loading","kapi kapi kapiciulo");
@@ -363,6 +365,10 @@ public class PytaniaNewFormat {
 
     public String getZdj() {
         return Zdj;
+    }
+    public Bitmap getZdjBitmap(){ return ZdjBitmap;}
+    public void setZdjBitmap(Bitmap bitmap){
+        this.ZdjBitmap = bitmap;
     }
 
     public String getPolecenie(String lang) {
