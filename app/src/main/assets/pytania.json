@@ -5,6 +5,7 @@
       "katID": 1,
       "pkt": 1,
       "id": 0,
+      "zdj": "zdj1.png",
       "polecenie": ["\\text{Dokończ zdanie. Zaznacz odpowiedź spośród podanych}","\\text{Finish the sentence. Check the correct answer.}"],
       "tresc": ["\\text{Równość }  \\frac{1}{4} + \\frac{1}{5}+ \\frac{1}{a} = 1 \\text{ jest prawdziwa dla:} "],
       "odp": [["a=\\frac{11}{20}","a=\\frac{8}{9}","a=\\frac{9}{8}","a=\\frac{20}{11}"]],

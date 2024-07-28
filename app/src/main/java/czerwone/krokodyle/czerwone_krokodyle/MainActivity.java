@@ -44,6 +44,7 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -122,7 +123,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -254,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private static final String SAVED_LEVEL = "SAVED_LEVEL";
     private static final String SAVED_EXP = "SAVED_EXP";
     private static final String final_connection= "https://blaz1q.github.io/crocodingo/androidAPI.json"; //"https://jncrew.5v.pl/androidAPI.php";
+    private static final String imgs_server = "https://blaz1q.github.io/crocodingo/serverimgs/";
     String[] SERVER_VERSION = {"",""};
     AppUpdateManager appUpdateManager;
     Dialog dialog;
@@ -2966,6 +2971,42 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if(result==null) Toast.makeText(getApplicationContext(),"Can't load img.",Toast.LENGTH_SHORT).show();
+            bmImage.setImageBitmap(result);
+        }
+    }
+    public void loadImgFromServer(ImageView img,PytaniaNewFormat pytanie,LinearLayout mainlayout){
+        if(pytanie.hasZdj){
+            try{
+                new DownloadImageTask(img)
+                        .execute(imgs_server+pytanie.getZdj());
+                mainlayout.addView(img);
+            }catch (Exception e){
+
+            }
+        }
+    }
     public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){
         switch (pytanie.getTyp()){
             case "DOKONCZ":
@@ -2980,7 +3021,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 tresc.setBackground(Math_syn.set_Math(pytanie.getTresc(getLang())));
                 wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
                 mainlayout.addView(info);
-                mainlayout.addView(zdj);
+                loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
                 mainlayout.addView(tresc);
                 Button[] odpowiedz = new Button[pytanie.getOdpowiedzi(getLang()).length];
@@ -3046,7 +3087,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
                 wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
                 mainlayout.addView(info);
-                mainlayout.addView(zdj);
+                loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
                 TableLayout.LayoutParams tableparams = new TableLayout.LayoutParams(
                         TableLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f
@@ -3148,7 +3189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
                 info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
                 mainlayout.addView(info);
-                mainlayout.addView(zdj);
+                loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
                 RadioGroup radioGroup = new RadioGroup(this);
                 radioGroup.setOrientation(LinearLayout.HORIZONTAL);
@@ -3212,7 +3253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
                 wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
                 mainlayout.addView(info);
-                mainlayout.addView(zdj);
+                loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
                 TextView[] odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
                 for(int i=0;i<pytanie.getPoprawnaOdp().length;i++){
@@ -3267,7 +3308,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
                 polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
                 mainlayout.addView(info);
-                mainlayout.addView(zdj);
+                loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
                 TextView[] odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
                 for(int i=0;i<pytanie.getPoprawnaOdp().length;i++){
@@ -3330,7 +3371,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
                 wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
                 mainlayout.addView(info);
-                mainlayout.addView(zdj);
+                loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
                 LinearLayout TabelaContainer = new LinearLayout(this);
                 TabelaContainer.setOrientation(LinearLayout.HORIZONTAL);

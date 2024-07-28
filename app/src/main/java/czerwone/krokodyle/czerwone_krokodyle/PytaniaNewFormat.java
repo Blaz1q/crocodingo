@@ -361,6 +361,10 @@ public class PytaniaNewFormat {
         return "";
     }
 
+    public String getZdj() {
+        return Zdj;
+    }
+
     public String getPolecenie(String lang) {
         if(!hasPolecenie) return "";
         if(translatable!=null){
