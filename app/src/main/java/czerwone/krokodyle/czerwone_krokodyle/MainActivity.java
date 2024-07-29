@@ -3080,6 +3080,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                         if(!pytanie.czy_wszystko_zaznaczyl())
                                             pytanie.setOdpowiedziUzytkownika(finalI,0);
                                         setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,true);
+                                        Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                        wyjasnienieButton.setEnabled(true);
                                         } catch (Exception e){
                                             e.printStackTrace();
                                         }
@@ -3165,6 +3167,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                         if(!pytanie.czy_zaznaczyl(finalI))
                                             pytanie.setOdpowiedziUzytkownika(0,finalI);
                                         setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,true);
+                                        if(pytanie.czy_wszystko_zaznaczyl()){
+                                            Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                            wyjasnienieButton.setEnabled(true);
+                                        }
                                     } catch (Exception e){
                                         e.printStackTrace();
                                     }
@@ -3177,6 +3183,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                         if(!pytanie.czy_zaznaczyl(finalI))
                                             pytanie.setOdpowiedziUzytkownika(1,finalI);
                                         setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,true);
+                                        if(pytanie.czy_wszystko_zaznaczyl()){
+                                            Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                            wyjasnienieButton.setEnabled(true);
+                                        }
                                     } catch (Exception e){
                                         e.printStackTrace();
                                     }
@@ -4221,11 +4231,17 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         int r2 = r.nextInt(podzielonanowaListaPytan.get(r1).size());
         LinearLayout layout = findViewById(R.id.miejsce_na_pytanie_pojedyncze);
         podzielonanowaListaPytan.get(r1).get(r2).reset();
+        globalpytanie = podzielonanowaListaPytan.get(r1).get(r2);
         set_new_pytanie_poj(podzielonanowaListaPytan.get(r1).get(r2),layout);
     }
+    PytaniaNewFormat globalpytanie;
     public void set_new_pytanie_poj(PytaniaNewFormat pytanie,LinearLayout mainlayout){
         mainlayout.removeAllViews();
+        miejsceNaPytanie_global = mainlayout;
+        WyjasnijToggle = false;
         addNewPytania(pytanie,mainlayout,false,1);
+        Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+        wyjasnienieButton.setEnabled(false);
     }
     public void set_new_pytanie(PytaniaNewFormat pytanie,LinearLayout mainlayout,Boolean checkPoprawne){
         mainlayout.removeAllViews();
@@ -4476,10 +4492,18 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             if(v.getId()==R.id.wyjasnienie){
                 set_new_pytanie(NewlistaShuffled.get(CURRENT_INDEX),miejsceNaPytanie_global,true);
             }
+            else if(v.getId()==R.id.wyjasnienie_poj){
+                miejsceNaPytanie_global.removeAllViews();
+                addNewPytania(globalpytanie,miejsceNaPytanie_global,true,1);
+            }
         }else{
             WyjasnijToggle=true;
             if(v.getId()==R.id.wyjasnienie){
                 set_new_pytanie(NewlistaShuffled.get(CURRENT_INDEX),miejsceNaPytanie_global,true);
+            }
+            else if(v.getId()==R.id.wyjasnienie_poj){
+                miejsceNaPytanie_global.removeAllViews();
+                addNewPytania(globalpytanie,miejsceNaPytanie_global,true,1);
             }
         }
     }
