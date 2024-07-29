@@ -33,11 +33,11 @@
 
         <Button
             android:layout_below="@id/hiddentop"
-            android:id="@+id/karta_wzorow"
+            android:id="@+id/wyjasnienie"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/wyjasnienie"
-            android:onClick="Zmien_widoki"
+            android:onClick="WyjasnijToggle"
             android:layout_weight="1"
             android:layout_marginRight="3dp"
             android:backgroundTint="#333333"

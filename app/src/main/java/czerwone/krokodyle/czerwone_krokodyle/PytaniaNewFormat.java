@@ -318,6 +318,13 @@ public class PytaniaNewFormat {
         }
         return "";
     }
+    public String[] getWyjasnienieZlozone(String lang){
+        String[] result = new String[ListaZlozone.size()];
+        for(int i=0;i<ListaZlozone.size();i++){
+            result[i] = ListaZlozone.get(i).getWyjasnienie(lang);
+        }
+        return result;
+    }
 
     public int getKatID() {
         return KatID;

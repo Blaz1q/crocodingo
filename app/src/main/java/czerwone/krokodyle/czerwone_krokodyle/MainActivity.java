@@ -3091,7 +3091,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     mainlayout.addView(odpowiedz[i]);
                 }
                 setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,checkpoprawne);
-                //mainlayout.addView(wyjasnienie);
+                if(WyjasnijToggle){
+                    mainlayout.addView(wyjasnienie);
+                }
             }break;
             case "PF":
             {
@@ -3192,7 +3194,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     mainlayout.addView(tabela);
                     setSelectedNewPytaniaPF(prawdafalsz,pytanie,finalI,checkpoprawne);
                 }
-                //mainlayout.addView(wyjasnienie);
+                if(WyjasnijToggle){
+                    mainlayout.addView(wyjasnienie);
+                }
             }break;
             case "OTWARTE": {
                 TextView info = new TextView(this);
@@ -3256,7 +3260,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 mainlayout.addView(radioGroup);
                 mainlayout.addView(wyjasnij_mini);
                 //mainlayout.addView(wyjasnieniemini);
-                //mainlayout.addView(wyjasnienie);
+                if(WyjasnijToggle){
+                    mainlayout.addView(wyjasnienie);
+                }
             }break;
             case "DOPASUJ_NTO1":
             {
@@ -3313,6 +3319,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     }
                     mainlayout.addView(odpowiedz[i]);
                 }
+                if(WyjasnijToggle){
+                    mainlayout.addView(wyjasnienie);
+                }
             }break;
             case "DOPASUJ_1TO1":{
                 TextView info = new TextView(this);
@@ -3365,6 +3374,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     mainlayout.addView(dropdown[i]);
 
                     if(checkpoprawne) dropdown[i].setEnabled(false);
+
                 }
                 setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie);
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
@@ -3376,6 +3386,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         }
                     }
                     mainlayout.addView(odpowiedz[i]);
+                }
+                if(WyjasnijToggle){
+                    mainlayout.addView(wyjasnienie);
                 }
             }break;
             case "DOPASUJ_TABELA":{
@@ -3448,6 +3461,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     TabelaContainer.addView(TabelaColumn);
                 }
                 mainlayout.addView(TabelaContainer);
+                if(WyjasnijToggle){
+                    mainlayout.addView(wyjasnienie);
+                }
             }
             break;
             case "ZLOZONE":{
@@ -4185,6 +4201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         setContentView(R.layout.newformattestpytanie_bledne);
                         LinearLayout mainlayout = findViewById(R.id.miejsce_na_pytanie_bledne);
                         miejsceNaPytanie_global = mainlayout;
+                        WyjasnijToggle=false;
                         set_new_pytanie(NewlistaShuffled.get(finalI),mainlayout,true);
                         //Zakoncz_new_test();
                     } catch (Exception e){
@@ -4229,6 +4246,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }else{
                 zmientekst.setText(getString(R.string.wroc_do_startu));
             }
+        }else{
+            Button zmientekst = findViewById(R.id.nextnewbutton);
+            zmientekst.setText(getString(R.string.next));
         }
         if(CURRENT_INDEX==0){
             Button btn = findViewById(R.id.prevnewbutton);
@@ -4404,7 +4424,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             if(CURRENT_INDEX<q_num-1){
                 try{
                     CURRENT_INDEX++;
+                    WyjasnijToggle=false;
                     set_new_pytanie(NewlistaShuffled.get(CURRENT_INDEX),miejsceNaPytanie_global,checkPoprawne_global);
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -4437,6 +4459,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(v.getId()==R.id.prevnewbutton){
             if(CURRENT_INDEX>0){
                 CURRENT_INDEX--;
+                WyjasnijToggle=false;
                 set_new_pytanie(NewlistaShuffled.get(CURRENT_INDEX),miejsceNaPytanie_global,checkPoprawne_global);
                 Button btn = findViewById(R.id.prevnewbutton);
                 btn.setEnabled(true);
@@ -4445,6 +4468,21 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     boolean oneshot=true;
+    boolean WyjasnijToggle = false;
+    public void WyjasnijToggle(View v){
+        miejsceNaPytanie_global.removeAllViews();
+        if(WyjasnijToggle){
+            WyjasnijToggle=false;
+            if(v.getId()==R.id.wyjasnienie){
+                set_new_pytanie(NewlistaShuffled.get(CURRENT_INDEX),miejsceNaPytanie_global,true);
+            }
+        }else{
+            WyjasnijToggle=true;
+            if(v.getId()==R.id.wyjasnienie){
+                set_new_pytanie(NewlistaShuffled.get(CURRENT_INDEX),miejsceNaPytanie_global,true);
+            }
+        }
+    }
     public void Wyjasnij(View v){
 
         if(v.getId()==R.id.wyjasnienie){
