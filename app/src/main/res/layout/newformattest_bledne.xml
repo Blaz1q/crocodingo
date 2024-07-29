@@ -11,7 +11,7 @@
         android:id="@+id/questions_select_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/zakoncz_test"
+        android:layout_above="@id/zakoncz_test_bledne"
         android:contentDescription="@string/app_name"
         tools:ignore="UselessParent"
         android:layout_marginBottom="20dp"
@@ -38,7 +38,7 @@
         />
 
     <Button
-        android:id="@+id/zakoncz_test"
+        android:id="@+id/zakoncz_test_bledne"
         style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

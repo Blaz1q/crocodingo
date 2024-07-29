@@ -465,7 +465,13 @@ public class PytaniaNewFormat {
         return ObliczPkty() == 0;
     }
     public boolean czyPoprawne(){
-        return Pkt == ObliczPkty();
+        if(!Typ.equals("ZLOZONE"))
+            return Pkt == ObliczPkty();
+        int Pkty_suma = 0;
+        for(int i=0;i<ListaZlozone.size();i++){
+            Pkty_suma+= ListaZlozone.get(i).getPkt();
+        }
+        return ObliczPkty()==Pkty_suma;
     }
     public boolean czyTrochePoprawne(){
         if(!czyBledne()){

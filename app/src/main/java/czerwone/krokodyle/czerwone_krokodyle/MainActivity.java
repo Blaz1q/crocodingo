@@ -516,6 +516,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 case "pytania_wybor_bledne":
                     DefaultMainPageActions();
                     break;
+                case "pytanie_wyglad_bledne":
+                    setContentView(R.layout.newformattest_bledne);
+                    GenerujTestBledne();
+                    RemoveAction();
+                    break;
                 case "userprofile":
                     DefaultMainPageActions();
                     break;
@@ -4690,9 +4695,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             if(pytanie.czyTrochePoprawne()){
                 troche_poprawne++;
             }
-            if(pytanie.czyPoprawne()) poprawne++;
+            if(pytanie.czyPoprawne()){
+                poprawne++;
+                //Log.d("qnum_i","i: "+i);
+                //Log.d("pkty","pkty: "+pytanie.ObliczPkty());
+            }
         }
-        double oblicz_percenty = pkt*100/q_num;
+        double oblicz_percenty = pkt*100/laczne_pkt;
         setContentView(R.layout.test_final);
         addProgress(1);
         addProgressOsiagniecia(11);
@@ -4725,6 +4734,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             negatywneWeight.weight = (float) npoprawne/q_num;
             pominieteWeight.weight = (float) brak_odp/q_num;
             trochepoprawneWeight.weight = (float) troche_poprawne/q_num;
+            if(troche_poprawne==0) troche_poprawne_chart.setVisibility(View.GONE);
+            if(npoprawne==0) negatywne_chart.setVisibility(View.GONE);
+            if(brak_odp==0) pominiete_chart.setVisibility(View.GONE);
+            if(poprawne==0) poprawne_chart.setVisibility(View.GONE);
             double mnoznik = 1;
             if(User.CrocoState==1){
                 mnoznik=0.7;
