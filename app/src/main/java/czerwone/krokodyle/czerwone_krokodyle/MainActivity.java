@@ -1599,8 +1599,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         TextView nazwa = new TextView(this);
         ImageView waluta = new ImageView(this);
         Button kupButton = new Button(this);
-        Typeface typeface = ResourcesCompat.getFont(this, R.font.londrina_solid);
-        Typeface typefaceoutline = ResourcesCompat.getFont(this, R.font.londrina_outline);
+        Typeface typeface = Typeface.DEFAULT;
+        Typeface typefaceoutline = Typeface.DEFAULT;
+        try{
+            typeface = ResourcesCompat.getFont(this, R.font.londrina_solid);
+            typefaceoutline = ResourcesCompat.getFont(this, R.font.londrina_outline);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         kupButton.setId(View.generateViewId());
         ImageView czapkaImageView = new ImageView(this);
         czapkaImageView.setId(View.generateViewId());
