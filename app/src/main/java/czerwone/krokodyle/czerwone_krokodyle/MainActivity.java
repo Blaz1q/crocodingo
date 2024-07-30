@@ -204,8 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean czyZalogowany = false;
     boolean isExitEnabled = true;
     boolean IGNORE_UPDATES = false;
-
-    private static final boolean canShowAds = false;
+    private static final boolean canShowAds = true;
     int radioButtonChecked = 0;
     int currentVol = -1;
     int current_item_index=-1;
