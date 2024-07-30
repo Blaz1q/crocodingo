@@ -2940,11 +2940,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             if(checkPoprawne){
                 if(i==odpowiedzi){
                     //button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+" }:"+pytanie.getOdpowiedzi(getLang())[i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
-                    button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_npoprawne", "drawable", getPackageName())),0xffffffff));
-                    if(pytanie.getPoprawnaOdp()[firstlast]==i) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_poprawne", "drawable", getPackageName())),0xffffffff));
-                }else{
+                    button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_npoprawna", "drawable", getPackageName())),0xffffffff));
+                }
+                else{
                     button[i].setBackground(Math_syn.set_Math(pytanie.getTabela(getLang())[index][i]));
                 }
+                if(pytanie.getPoprawnaOdp()[firstlast]==i) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_poprawna", "drawable", getPackageName())),0xffffffff));
             }
             else{
                 if(i==odpowiedzi) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
@@ -3240,22 +3241,43 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     radioButtons[i] = new RadioButton(this);
                     radioButtons[i].setText(i+" pkt");
                     final int finalI = i;
-                    if(!checkpoprawne){
-                        radioButtons[i].setLayoutParams(params);
-                        radioButtons[i].setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    radioButtons[i].setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try{
-                                pytanie.setOdpowiedziUzytkownika(finalI,0);
-
-                            } catch (Exception e){
-                                e.printStackTrace();
+                    radioButtons[i].setLayoutParams(params);
+                    radioButtons[i].setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    switch (testMode){
+                        case 0:
+                            if(!checkpoprawne){
+                                radioButtons[i].setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try{
+                                            pytanie.setOdpowiedziUzytkownika(finalI,0);
+                                        } catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
                             }
+                            if(checkpoprawne) radioButtons[i].setEnabled(false);
+                            break;
+                        case 1:{
+                            radioButtons[i].setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try{
+                                        pytanie.setOdpowiedziUzytkownika(finalI,0);
+                                        Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                        wyjasnienieButton.setEnabled(true);
+                                        for(int k=0;k<radioButtons.length;k++){
+                                            radioButtons[k].setEnabled(false);
+                                        }//głupie ale działa
+                                    } catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
                         }
-                    });
+                            break;
                     }
-                    if(checkpoprawne) radioButtons[i].setEnabled(false);
                     radioGroup.addView(radioButtons[i]);
                 }
                 Button wyjasnij_mini = new Button(this);
@@ -3312,20 +3334,34 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
                     dropdown[i].setAdapter(adapter);
                     int finalI = i;
-                    dropdown[i].setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view,
-                                                   int position, long id) {
-                            //Toast.makeText(getApplicationContext(),parent.getSelectedItemPosition()-1+"",Toast.LENGTH_SHORT).show();
-                            pytanie.setOdpowiedziUzytkownika(parent.getSelectedItemPosition()-1, finalI);
-                            setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie,checkpoprawne);
-                        }
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-                        }
-                    });
+                            dropdown[i].setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view,
+                                                           int position, long id) {
+                                    //Toast.makeText(getApplicationContext(),parent.getSelectedItemPosition()-1+"",Toast.LENGTH_SHORT).show();
+                                    pytanie.setOdpowiedziUzytkownika(parent.getSelectedItemPosition()-1, finalI);
+                                    if(pytanie.getOdpowiedziUzytkownika()[finalI]!=-1){
+                                        switch (testMode){
+                                            case 0:setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie,checkpoprawne);break;
+                                            case 1: setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie,true); dropdown[finalI].setEnabled(false);break;
+                                        }
+                                    }
+                                    if(pytanie.czy_wszystko_zaznaczyl()){
+                                        Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                        wyjasnienieButton.setEnabled(true);
+                                    }
+                                }
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+                                }
+                            });
+
+
                     mainlayout.addView(dropdown[i]);
-                    if(checkpoprawne) dropdown[i].setEnabled(false);
+                    if(testMode==0){
+                        if(checkpoprawne) dropdown[i].setEnabled(false);
+                    }
+
                 }
                 setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie,checkpoprawne);
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
@@ -3374,14 +3410,22 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
                     dropdown[i].setAdapter(adapter);
                     int finalI = i;
+
                     dropdown[i].setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view,
                                                    int position, long id) {
-                            //Toast.makeText(getApplicationContext(),parent.getSelectedItemPosition()-1+"",Toast.LENGTH_SHORT).show();
                             pytanie.setOdpowiedziUzytkownika(parent.getSelectedItemPosition()-1, finalI);
-                            setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie,checkpoprawne);
-
+                            if(pytanie.getOdpowiedziUzytkownika()[finalI]!=-1){
+                            switch (testMode){
+                                case 0:setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie,checkpoprawne);break;
+                                case 1: setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie,true); dropdown[finalI].setEnabled(false);break;
+                                }
+                            }
+                            if(pytanie.czy_wszystko_zaznaczyl()){
+                                Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                wyjasnienieButton.setEnabled(true);
+                            }
                         }
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
@@ -3389,9 +3433,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     });
                     mainlayout.addView(PolecenieMultiKulti);
                     mainlayout.addView(dropdown[i]);
-
-                    if(checkpoprawne) dropdown[i].setEnabled(false);
-
+                    if(testMode==0){
+                        if(checkpoprawne) dropdown[i].setEnabled(false);
+                    }
                 }
                 setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie,checkpoprawne);
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
@@ -3444,13 +3488,29 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             odp[j].setOnClickListener(new View.OnClickListener(){
                                 @Override
                                 public void onClick(View v) {
-                                    if(finalI==0){
-                                        pytanie.setOdpowiedziUzytkownika(finalJ,0);
-                                        setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,checkpoprawne);
-                                    }else{
-                                        pytanie.setOdpowiedziUzytkownika(finalJ,1);
-                                        setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length-1,checkpoprawne);
+                                    switch (testMode){
+                                        case 0:{
+                                            if(finalI==0){
+                                                pytanie.setOdpowiedziUzytkownika(finalJ,0);
+                                                setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,checkpoprawne);
+                                            }else{
+                                                pytanie.setOdpowiedziUzytkownika(finalJ,1);
+                                                setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length-1,checkpoprawne);
+                                            }
+                                        }break;
+                                        case 1:{
+                                                if(finalI==0){
+                                                    if(!pytanie.czy_zaznaczyl(0))
+                                                        pytanie.setOdpowiedziUzytkownika(finalJ,0);
+                                                    setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,true);
+                                                }else{
+                                                    if(!pytanie.czy_zaznaczyl(1)) pytanie.setOdpowiedziUzytkownika(finalJ,1);
+                                                    setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length-1,true);
+                                                }
+                                            }
+                                        break;
                                     }
+
                                 }
                             });
                             }
@@ -4229,7 +4289,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void GenerujPojPytania(View v){
         Random r = new Random();
-        int r1 = r.nextInt(podzielonanowaListaPytan.size());
+        int r1 = 3;//r.nextInt(podzielonanowaListaPytan.size());
         int r2 = r.nextInt(podzielonanowaListaPytan.get(r1).size());
         LinearLayout layout = findViewById(R.id.miejsce_na_pytanie_pojedyncze);
         podzielonanowaListaPytan.get(r1).get(r2).reset();
