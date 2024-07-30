@@ -4288,7 +4288,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void GenerujPojPytania(View v){
         Random r = new Random();
-        int r1 = 3;//r.nextInt(podzielonanowaListaPytan.size());
+        int r1 = r.nextInt(podzielonanowaListaPytan.size());
         int r2 = r.nextInt(podzielonanowaListaPytan.get(r1).size());
         LinearLayout layout = findViewById(R.id.miejsce_na_pytanie_pojedyncze);
         podzielonanowaListaPytan.get(r1).get(r2).reset();
