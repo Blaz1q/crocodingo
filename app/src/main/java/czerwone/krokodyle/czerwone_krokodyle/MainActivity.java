@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean isExitEnabled = true;
     boolean IGNORE_UPDATES = false;
 
-    private static final boolean canShowAds = true;
+    private static final boolean canShowAds = false;
     int radioButtonChecked = 0;
     int currentVol = -1;
     int current_item_index=-1;
@@ -339,8 +339,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 }
             }
         },AnimationTimer);
-
-
         handler.postDelayed(runnable = new Runnable() {
             public void run() {
                 handler.postDelayed(runnable, UpdateTimer);
@@ -2164,7 +2162,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             LoadAd();
         }
     }
-
     public void UstawStatusJedzenia(){
         if(czypokazana){
             ImageView strzaleczka = findViewById(R.id.current_status_jedzenia);
@@ -2870,29 +2867,39 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             radioButton[i].setChecked(isselected);
         }
     }
-    public void setSelectedNewPytaniaDOPASUJ_NTO1(Spinner spinner[],PytaniaNewFormat pytanie){
+    public void setSelectedNewPytaniaDOPASUJ_NTO1(Spinner spinner[],PytaniaNewFormat pytanie,boolean checkPoprawne){
         for(int i=0;i<spinner.length;i++){
             if(pytanie.getOdpowiedziUzytkownika()[i]!=-1){
-                spinner[i].setSelection(pytanie.getOdpowiedziUzytkownika()[i]);
-                if(pytanie.checkPoprawnaAny(i)){
-                    spinner[i].setBackgroundColor(0xff00ff00);
-                }
-                else{
+                spinner[i].setSelection(pytanie.getOdpowiedziUzytkownika()[i]+1);
+                if(checkPoprawne){
+                    if(pytanie.checkPoprawnaAny(i)){
+                        spinner[i].setBackgroundColor(getColor(R.color.ckcorrect));
+                    }
+                    else{
+                        spinner[i].setBackgroundColor(0xffffffff);
+                    }
+                }else{
                     spinner[i].setBackgroundColor(0xffffffff);
                 }
+
             }
         }
     }
-    public void setSelectedNewPytaniaDOPASUJ_1TO1(Spinner spinner[],PytaniaNewFormat pytanie){
+    public void setSelectedNewPytaniaDOPASUJ_1TO1(Spinner spinner[],PytaniaNewFormat pytanie,boolean checkPoprawne){
         for(int i=0;i<spinner.length;i++){
             if(pytanie.getOdpowiedziUzytkownika()[i]!=-1){
-                spinner[i].setSelection(pytanie.getOdpowiedziUzytkownika()[i]);
-                if(pytanie.checkPoprawna(i)){
-                    spinner[i].setBackgroundColor(0xff00ff00);
+                spinner[i].setSelection(pytanie.getOdpowiedziUzytkownika()[i]+1);
+                if(checkPoprawne){
+                    if(pytanie.checkPoprawna(i)){
+                        spinner[i].setBackgroundColor(getColor(R.color.ckcorrect));
+                    }
+                    else{
+                        spinner[i].setBackgroundColor(getColor(R.color.ckpink));
+                    }
+                }else{
+                    spinner[i].setBackgroundColor(0x00000000);
                 }
-                else{
-                    spinner[i].setBackgroundColor(0xffffffff);
-                }
+
             }
         }
     }
@@ -3297,9 +3304,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     dropdown[i].setLayoutParams(dropdownparams);
                     dropdown[i].setBackgroundColor(getColor(R.color.white));
                     dropdown[i].setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    String[] items = new String[pytanie.getOdpowiedzi(getLang()).length];
-                    for(int j=0;j<pytanie.getOdpowiedzi(getLang()).length;j++){
-                        items[j] = String.valueOf(alfabet.charAt(j));
+                    String[] items = new String[pytanie.getOdpowiedzi(getLang()).length+1];
+                    items[0]="-";
+                    for(int j=1;j<pytanie.getOdpowiedzi(getLang()).length+1;j++){
+                        items[j] = String.valueOf(alfabet.charAt(j-1));
                     }
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
                     dropdown[i].setAdapter(adapter);
@@ -3308,8 +3316,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view,
                                                    int position, long id) {
-                            pytanie.setOdpowiedziUzytkownika(parent.getSelectedItemPosition(), finalI);
-                            setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie);
+                            //Toast.makeText(getApplicationContext(),parent.getSelectedItemPosition()-1+"",Toast.LENGTH_SHORT).show();
+                            pytanie.setOdpowiedziUzytkownika(parent.getSelectedItemPosition()-1, finalI);
+                            setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie,checkpoprawne);
                         }
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
@@ -3318,15 +3327,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     mainlayout.addView(dropdown[i]);
                     if(checkpoprawne) dropdown[i].setEnabled(false);
                 }
-                setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie);
+                setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie,checkpoprawne);
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
                     odpowiedz[i] = new TextView(this);
                     odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
-                    for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
-                        if(pytanie.getPoprawnaOdp()[j]==i){
-                            odpowiedz[i].setBackground(Math_syn.set_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
-                        }
-                    }
                     mainlayout.addView(odpowiedz[i]);
                 }
                 if(WyjasnijToggle){
@@ -3361,9 +3365,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     dropdown[i].setLayoutParams(dropdownparams);
                     dropdown[i].setBackgroundColor(getColor(R.color.white));
                     dropdown[i].setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    String[] items = new String[pytanie.getOdpowiedzi(getLang()).length];
-                    for(int j=0;j<pytanie.getOdpowiedzi(getLang()).length;j++){
-                        items[j] = String.valueOf(alfabet.charAt(j));
+
+                    String[] items = new String[pytanie.getOdpowiedzi(getLang()).length+1];
+                    items[0]="-";
+                    for(int j=1;j<pytanie.getOdpowiedzi(getLang()).length+1;j++){
+                        items[j] = String.valueOf(alfabet.charAt(j-1));
                     }
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
                     dropdown[i].setAdapter(adapter);
@@ -3372,8 +3378,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view,
                                                    int position, long id) {
-                            pytanie.setOdpowiedziUzytkownika(parent.getSelectedItemPosition(), finalI);
-                            setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie);
+                            //Toast.makeText(getApplicationContext(),parent.getSelectedItemPosition()-1+"",Toast.LENGTH_SHORT).show();
+                            pytanie.setOdpowiedziUzytkownika(parent.getSelectedItemPosition()-1, finalI);
+                            setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie,checkpoprawne);
 
                         }
                         @Override
@@ -3386,15 +3393,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     if(checkpoprawne) dropdown[i].setEnabled(false);
 
                 }
-                setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie);
+                setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie,checkpoprawne);
                 for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
                     odpowiedz[i] = new TextView(this);
                     odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
-                    for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
-                        if(pytanie.getPoprawnaOdp()[j]==i){
-                            odpowiedz[i].setBackground(Math_syn.set_Fancy_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i],0xff00ff00));
-                        }
-                    }
                     mainlayout.addView(odpowiedz[i]);
                 }
                 if(WyjasnijToggle){
@@ -4753,9 +4755,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             pkt+=pytanie.ObliczPkty();
             laczne_pkt+=pytanie.getPkt();
             if(pytanie.czyPominiete()) brak_odp++;
-            else if(pytanie.czyBledne()) npoprawne++;
-            if(pytanie.czyTrochePoprawne()){
-                troche_poprawne++;
+            if(!pytanie.czyPominiete()){
+                if(pytanie.czyTrochePoprawne()) troche_poprawne++;
+                else if(pytanie.czyBledne()) npoprawne++;
             }
             if(pytanie.czyPoprawne()){
                 poprawne++;
