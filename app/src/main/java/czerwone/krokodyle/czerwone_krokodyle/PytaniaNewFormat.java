@@ -472,17 +472,21 @@ public class PytaniaNewFormat {
         return ObliczPkty() == 0;
     }
     public boolean czyPoprawne(){
-        if(!Typ.equals("ZLOZONE"))
-            return Pkt == ObliczPkty();
+        return ObliczPkty()==getTotalPkt();
+    }
+    public int getTotalPkt(){
+        if(!Typ.equals("ZLOZONE")){
+            return getPkt();
+        }
         int Pkty_suma = 0;
         for(int i=0;i<ListaZlozone.size();i++){
             Pkty_suma+= ListaZlozone.get(i).getPkt();
         }
-        return ObliczPkty()==Pkty_suma;
+        return Pkty_suma;
     }
     public boolean czyTrochePoprawne(){
         if(!czyBledne()){
-            return ObliczPkty() != Pkt;
+            return ObliczPkty() != getTotalPkt();
         }
         return false;
     }

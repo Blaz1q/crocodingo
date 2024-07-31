@@ -4172,7 +4172,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public int KATEGORIA_ID;
     public void prepTest(){
         WyjasnijToggle = false;
-        poprawne = 0;
         int localqnum=0;
         //ResetAllQuestions();
         List<PytaniaNewFormat> ListaPytan = new ArrayList<>();
@@ -4427,7 +4426,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public Random rand_num = new Random();
     public int q_num;
-    public int poprawne;
     public void Resume_Question_Buttons_Final(){
         try{
             LinearLayout layout = findViewById(R.id.questions_select_bledne);
@@ -4825,13 +4823,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             laczne_pkt+=pytanie.getPkt();
             if(pytanie.czyPominiete()) brak_odp++;
             if(!pytanie.czyPominiete()){
-                if(pytanie.czyTrochePoprawne()) troche_poprawne++;
+                if(pytanie.czyTrochePoprawne()&&!pytanie.czyPoprawne()) troche_poprawne++;
                 else if(pytanie.czyBledne()) npoprawne++;
             }
             if(pytanie.czyPoprawne()){
                 poprawne++;
-                //Log.d("qnum_i","i: "+i);
-                //Log.d("pkty","pkty: "+pytanie.ObliczPkty());
+                Log.d("qnum_i","i: "+i);
+                Log.d("pkty","pkty: "+pytanie.ObliczPkty());
             }
         }
         double oblicz_percenty = pkt*100/laczne_pkt;
