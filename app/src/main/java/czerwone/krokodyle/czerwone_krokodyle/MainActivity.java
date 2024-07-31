@@ -3349,12 +3349,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                     if(pytanie.getOdpowiedziUzytkownika()[finalI]!=-1){
                                         switch (testMode){
                                             case 0:setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie,checkpoprawne);break;
-                                            case 1: setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie,true); dropdown[finalI].setEnabled(false);break;
+                                            case 1: setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie,true); dropdown[finalI].setEnabled(false);
+                                                if(pytanie.czy_wszystko_zaznaczyl()){
+                                                    Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                                    wyjasnienieButton.setEnabled(true);
+                                                }
+                                            break;
                                         }
-                                    }
-                                    if(pytanie.czy_wszystko_zaznaczyl()){
-                                        Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
-                                        wyjasnienieButton.setEnabled(true);
                                     }
                                 }
                                 @Override
@@ -3425,12 +3426,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             if(pytanie.getOdpowiedziUzytkownika()[finalI]!=-1){
                             switch (testMode){
                                 case 0:setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie,checkpoprawne);break;
-                                case 1: setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie,true); dropdown[finalI].setEnabled(false);break;
+                                case 1: setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie,true); dropdown[finalI].setEnabled(false);
+                                    if(pytanie.czy_wszystko_zaznaczyl()){
+                                    Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                    wyjasnienieButton.setEnabled(true);
                                 }
-                            }
-                            if(pytanie.czy_wszystko_zaznaczyl()){
-                                Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
-                                wyjasnienieButton.setEnabled(true);
+                                break;
+                                }
                             }
                         }
                         @Override
