@@ -4169,6 +4169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public int CURRENT_INDEX;
     public int KATEGORIA_ID;
     public void prepTest(){
+        WyjasnijToggle = false;
         poprawne = 0;
         int localqnum=0;
         //ResetAllQuestions();
