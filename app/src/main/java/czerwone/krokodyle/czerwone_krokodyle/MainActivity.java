@@ -497,8 +497,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     }
                     break;
                 case "pytanie_wyglad":
-                    setContentView(R.layout.pytania_wybor);
-                    Resume_Question_Buttons();
+                    setContentView(R.layout.newformattest);
+                    GenerujTest();
                     RemoveAction();
                     break;
                 case "test_final":
