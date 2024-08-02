@@ -3154,8 +3154,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     case 0: {
                         if (!checkpoprawne) {
                             int finalI = i;
-                            ImageButton[] finalOdpowiedz = odpowiedzZdj;
-                            odpowiedzZdj[i].setOnClickListener(new View.OnClickListener() {
+                            Button[] finalOdpowiedz = odpowiedz;
+                            odpowiedz[i].setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     try {
