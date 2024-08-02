@@ -42,6 +42,7 @@ public class PytaniaNewFormat {
     boolean hasOdpowiedziZdj = false;
     JSONObject translatable = null;
     private Bitmap ZdjBitmap = null;
+    private Bitmap[] OdpZdjBitmap;
 
     public PytaniaNewFormat(JSONObject pytanie) throws JSONException {
         //Log.d("Loading","kapi kapi kapiciulo");
@@ -59,7 +60,7 @@ public class PytaniaNewFormat {
             this.Polecenie = initS1D(pytanie.getJSONArray("polecenie")); hasPolecenie=true;
             if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
-            if(pytanie.has("odp_zdj")) this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp_zdj"));
+            if(pytanie.has("odp_zdj")) {this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp_zdj")); hasOdpowiedziZdj=true; OdpZdjBitmap = new Bitmap[OdpowiedziZdj.length]; Arrays.fill(this.OdpZdjBitmap,null);}
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
             if(pytanie.has("translatable_info")){
@@ -116,6 +117,10 @@ public class PytaniaNewFormat {
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
+            if(pytanie.has("odp_zdj")) {this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp_zdj")); hasOdpowiedziZdj=true;
+            OdpZdjBitmap = new Bitmap[OdpowiedziZdj.length];
+            Arrays.fill(this.OdpZdjBitmap,null);
+            }
         }
         if(Typ.equals("DOPASUJ_NTO1")){
             this.Pkt = pytanie.getInt("pkt");
@@ -130,6 +135,7 @@ public class PytaniaNewFormat {
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
+            if(pytanie.has("odp_zdj")) {this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp_zdj")); hasOdpowiedziZdj=true; OdpZdjBitmap = new Bitmap[OdpowiedziZdj.length]; Arrays.fill(this.OdpZdjBitmap,null);}
         }
         if(Typ.equals("DOPASUJ_TABELA")){
             this.Pkt = pytanie.getInt("pkt");
@@ -145,6 +151,7 @@ public class PytaniaNewFormat {
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
+            if(pytanie.has("odp_zdj")) {this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp_zdj")); hasOdpowiedziZdj=true; OdpZdjBitmap = new Bitmap[OdpowiedziZdj.length]; Arrays.fill(this.OdpZdjBitmap,null);}
         }
         if(Typ.equals("ZLOZONE")){
             this.Podpunkty = pytanie.getInt("ilosc_podpunktow");
@@ -221,6 +228,14 @@ public class PytaniaNewFormat {
     public String getTyp() {
         return Typ;
     }
+    public Bitmap[] getOdpZdjBitmap(){
+        return OdpZdjBitmap;
+    }
+    public void setOdpZdjBitmap(Bitmap bitmap,int index){
+        if(index<OdpZdjBitmap.length){
+            this.OdpZdjBitmap[index] = bitmap;
+        }
+    }
     public void Wypisz(){
         Log.d("Id",String.valueOf(this.Id));
         for(int i=0;i<this.Tresc.length;i++){
@@ -242,6 +257,9 @@ public class PytaniaNewFormat {
 
     public String getKategoria() {
         return Kategoria;
+    }
+    public String[] getOdpowiedziZdj(){
+        return OdpowiedziZdj;
     }
 
     public String[] getOdpowiedzi(String lang){

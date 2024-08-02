@@ -41,6 +41,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -2935,6 +2936,32 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    public void setSelectedNewPytaniaDOKONCZ(ImageButton button[],PytaniaNewFormat pytanie,boolean checkPoprawne){
+        boolean isselected;
+        int[] odpowiedzi = pytanie.getOdpowiedziUzytkownika();
+        for(int i=0;i<button.length;i++){
+            isselected = false;
+            for(int j=0;j<odpowiedzi.length;j++){
+                if(odpowiedzi[j]==i) isselected = true;
+            }
+            if(checkPoprawne){
+                for(int j=0;j<pytanie.getPoprawnaOdp().length;j++){
+                    if(isselected){
+                        if(!pytanie.checkPoprawna(j))
+                            button[i].setBackground(getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_npoprawna", "drawable", getPackageName())));
+                    }
+                    else button[i].setBackground(null);
+                    if(pytanie.getPoprawnaOdp()[j]==i)
+                        button[i].setBackground(getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_poprawna", "drawable", getPackageName())));
+                }
+            }else{
+                if(isselected) {
+                    button[i].setBackground(getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())));
+                }
+                else button[i].setBackground(null);
+            }
+        }
+    }
     public void setSelectedNewPytaniaDOPASUJ_TABELA(Button button[],PytaniaNewFormat pytanie,int index,boolean checkPoprawne){
         boolean isselected;
         int odpowiedzi;
@@ -2991,6 +3018,35 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    private class DownloadImageBitmap extends AsyncTask<String, Void, Bitmap> {
+        Bitmap bitmap;
+        PytaniaNewFormat pytanie;
+        int index;
+        ImageButton button;
+        public DownloadImageBitmap(ImageButton button,PytaniaNewFormat pytanie,int index) {
+            this.pytanie = pytanie;
+            this.index = index;
+            this.button = button;
+        }
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+        protected void onPostExecute(Bitmap result) {
+            if(result==null) Toast.makeText(getApplicationContext(),"Can't load img.",Toast.LENGTH_SHORT).show();
+            this.bitmap = result;
+            pytanie.setOdpZdjBitmap(bitmap,index);
+            button.setImageBitmap(result);
+        }
+    }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
         Bitmap bitmap;
@@ -3021,6 +3077,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             pytanie.setZdjBitmap(result);
         }
     }
+    public void loadImgFromServer(ImageButton button,PytaniaNewFormat pytanie,int index){
+        if(pytanie.getOdpowiedziZdj().length>index){
+            if(pytanie.getOdpZdjBitmap()[index]==null){
+                new DownloadImageBitmap(button,pytanie,index).execute(imgs_server+pytanie.getOdpowiedziZdj()[index]);
+                Log.d("attemptingConnection",imgs_server+pytanie.getOdpowiedziZdj()[index]);
+            }else{
+                button.setImageBitmap(pytanie.getOdpZdjBitmap()[index]);
+            }
+        }
+    }
     public void loadImgFromServer(ImageView img,PytaniaNewFormat pytanie,LinearLayout mainlayout){
         if(pytanie.hasZdj){
             if(pytanie.getZdjBitmap()==null){
@@ -3037,79 +3103,149 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    public void GenerujDokoncz(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){
+        TextView info = new TextView(this);
+        ImageView zdj = new ImageView(this);
+        TextView polecenie = new TextView(this);
+        TextView tresc = new TextView(this);
+        TextView wyjasnienie = new TextView(this);
+        polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
+        info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
+        tresc.setBackground(Math_syn.set_Math(pytanie.getTresc(getLang())));
+        wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
+        mainlayout.addView(info);
+        loadImgFromServer(zdj,pytanie,mainlayout);
+        mainlayout.addView(polecenie);
+        mainlayout.addView(tresc);
+        Button[] odpowiedz = new Button[0];
+        ImageButton[] odpowiedzZdj = new ImageButton[0];
+        int arrayLength=0;
+        if(pytanie.hasOdpowiedzi){
+            odpowiedz = new Button[pytanie.getOdpowiedzi(getLang()).length];
+            arrayLength = odpowiedz.length;
+        }else if(pytanie.hasOdpowiedziZdj){
+            odpowiedzZdj = new ImageButton[pytanie.getOdpZdjBitmap().length];
+            arrayLength = odpowiedzZdj.length;
+        }
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0, 10, 0, 10);
+        for(int i=0;i<arrayLength;i++){
+
+            if(pytanie.hasOdpowiedzi){
+                odpowiedz[i] = new Button(this);
+                odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
+                odpowiedz[i].setLayoutParams(params);
+                odpowiedz[i].setPadding(0,40,0,40);
+            }
+            else if(pytanie.hasOdpowiedziZdj){
+                odpowiedzZdj[i] = new ImageButton(this);
+                loadImgFromServer(odpowiedzZdj[i],pytanie,i);
+                odpowiedzZdj[i].setLayoutParams(params);
+                odpowiedzZdj[i].setPadding(0,40,0,40);
+                //odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
+            }
+        }
+        if(pytanie.hasOdpowiedzi) {
+            for (int i = 0; i < odpowiedz.length; i++) {
+                switch (testMode) {
+                    case 0: {
+                        if (!checkpoprawne) {
+                            int finalI = i;
+                            ImageButton[] finalOdpowiedz = odpowiedzZdj;
+                            odpowiedzZdj[i].setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try {
+                                        pytanie.setOdpowiedziUzytkownika(finalI, 0);
+                                        setSelectedNewPytaniaDOKONCZ(finalOdpowiedz, pytanie, checkpoprawne);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    break;
+                    case 1: {
+                        int finalI = i;
+                        Button[] finalOdpowiedz1 = odpowiedz;
+                        odpowiedz[i].setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    if (!pytanie.czy_wszystko_zaznaczyl())
+                                        pytanie.setOdpowiedziUzytkownika(finalI, 0);
+                                    setSelectedNewPytaniaDOKONCZ(finalOdpowiedz1, pytanie, true);
+                                    Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                    wyjasnienieButton.setEnabled(true);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    break;
+                }
+                mainlayout.addView(odpowiedz[i]);
+            }
+            setSelectedNewPytaniaDOKONCZ(odpowiedz, pytanie, checkpoprawne);
+        }else if(pytanie.hasOdpowiedziZdj){
+            for (int i = 0; i < odpowiedzZdj.length; i++) {
+                switch (testMode) {
+                    case 0: {
+                        if (!checkpoprawne) {
+                            int finalI = i;
+                            ImageButton[] finalOdpowiedz = odpowiedzZdj;
+                            odpowiedz[i].setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try {
+                                        pytanie.setOdpowiedziUzytkownika(finalI, 0);
+                                        setSelectedNewPytaniaDOKONCZ(finalOdpowiedz, pytanie, checkpoprawne);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    break;
+                    case 1: {
+                        int finalI = i;
+                        ImageButton[] finalOdpowiedz1 = odpowiedzZdj;
+                        odpowiedz[i].setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    if (!pytanie.czy_wszystko_zaznaczyl())
+                                        pytanie.setOdpowiedziUzytkownika(finalI, 0);
+                                    setSelectedNewPytaniaDOKONCZ(finalOdpowiedz1, pytanie, true);
+                                    Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                    wyjasnienieButton.setEnabled(true);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    break;
+                }
+                mainlayout.addView(odpowiedzZdj[i]);
+            }
+            setSelectedNewPytaniaDOKONCZ(odpowiedzZdj, pytanie, checkpoprawne);
+        }
+        if(WyjasnijToggle){
+            mainlayout.addView(wyjasnienie);
+        }
+    }
     public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){
         switch (pytanie.getTyp()){
             case "DOKONCZ":
             {
-                TextView info = new TextView(this);
-                ImageView zdj = new ImageView(this);
-                TextView polecenie = new TextView(this);
-                TextView tresc = new TextView(this);
-                TextView wyjasnienie = new TextView(this);
-                polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
-                info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
-                tresc.setBackground(Math_syn.set_Math(pytanie.getTresc(getLang())));
-                wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
-                mainlayout.addView(info);
-                loadImgFromServer(zdj,pytanie,mainlayout);
-                mainlayout.addView(polecenie);
-                mainlayout.addView(tresc);
-                Button[] odpowiedz = new Button[pytanie.getOdpowiedzi(getLang()).length];
-                for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
-                    odpowiedz[i] = new Button(this);
-                    odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    params.setMargins(0, 10, 0, 10);
-                    odpowiedz[i].setLayoutParams(params);
-                    odpowiedz[i].setPadding(0,40,0,40);
-                }
-
-                for(int i=0;i<odpowiedz.length;i++){
-                    switch (testMode){
-                        case 0:{
-                            if(!checkpoprawne){
-                                int finalI = i;
-                                odpowiedz[i].setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        try{
-                                            pytanie.setOdpowiedziUzytkownika(finalI,0);
-                                            setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,checkpoprawne);
-                                        } catch (Exception e){
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                            }
-                        }break;
-                        case 1: {
-                            int finalI = i;
-                            odpowiedz[i].setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    try{
-                                        if(!pytanie.czy_wszystko_zaznaczyl())
-                                            pytanie.setOdpowiedziUzytkownika(finalI,0);
-                                        setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,true);
-                                        Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
-                                        wyjasnienieButton.setEnabled(true);
-                                        } catch (Exception e){
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                        }
-                        break;
-                    }
-                    mainlayout.addView(odpowiedz[i]);
-                }
-                setSelectedNewPytaniaDOKONCZ(odpowiedz,pytanie,checkpoprawne);
-                if(WyjasnijToggle){
-                    mainlayout.addView(wyjasnienie);
-                }
+                GenerujDokoncz(pytanie,mainlayout,checkpoprawne,testMode);
             }break;
             case "PF":
             {

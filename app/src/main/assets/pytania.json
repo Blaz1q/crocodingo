@@ -18,6 +18,23 @@
       }
     },
     {
+      "typ": "DOKONCZ",
+      "kat": "Liczby Rzeczywiste",
+      "katID": 1,
+      "pkt": 1,
+      "id": 0,
+      "zdj": "zdj1.png",
+      "polecenie": ["\\text{Dokończ zdanie. Zaznacz odpowiedź spośród podanych}","\\text{Finish the sentence. Check the correct answer.}"],
+      "tresc": ["\\text{Równość }  \\frac{1}{4} + \\frac{1}{5}+ \\frac{1}{a} = 1 \\text{ jest prawdziwa dla:} "],
+      "odp_zdj": ["odp1.png","odp2.png","odp3.png","odp4.png"],
+      "poprawna": [2],
+      "wyjasnienie": ["\\text{Krok 1}\\\\\\frac{1}{4} + \\frac{1}{5} + \\frac{1}{a} = 1\\\\\\frac{5}{20} + \\frac{4}{20} + \\frac{1}{a} = \\frac{20}{20}\\\\\\frac{9}{20} + \\frac{1}{a} = \\frac{20}{20}\\\\\\frac{1}{a} = \\frac{11}{20}\\\\\\text{Krok 2}\\\\1 \\cdot 20 = 11a\\\\11a = 20\\\\a = \\frac{20}{11}"],
+      "translatable_info": {
+        "tresc": false,
+        "wyjasnienie": false
+      }
+    },
+    {
       "typ": "PF",
       "kat": "Ciąg geometryczny",
       "katID": 22,
