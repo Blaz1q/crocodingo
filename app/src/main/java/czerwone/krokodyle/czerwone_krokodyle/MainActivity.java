@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private static final String PURCHASEDCZAPKA = "PURCHASEDCZAPKA";
     private static final String SAVED_LEVEL = "SAVED_LEVEL";
     private static final String SAVED_EXP = "SAVED_EXP";
-    private static final String final_connection= "https://blaz1q.github.io/crocodingo/androidAPI.json"; //"https://jncrew.5v.pl/androidAPI.php";
+    private static final String final_connection= "https://blaz1q.github.io/crocodingo/androidAPIVER2.json"; //"https://jncrew.5v.pl/androidAPI.php";
     private static final String imgs_server = "https://blaz1q.github.io/crocodingo/serverimgs/";
     String[] SERVER_VERSION = {"",""};
     AppUpdateManager appUpdateManager;
@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         loadPotkiFromAsset();
         loadJedzenieFromAsset();
         loadOsiagnieciaFromAsset();
-        loadTestPytania();
+        //loadTestPytania();
         fetchData(0); //pobierz pytania
         RelativeLayout bgimg = findViewById(R.id.MAIN_LOADING_BG);
         ImageView ckrkdl = findViewById(R.id.krokodyl_loading);
@@ -1085,6 +1085,58 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         } catch (Exception e){
 
         }
+    }
+    public void loadPytania(String response){
+        if(!response.equals("")){
+            try{
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray jsonArray = jsonObject.getJSONArray("API");
+                PytaniaNewFormat pytanie = null;
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject pytania = jsonArray.getJSONObject(i);
+                    //Log.d("pytanie"+i,""+pytania);
+                    try{
+                        pytanie = new PytaniaNewFormat(pytania);
+                    } catch (JSONException e){
+                        Log.d("exception", String.valueOf(e));
+                    }
+                    if(!pytanie.getTyp().equals("ZLOZONE")) {
+                        int h=0;
+                        boolean hasKat = false;
+                        while (h < listaKategoriiNew.size()) {
+                            if (listaKategoriiNew.get(h) == Integer.valueOf(pytanie.getKatID())) {
+                                hasKat = true;
+                                break;
+                            }
+                            h++;
+                        }
+                        if (!hasKat) {
+                            listaKategoriiNew.add(Integer.valueOf(pytanie.getKatID()));
+                            podzielonanowaListaPytan.add(new ArrayList<PytaniaNewFormat>());
+                        }
+                        podzielonanowaListaPytan.get(listaKategoriiNew.indexOf(Integer.valueOf(pytanie.getKatID()))).add(pytanie);
+                    }else{
+                        ListaPytanZlozone.add(pytanie);
+                    }
+                    nowaListaPytan.add(pytanie);
+                }
+                zaladowanodb=true;
+                Log.d("podzielona","kutas");
+                for(int i=0;i<podzielonanowaListaPytan.size();i++){
+                    for(int j=0;j<podzielonanowaListaPytan.get(i).size();j++){
+                        Log.d("podzielona_"+podzielonanowaListaPytan.get(i).get(j).getKatID(),podzielonanowaListaPytan.get(i).get(j).getTyp());
+                    }
+                }
+                isEverythingLoaded();
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+        }else{
+            Toast.makeText(getApplicationContext(),"nie udało się wczytać pytań",Toast.LENGTH_SHORT).show();
+            zaladowanodb=true;
+            isEverythingLoaded();
+        }
+
     }
     public void loadOsiagnieciaFromAsset() {
         TextView cosiedzieje = findViewById(R.id.cosiedzieje);
@@ -3022,8 +3074,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Bitmap bitmap;
         PytaniaNewFormat pytanie;
         int index;
-        ImageButton button;
-        public DownloadImageBitmap(ImageButton button,PytaniaNewFormat pytanie,int index) {
+        ImageView button;
+        public DownloadImageBitmap(ImageView button,PytaniaNewFormat pytanie,int index) {
             this.pytanie = pytanie;
             this.index = index;
             this.button = button;
@@ -3078,6 +3130,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void loadImgFromServer(ImageButton button,PytaniaNewFormat pytanie,int index){
+        if(pytanie.getOdpowiedziZdj().length>index){
+            if(pytanie.getOdpZdjBitmap()[index]==null){
+                new DownloadImageBitmap(button,pytanie,index).execute(imgs_server+pytanie.getOdpowiedziZdj()[index]);
+                Log.d("attemptingConnection",imgs_server+pytanie.getOdpowiedziZdj()[index]);
+            }else{
+                button.setImageBitmap(pytanie.getOdpZdjBitmap()[index]);
+            }
+        }
+    }
+    public void loadImgFromServer(ImageView button,PytaniaNewFormat pytanie,int index){
         if(pytanie.getOdpowiedziZdj().length>index){
             if(pytanie.getOdpZdjBitmap()[index]==null){
                 new DownloadImageBitmap(button,pytanie,index).execute(imgs_server+pytanie.getOdpowiedziZdj()[index]);
@@ -3459,6 +3521,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
                 TextView[] odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
+                ImageView[] odpowiedzZdj = new ImageView[pytanie.getOdpowiedziZdj().length];
                 for(int i=0;i<pytanie.getPoprawnaOdp().length;i++){
                     dropdown[i] = new Spinner(this);
                     LinearLayout.LayoutParams dropdownparams = new LinearLayout.LayoutParams(
@@ -3507,10 +3570,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
                 }
                 setSelectedNewPytaniaDOPASUJ_NTO1(dropdown,pytanie,checkpoprawne);
-                for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
-                    odpowiedz[i] = new TextView(this);
-                    odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
-                    mainlayout.addView(odpowiedz[i]);
+                if(pytanie.hasOdpowiedzi){
+                    for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
+                        odpowiedz[i] = new TextView(this);
+                        odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
+                        mainlayout.addView(odpowiedz[i]);
+                    }
+                }
+                else if(pytanie.hasOdpowiedziZdj){
+                    for(int i=0;i<pytanie.getOdpowiedziZdj().length;i++){
+                        odpowiedzZdj[i] = new ImageView(this);
+                        loadImgFromServer(odpowiedzZdj[i],pytanie,i);
+                        mainlayout.addView(odpowiedzZdj[i]);
+                    }
                 }
                 if(WyjasnijToggle){
                     mainlayout.addView(wyjasnienie);
@@ -3529,6 +3601,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
                 TextView[] odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
+                ImageView[] odpowiedzZdj = new ImageView[pytanie.getOdpowiedziZdj().length];
                 for(int i=0;i<pytanie.getPoprawnaOdp().length;i++){
                     TextView PolecenieMultiKulti = new TextView(this);
                     if(pytanie.getPolecenieMulti(getLang()).length>i){
@@ -3582,10 +3655,19 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     }
                 }
                 setSelectedNewPytaniaDOPASUJ_1TO1(dropdown,pytanie,checkpoprawne);
-                for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
-                    odpowiedz[i] = new TextView(this);
-                    odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
-                    mainlayout.addView(odpowiedz[i]);
+                if(pytanie.hasOdpowiedzi){
+                    for(int i=0;i<pytanie.getOdpowiedzi(getLang()).length;i++){
+                        odpowiedz[i] = new TextView(this);
+                        odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
+                        mainlayout.addView(odpowiedz[i]);
+                    }
+                }
+                else if(pytanie.hasOdpowiedziZdj){
+                    for(int i=0;i<pytanie.getOdpowiedziZdj().length;i++){
+                        odpowiedzZdj[i] = new ImageView(this);
+                        loadImgFromServer(odpowiedzZdj[i],pytanie,i);
+                        mainlayout.addView(odpowiedzZdj[i]);
+                    }
                 }
                 if(WyjasnijToggle){
                     mainlayout.addView(wyjasnienie);
@@ -4275,12 +4357,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     listaPytan.add(pytanie);
                     pytanie.Wypisz();
                     zaladowanodb=true;
+                    isEverythingLoaded();
                 }
                 isEverythingLoaded();
                 updateLoader();
             } catch (JSONException e) {
                 e.printStackTrace();
-                zaladowanodb=false;
+                zaladowanodb=true;
+                isEverythingLoaded();
             }
         }
         try{
@@ -5258,8 +5342,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         //Log.d("JSON_DATA",response);
                         switch (action){
                             case 0:
-                                Set_Ids_List(response);
-
+                                loadPytania(response);
+                                //Set_Ids_List(response);
                                 break;
                             case 1:
                                 parseJson(response);
@@ -5270,7 +5354,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Response_Error",error.toString());
-                Set_Ids_List("");
+                //Set_Ids_List("");
             }
         });
         queue.add(stringRequest);
