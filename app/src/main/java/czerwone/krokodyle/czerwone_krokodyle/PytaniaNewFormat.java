@@ -154,7 +154,7 @@ public class PytaniaNewFormat {
             if(pytanie.has("odp_zdj")) {this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp_zdj")); hasOdpowiedziZdj=true; OdpZdjBitmap = new Bitmap[OdpowiedziZdj.length]; Arrays.fill(this.OdpZdjBitmap,null);}
         }
         if(Typ.equals("ZLOZONE")){
-            this.Podpunkty = pytanie.getInt("ilosc_podpunktow");
+            //this.Podpunkty = pytanie.getInt("ilosc_podpunktow");
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
             if(pytanie.has("tresc")) {this.Tresc = initS1D(pytanie.getJSONArray("tresc")); hasTresc = true;}

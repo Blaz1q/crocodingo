@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean czyZalogowany = false;
     boolean isExitEnabled = true;
     boolean IGNORE_UPDATES = false;
-    private static final boolean canShowAds = true;
+    private static final boolean canShowAds = false;
     int radioButtonChecked = 0;
     int currentVol = -1;
     int current_item_index=-1;
@@ -3032,6 +3032,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 if(pytanie.getPoprawnaOdp()[firstlast]==i) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_poprawna", "drawable", getPackageName())),0xffffffff));
             }
             else{
+
                 if(i==odpowiedzi) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
                 else button[i].setBackground(Math_syn.set_Math(pytanie.getTabela(getLang())[index][i]));
 
@@ -3720,7 +3721,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                                 setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,checkpoprawne);
                                             }else{
                                                 pytanie.setOdpowiedziUzytkownika(finalJ,1);
-                                                setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length-1,checkpoprawne);
+                                                setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length,checkpoprawne);
                                             }
                                         }break;
                                         case 1:{
@@ -3730,7 +3731,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                                     setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,true);
                                                 }else{
                                                     if(!pytanie.czy_zaznaczyl(1)) pytanie.setOdpowiedziUzytkownika(finalJ,1);
-                                                    setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length-1,true);
+                                                    setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length,true);
                                                 }
                                             }
                                         break;
@@ -3768,7 +3769,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 ImageView zdj = new ImageView(this);
                 info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
                 mainlayout.addView(info);
-                mainlayout.addView(zdj);
+                loadImgFromServer(zdj,pytanie,mainlayout);
+                //mainlayout.addView(zdj);
                 for(int i=0;i<pytanie.getListaZlozone().size();i++){
                     addNewPytania(pytanie.getListaZlozone().get(i),mainlayout,checkpoprawne,testMode);
                 }
