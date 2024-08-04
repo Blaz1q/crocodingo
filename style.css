@@ -52,7 +52,12 @@ h1, h2, h3, h4, h5, h6 {
 
 @media screen and (max-width: 1000px) {
   .showcase {
-    min-height: 900px;
+    min-height: 1300px;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .showcase {
+    min-height: 1100px;
   }
 }
 #croco, #czapka {
@@ -64,7 +69,6 @@ h1, h2, h3, h4, h5, h6 {
   height: 90vh;
   width: 90%;
   max-width: 1120px;
-  min-height: 1100px;
   margin: auto;
 }
 @media screen and (max-width: 1000px) {
