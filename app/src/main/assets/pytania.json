@@ -94,6 +94,37 @@
     "odp": [["[-3,-1]\\cup[1,3]","(-3,3)","(-3,-1)\\cup(1,3)","[-5,-1]\\cup[1,5]","(-5,5)","(-5,-1)\\cup(1,5)"]],
     "wyjasnienie": ["\\text{mega wyjasnienie}"]
   },
+  {
+    "typ": "ZLOZONE",
+    "id": 148,
+    "zdj": "czerwiec2024-zlozone.png",
+    "info": ["\\text{Na rysunku, w kartezzjańskim układzie współrzędnych \\((x,y)\\),\\\\przedstawiono wykres funkcji \\(f\\).\\\\Każdy z punktów przecięcia wykresu funkcji \\(f\\)\\\\ z prostą o równaniu \\(f\\)\\\\ma obie współrzędne całkowite.}"],
+    "ListaZlozone": [{
+      "typ": "OTWARTE",
+      "kat": "Wykaz",
+      "katID": 2,
+      "pkt":1,
+      "id": 2,
+      "polecenie": ["\\text{Uzupełnij poniższe zadanie tak, aby zdanie było prawdziwe.}"],
+      "poprawna": ["[0,4]"],
+      "wyjasnienie": ["\\text{aby rozwiązać to zadanie, trzeba poprawnie odczytać funkcje.}"]
+    },
+      {
+        "typ": "DOPASUJ_TABELA",
+        "kat": "zbiór",
+        "katID": 3,
+        "id": 4,
+        "pkt": 1,
+        "zdj": "czerwiec2024-zlozone-2.png",
+        "info": ["\\text{Na rysunku, w kartezjańskim układzie współrzędnych \\((x,y)\\),\\\\przedstawiono wykres funkcji \\(g\\), \\\\powstałej w wyniku przesunięcia równoległego wykresu funkcji \\(f\\)\\\\ wzdłłóż osi \\(Ox\\)\\\\o 4 jednostki w lewo.}"],
+        "polecenie": ["\\text{Dokończ zdanie.}"],
+        "tresc": ["\\text{Funkcje \\(f\\) i \\(g\\) są powiązane zależnością}"],
+        "poprawna": [0,1],
+        "tabela": [[["g(x) = f(x+4)","g(x)=f(x-4)","g(x)=f(x)-4"],["\\text{oraz mają takie same}"],["\\text{dziedziny}","\\text{zbiory wartości}"]]],
+        "wyjasnienie": ["\\text{funkcja jest przesunięta o 4 jednostki w lewo, zatem\\\\ funkcja \\(g\\) musi przyjąć wartość\\\\\\(g(x) = f(x+4)\\) oraz muszą mieć takie same wartości.}"]
+      }
+    ]
+  },
     {
       "typ": "ZLOZONE",
       "id": 3,

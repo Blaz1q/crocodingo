@@ -150,4 +150,9 @@ h1, h2, h3, h4, h5, h6 {
   background-repeat: no-repeat;
   background-position: bottom;
   background-size: cover;
+}
+
+.bg-center {
+  background-position: center;
+  background-size: cover;
 }/*# sourceMappingURL=style.css.map */

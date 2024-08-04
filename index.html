@@ -12,7 +12,7 @@
     <link rel="icon" type="image/x-icon" href="/imgs/corcodoingo.png">
     <script src="script.js"></script>
 </head>
-<body onload="init()">
+<body onload="init();losuj_pytanie()">
     <div class="center">
         <img src="./imgs/corcodoingo.png" alt="crocodingo" />
         <img src="./imgs/testers.png" alt="testers" />
@@ -67,7 +67,7 @@
             </section>
             <section>
                 <section class="showcase-display-roll">
-                    <div class="showcase-display bg-img" style="background-image: url('./imgs/tlobezwody.png');">
+                    <div class="showcase-display bg-img bg-center" style="background-image: url('./imgs/short_gameplay.gif');">
                         <img src="" alt="cerwone croco">
                     </div>
                     <div class="dice" style="opacity: 0;">
@@ -94,16 +94,16 @@
             <section>
                 <h2>Ciężko pracowaliśmy nad dodaniem <b>wszyskich</b> rodzaji pytań
                     <br><br>
-                    śmiało wypróbuj je tutaj! ->
+                    śmiało zobacz je tutaj! ->
                 </h2>
             </section>
             <section>
                 <section class="showcase-display-roll">
-                    <div class="showcase-display bg-img" style="background-image: url('./imgs/tlobezwody.png');">
-                        <img src="" alt="cerwone croco">
+                    <div class="showcase-display bg-img bg-center">
+                        <img src="" alt="pytania" id="pytania">
                     </div>
                     <div class="dice">
-                        <button>
+                        <button onclick="losuj_pytanie();rotate(this)">
                             <svg width="36" height="36" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.125em" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="5" y="5" width="34" height="34" rx="6" stroke="white" stroke-width="2"/>
                                 <circle cx="13" cy="31" r="4" fill="white"/>

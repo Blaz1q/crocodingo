@@ -3261,7 +3261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         if (!checkpoprawne) {
                             int finalI = i;
                             ImageButton[] finalOdpowiedz = odpowiedzZdj;
-                            odpowiedz[i].setOnClickListener(new View.OnClickListener() {
+                            odpowiedzZdj[i].setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     try {
@@ -3278,7 +3278,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     case 1: {
                         int finalI = i;
                         ImageButton[] finalOdpowiedz1 = odpowiedzZdj;
-                        odpowiedz[i].setOnClickListener(new View.OnClickListener() {
+                        odpowiedzZdj[i].setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 try {
@@ -3520,8 +3520,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 mainlayout.addView(info);
                 loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
-                TextView[] odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
-                ImageView[] odpowiedzZdj = new ImageView[pytanie.getOdpowiedziZdj().length];
+                TextView[] odpowiedz = new Button[0];
+                if(pytanie.hasOdpowiedzi) {
+                    odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
+                }
+                ImageView[] odpowiedzZdj = new ImageView[0];
+                if(pytanie.hasOdpowiedziZdj){
+                    odpowiedzZdj = new ImageView[pytanie.getOdpowiedziZdj().length];
+                }
                 for(int i=0;i<pytanie.getPoprawnaOdp().length;i++){
                     dropdown[i] = new Spinner(this);
                     LinearLayout.LayoutParams dropdownparams = new LinearLayout.LayoutParams(
@@ -3600,8 +3606,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 mainlayout.addView(info);
                 loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
-                TextView[] odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
-                ImageView[] odpowiedzZdj = new ImageView[pytanie.getOdpowiedziZdj().length];
+                TextView[] odpowiedz = new Button[0];
+                if(pytanie.hasOdpowiedzi) {
+                    odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
+                }
+                ImageView[] odpowiedzZdj = new ImageView[0];
+                if(pytanie.hasOdpowiedziZdj){
+                    odpowiedzZdj = new ImageView[pytanie.getOdpowiedziZdj().length];
+                }
                 for(int i=0;i<pytanie.getPoprawnaOdp().length;i++){
                     TextView PolecenieMultiKulti = new TextView(this);
                     if(pytanie.getPolecenieMulti(getLang()).length>i){
@@ -3721,7 +3733,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                                 setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,checkpoprawne);
                                             }else{
                                                 pytanie.setOdpowiedziUzytkownika(finalJ,1);
-                                                setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length,checkpoprawne);
+                                                setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[2].length,checkpoprawne);
                                             }
                                         }break;
                                         case 1:{
@@ -3731,7 +3743,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                                     setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,true);
                                                 }else{
                                                     if(!pytanie.czy_zaznaczyl(1)) pytanie.setOdpowiedziUzytkownika(finalJ,1);
-                                                    setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[finalI].length,true);
+                                                    setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[2].length,true);
                                                 }
                                             }
                                         break;

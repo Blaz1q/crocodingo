@@ -1,6 +1,7 @@
 var rand_counter=0;
 let deg=0;
 let prev_los=-1;
+let prev_pytanie=-1;
 function krokodyl_mrugaj(){
     let croco = document.getElementById("croco");
     croco.src = "./imgs/logomrug.png"
@@ -47,6 +48,22 @@ function random_hat(){
         czapkiimg.src = "";
     }
     krokodyl_skacz();
+}
+function losuj_pytanie(){
+    let czapkiimg = document.getElementById("pytania");
+    let pytania = [
+        "odpzdj.png",
+        "otwarte.jpg",
+        "pf.jpg",
+        "tabela.jpg",
+        "1to1.jpg"
+    ]
+    let r = Math.floor(Math.random()*pytania.length);
+    while(prev_pytanie==r){
+        r = Math.floor(Math.random()*pytania.length);
+    }
+    prev_pytanie = r;
+    czapkiimg.src = "./imgs/"+pytania[r];
 }
 function rotate(btn){
     deg+=832%360;

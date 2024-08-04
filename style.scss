@@ -141,8 +141,13 @@
       }
     }
 }
+
 .bg-img{
     background-repeat: no-repeat;
     background-position: bottom;
     background-size: cover;
+}
+.bg-center{
+  background-position: center;
+  background-size: cover;
 }
