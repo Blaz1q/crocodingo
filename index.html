@@ -10,15 +10,115 @@
     <title>Crocodingo</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/x-icon" href="/imgs/corcodoingo.png">
+    <script src="script.js"></script>
 </head>
-<body>
-    <div>
+<body onload="init()">
+    <div class="center">
         <img src="./imgs/corcodoingo.png" alt="crocodingo" />
-        <h1>Crocodingo Testers</h1>
+        <img src="./imgs/testers.png" alt="testers" />
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSfS8l5tmMw5cBd4NJMPCqVlQpA24VnbEKtlPQnazrOctA3NIg/viewform">Chcesz zostać testerem? Kliknij tutaj!</a>
         <h2>W razie pytań, napisz na maila lub skontaktuj się osobiście</h2>
         <p>CrocodingoMath@gmail.com</p>
         <a href="https://play.google.com/apps/internaltest/4701530019733300821">Sprawdź, czy jestem testerem</a>
+    </div>
+    <div class="showcase">
+        <h1>Dlaczego Crocodingo?</h1>
+        <div class="showcase-layout">
+            <section>
+                <h2>Crocodingo jest spokojną, i przyjemną aplikacją do nauki matematyki ;&gt
+                    <br><br>
+                    pozwoli Ci na szybkie i przyjemne powtórki zagadnień matematycznych
+                    <br><br><b>Zero stresu, same korzyści &lt3</b>
+                </h2>
+            </section>
+            <section>
+                <section class="showcase-display-roll">
+                    <div class="showcase-display bg-img" style="background-image: url('./imgs/tlobezwody.png');">
+                        <img id="croco" src="./imgs/logo.png" alt="cerwone croco" onclick="krokodyl_mrugaj()">
+                        <img id="czapka" alt="cerwone croco" onclick="krokodyl_mrugaj()">
+                    </div>
+                    <div class="dice">
+                        <button onclick="random_hat();rotate(this)">
+                            <svg width="36" height="36" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.125em" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="5" y="5" width="34" height="34" rx="6" stroke="white" stroke-width="2"/>
+                                <circle cx="13" cy="31" r="4" fill="white"/>
+                                <circle cx="13" cy="13" r="4" fill="white"/>
+                                <circle cx="31" cy="31" r="4" fill="white"/>
+                                <circle cx="31" cy="13" r="4" fill="white"/>
+                                <circle cx="22" cy="22" r="4" fill="white"/>
+                                <path d="M9 43C1.68571 43 1.00003 37.8571 1 35" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M35 1C42.3143 1 43 6.14286 43 9" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                        </button>
+                    </div>
+                </section>      
+            </section>
+        </div>
+    </div>
+    <div class="showcase">
+        <h1>Przyjemny interfejs</h1>
+        <div class="showcase-layout">
+            <section>
+                <h2>Skupiliśmy się na przejżystości aplikacji oraz wygodzie użytkownika.
+                    <br><br>
+                    Czy to podczas przerwy, nudnej lekcji czy w wolnym czasie w domu - Crocodingo pozwoli Ci na szybkie powtórki!
+                    <br><br><b>Brak uporczywych reklam, wszystko za darmo!</b>
+                </h2>
+            </section>
+            <section>
+                <section class="showcase-display-roll">
+                    <div class="showcase-display bg-img" style="background-image: url('./imgs/tlobezwody.png');">
+                        <img src="" alt="cerwone croco">
+                    </div>
+                    <div class="dice" style="opacity: 0;">
+                        <button style="cursor:auto;">
+                            <svg width="36" height="36" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.125em" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="5" y="5" width="34" height="34" rx="6" stroke="white" stroke-width="2"/>
+                                <circle cx="13" cy="31" r="4" fill="white"/>
+                                <circle cx="13" cy="13" r="4" fill="white"/>
+                                <circle cx="31" cy="31" r="4" fill="white"/>
+                                <circle cx="31" cy="13" r="4" fill="white"/>
+                                <circle cx="22" cy="22" r="4" fill="white"/>
+                                <path d="M9 43C1.68571 43 1.00003 37.8571 1 35" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M35 1C42.3143 1 43 6.14286 43 9" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                        </button>
+                    </div>
+                </section>      
+            </section>
+        </div>
+    </div>
+    <div class="showcase">
+        <h1>Wszystkie rodzaje pytań!</h1>
+        <div class="showcase-layout">
+            <section>
+                <h2>Ciężko pracowaliśmy nad dodaniem <b>wszyskich</b> rodzaji pytań
+                    <br><br>
+                    śmiało wypróbuj je tutaj! ->
+                </h2>
+            </section>
+            <section>
+                <section class="showcase-display-roll">
+                    <div class="showcase-display bg-img" style="background-image: url('./imgs/tlobezwody.png');">
+                        <img src="" alt="cerwone croco">
+                    </div>
+                    <div class="dice">
+                        <button>
+                            <svg width="36" height="36" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.125em" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="5" y="5" width="34" height="34" rx="6" stroke="white" stroke-width="2"/>
+                                <circle cx="13" cy="31" r="4" fill="white"/>
+                                <circle cx="13" cy="13" r="4" fill="white"/>
+                                <circle cx="31" cy="31" r="4" fill="white"/>
+                                <circle cx="31" cy="13" r="4" fill="white"/>
+                                <circle cx="22" cy="22" r="4" fill="white"/>
+                                <path d="M9 43C1.68571 43 1.00003 37.8571 1 35" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M35 1C42.3143 1 43 6.14286 43 9" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                        </button>
+                    </div>
+                </section>      
+            </section>
+        </div>
     </div>
 </body>
 </html>

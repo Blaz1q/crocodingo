@@ -1136,7 +1136,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             zaladowanodb=true;
             isEverythingLoaded();
         }
-
     }
     public void loadOsiagnieciaFromAsset() {
         TextView cosiedzieje = findViewById(R.id.cosiedzieje);
@@ -5354,6 +5353,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Response_Error",error.toString());
+                loadPytania("");
                 //Set_Ids_List("");
             }
         });
