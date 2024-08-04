@@ -11,15 +11,21 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/x-icon" href="/imgs/corcodoingo.png">
     <script src="script.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
 </head>
 <body onload="init();losuj_pytanie()">
+    <script>
+        AOS.init();
+      </script>
     <div class="center">
         <img src="./imgs/corcodoingo.png" alt="crocodingo" />
         <img src="./imgs/testers.png" alt="testers" />
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfS8l5tmMw5cBd4NJMPCqVlQpA24VnbEKtlPQnazrOctA3NIg/viewform">Chcesz zostać testerem? Kliknij tutaj!</a>
+        <a class="abutton" href="https://docs.google.com/forms/d/e/1FAIpQLSfS8l5tmMw5cBd4NJMPCqVlQpA24VnbEKtlPQnazrOctA3NIg/viewform">Chcesz zostać testerem? Kliknij tutaj!</a>
         <h2>W razie pytań, napisz na maila lub skontaktuj się osobiście</h2>
         <p>CrocodingoMath@gmail.com</p>
-        <a href="https://play.google.com/apps/internaltest/4701530019733300821">Sprawdź, czy jestem testerem</a>
+        <a class="abutton" href="https://play.google.com/apps/internaltest/4701530019733300821">Sprawdź, czy jestem testerem</a>
     </div>
     <div class="showcase">
         <h1>Dlaczego Crocodingo?</h1>
@@ -28,7 +34,7 @@
                 <h2>Crocodingo jest spokojną, i przyjemną aplikacją do nauki matematyki ;&gt
                     <br><br>
                     pozwoli Ci na szybkie i przyjemne powtórki zagadnień matematycznych
-                    <br><br><b>Zero stresu, same korzyści &lt3</b>
+                    <br><br><b>Zero stresu, same korzyści <b style="color: red;">&lt3</b></b>
                 </h2>
             </section>
             <section>
@@ -55,16 +61,9 @@
             </section>
         </div>
     </div>
-    <div class="showcase">
+    <div class="showcase" data-aos="fade-up">
         <h1>Przyjemny interfejs</h1>
         <div class="showcase-layout">
-            <section>
-                <h2>Skupiliśmy się na przejżystości aplikacji oraz wygodzie użytkownika.
-                    <br><br>
-                    Czy to podczas przerwy, nudnej lekcji czy w wolnym czasie w domu - Crocodingo pozwoli Ci na szybkie powtórki!
-                    <br><br><b>Brak uporczywych reklam, wszystko za darmo!</b>
-                </h2>
-            </section>
             <section>
                 <section class="showcase-display-roll">
                     <div class="showcase-display bg-img bg-center" style="background-image: url('./imgs/short_gameplay.gif');">
@@ -86,9 +85,17 @@
                     </div>
                 </section>      
             </section>
+            <section>
+                <h2>Skupiliśmy się na przejżystości aplikacji oraz wygodzie użytkownika.
+                    <br><br>
+                    Czy to podczas przerwy, nudnej lekcji czy w wolnym czasie w domu - Crocodingo pozwoli Ci na szybkie powtórki!
+                    <br><br><b>Brak uporczywych reklam, wszystko za darmo!</b>
+                </h2>
+            </section>
+            
         </div>
     </div>
-    <div class="showcase">
+    <div class="showcase" data-aos="fade-up">
         <h1>Wszystkie rodzaje pytań!</h1>
         <div class="showcase-layout">
             <section>
@@ -99,7 +106,7 @@
             </section>
             <section>
                 <section class="showcase-display-roll">
-                    <div class="showcase-display bg-img bg-center">
+                    <div class="showcase-display bg-img bg-center" style="background-color: white;">
                         <img src="" alt="pytania" id="pytania">
                     </div>
                     <div class="dice">
@@ -120,5 +127,18 @@
             </section>
         </div>
     </div>
+    <div class="center-end">
+        <h1>To jak, wracamy do nauki?</h1>
+        <a class="abutton" href="https://docs.google.com/forms/d/e/1FAIpQLSfS8l5tmMw5cBd4NJMPCqVlQpA24VnbEKtlPQnazrOctA3NIg/viewform">Zostań testerem</a>
+        
+    </div>
+    <footer>
+        <h2>Kontakt</h2>
+        <ul>
+            <li><a href="https://discord.gg/ePuaSvvt">Discord</a></li>
+            <li>Email: CrocodingoMath@gmail.com</li>
+        </ul>
+        <h2>Made with &lt3 by: <a href="https://github.com/Blaz1q/">Błażej Czarnecki</a>,<a href="https://github.com/Tymakox/">Tymoteusz Fabiański</a></h2>
+    </footer>
 </body>
 </html>

@@ -25,7 +25,6 @@ function krokodyl_skacz(){
 function random_hat(){
     let czapkiimg = document.getElementById("czapka");
     let czapki =[
-        "",
         "czapa_1",
         "czapa_2",
         "czapa_3",
@@ -42,11 +41,7 @@ function random_hat(){
         r = Math.floor(Math.random()*czapki.length);
     }
     prev_los=r;
-    if(r!=0){
-        czapkiimg.src = "./imgs/"+czapki[r]+"_idle.png";
-    }else{
-        czapkiimg.src = "";
-    }
+    czapkiimg.src = "./imgs/"+czapki[r]+"_idle.png";
     krokodyl_skacz();
 }
 function losuj_pytanie(){

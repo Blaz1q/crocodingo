@@ -1,3 +1,7 @@
+$ckwhite: #FBFFF4;
+body{
+  background-color: $ckwhite;
+}
 * {
     margin: 0;
     font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
@@ -5,6 +9,25 @@
   h1,h2,h3,h4,h5,h6{
     font-weight: normal;
   }
+  .abutton  {
+    display: block;
+    text-decoration: none;
+    background-color: rgb(32, 32, 32);
+    color: $ckwhite;
+    padding: 1.2em;
+    border: .1em solid rgba(0, 0, 0, 0.838);
+    padding-left: 4em;
+    padding-right: 4em;
+    border-radius: 100vh;
+    font-size: large;
+    transition: .3s;
+  }
+  .abutton:hover{
+    background-color: rgb(99, 99, 99);
+    border: .1em solid rgba(140, 255, 0, 0.066);
+  }
+
+  
 .center{
     display: flex;
     flex-direction: column;
@@ -23,15 +46,6 @@
         width: 100%;
         max-width: 1000px;
       }
-      a {
-        display: block;
-        text-decoration: none;
-        background-color: gray;
-        color: white;
-        padding: 1.2em;
-        border-radius: 1.5em;
-        font-size: large;
-      }
 }
 @media screen and (max-width: 1000px){
   .showcase{
@@ -45,8 +59,8 @@
     padding-top: 7vh;
     height: 90vh;
     width: 90%;
-    max-width: 1420px;
-    min-height: 1000px;
+    max-width: 1120px;
+    min-height: 1100px;
     margin:auto;
     @media screen and (max-width: 1000px) {
       .showcase-layout{
@@ -61,10 +75,12 @@
         width: 100%;
         display: flex;
         justify-content: center;
+        
       }
       .showcase-display{
         width: 100%;
         max-width: 300px;
+        
       }
     }
     @media screen and (min-width:1000px) {
@@ -123,7 +139,7 @@
       button{
         width: 6em;
         height: 6em;
-        border: .3em solid rgb(255, 255, 255);
+        border: .3em solid $ckwhite;
         border-radius: 100%;
         transition: .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         display: flex;
@@ -150,4 +166,24 @@
 .bg-center{
   background-position: center;
   background-size: cover;
+}
+.center-end{
+  height: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+  h1{
+    margin-top: 3em;
+  }
+}
+footer{
+  color: rgba(255, 255, 255, 0.64);
+  a{
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+  }
+  
+  background-color: rgb(32, 32, 32);
 }
