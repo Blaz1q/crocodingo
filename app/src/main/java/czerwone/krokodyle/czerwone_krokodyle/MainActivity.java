@@ -3689,14 +3689,17 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             case "DOPASUJ_TABELA":{
                 TextView info = new TextView(this);
                 ImageView zdj = new ImageView(this);
+                TextView tresc = new TextView(this);
                 TextView polecenie = new TextView(this);
                 TextView wyjasnienie = new TextView(this);
                 polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
                 info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
                 wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
+                tresc.setBackground(Math_syn.set_Math(pytanie.getTresc(getLang())));
                 mainlayout.addView(info);
                 loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
+                mainlayout.addView(tresc);
                 LinearLayout TabelaContainer = new LinearLayout(this);
                 TabelaContainer.setOrientation(LinearLayout.HORIZONTAL);
                 LinearLayout.LayoutParams TabelaConatinerParams = new LinearLayout.LayoutParams(
@@ -3717,7 +3720,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     TabelaColumn.setLayoutParams(TabelaColumnParams);
                     if(i==0||i==pytanie.getTabela(getLang()).length-1){
                         Button[] odp = new Button[TabelaData[i].length];
-                        Log.d("CO SIĘ ODKURWIA",TabelaData[i].length+"");
                         for(int j=0;j<pytanie.getTabela(getLang())[i].length;j++){
                             odp[j] = new Button(this);
                             odp[j].setBackground(Math_syn.set_Math(TabelaData[i][j]));
