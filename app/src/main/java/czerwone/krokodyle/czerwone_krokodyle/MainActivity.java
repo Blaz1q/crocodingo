@@ -3021,6 +3021,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         else firstlast=0;
         odpowiedzi = pytanie.getOdpowiedziUzytkownika()[firstlast];
         for(int i=0;i<button.length;i++){
+            Log.d("index:",""+index);
+            Log.d("i:",""+i);
             if(checkPoprawne){
                 if(i==odpowiedzi){
                     //button[i].setBackground(Math_syn.set_Very_Fancy_Math("\\text{"+alfabet.charAt(i)+" }:"+pytanie.getOdpowiedzi(getLang())[i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
@@ -3032,7 +3034,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 if(pytanie.getPoprawnaOdp()[firstlast]==i) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp_poprawna", "drawable", getPackageName())),0xffffffff));
             }
             else{
-
                 if(i==odpowiedzi) button[i].setBackground(Math_syn.set_Very_Fancy_Math(pytanie.getTabela(getLang())[index][i],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff));
                 else button[i].setBackground(Math_syn.set_Math(pytanie.getTabela(getLang())[index][i]));
 
@@ -3716,6 +3717,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     TabelaColumn.setLayoutParams(TabelaColumnParams);
                     if(i==0||i==pytanie.getTabela(getLang()).length-1){
                         Button[] odp = new Button[TabelaData[i].length];
+                        Log.d("CO SIĘ ODKURWIA",TabelaData[i].length+"");
                         for(int j=0;j<pytanie.getTabela(getLang())[i].length;j++){
                             odp[j] = new Button(this);
                             odp[j].setBackground(Math_syn.set_Math(TabelaData[i][j]));
@@ -3733,7 +3735,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                                 setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,checkpoprawne);
                                             }else{
                                                 pytanie.setOdpowiedziUzytkownika(finalJ,1);
-                                                setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[2].length,checkpoprawne);
+                                                setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,2,checkpoprawne);
                                             }
                                         }break;
                                         case 1:{
@@ -3743,7 +3745,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                                     setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,0,true);
                                                 }else{
                                                     if(!pytanie.czy_zaznaczyl(1)) pytanie.setOdpowiedziUzytkownika(finalJ,1);
-                                                    setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,pytanie.getTabela(getLang())[2].length,true);
+                                                    setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,2,true);
                                                 }
                                             }
                                         break;
