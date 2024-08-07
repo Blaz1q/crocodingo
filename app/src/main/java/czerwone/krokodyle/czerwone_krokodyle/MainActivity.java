@@ -141,9 +141,6 @@ import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
-    private List<PytaniaDB> listaPytan = new ArrayList<>();
-    private List<PytaniaDB> listaShuffled = new ArrayList<>();
-
     private List<Czapka> listaCzapek = new ArrayList<>();
     private List<Jedzenie> listaZarcia = new ArrayList<>();
     private List<Potka> listaPotek = new ArrayList<>();
@@ -152,9 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private List<Achievements> listaOsiagniec = new ArrayList<>();
     private List<Integer> listaKategorii = new ArrayList<>();
     private List<Integer> listaKategoriiNew = new ArrayList<>();
-    private List<List<PytaniaDB>> podzielonaListaPytan = new ArrayList<>();
     private List<PytaniaNewFormat> nowaListaPytan = new ArrayList<>();
-
     private List<List<PytaniaNewFormat>> podzielonanowaListaPytan = new ArrayList<>();
     private List<PytaniaNewFormat> NewlistaShuffled = new ArrayList<>();
     private List<PytaniaNewFormat> ListaPytanZlozone = new ArrayList<>();
@@ -505,12 +500,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 case "test_final":
                     DefaultMainPageActions();
                     break;
-                case "pytanie_wyglad_wyjasnienie":
-                    //wróć do pytania_wybor_bledne
-                    setContentView(R.layout.pytania_wybor_bledne);
-                    Resume_Question_Buttons_Final();
-                    RemoveAction();
-                    break;
                 case "pytania_wybor_bledne":
                     DefaultMainPageActions();
                     break;
@@ -521,12 +510,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     break;
                 case "userprofile":
                     DefaultMainPageActions();
-                    break;
-                case "wyjasnienie":
-                    //wróć do pytanie_wyglad_wyjasnienie
-                    setContentView(R.layout.pytanie_wyglad_wyjasnienie);
-                    Set_pytanie_bledne();
-                    RemoveAction();
                     break;
                 case "sklep":
                     DefaultMainPageActions();
@@ -653,7 +636,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         SaveSettings();
         setContentView(R.layout.settings);
         UpdateSettings();
-    }
+    }//zapis języka
     public void loadLang(){
         Locale myLocale = new Locale(getLang());
         Resources res = getResources();
@@ -829,7 +812,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         menuitem1.setOnLongClickListener(this);
         menuitem2.setOnLongClickListener(this);
         menuitem3.setOnLongClickListener(this);
-    }
+    }//do menu głównego
     boolean canplayanimations = true;
     int kropki=0;
     int kropki2=0;
@@ -862,7 +845,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 e.printStackTrace();
             }
         }
-    }
+    }//sam nie wiem co tu się dzieje
     public void KrokodylKlikaj(View v){
         if(lastFeed>umiera_po){
             addProgress(4);
@@ -883,7 +866,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 e.printStackTrace();
             }
         }
-    }
+    }//animacje do klikania krokodyla
     // Metoda do obsługi kliknięcia przycisku "Kup Czapkę"
     public void loadJSONFromAsset() {
         TextView cosiedzieje = findViewById(R.id.cosiedzieje);
@@ -1036,56 +1019,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             ex.printStackTrace();
         }
     }
-    public void loadTestPytania(){
-        try {
-            InputStream is = getAssets().open("pytania.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String json = new String(buffer, "UTF-8");
-            //Log.d("MojaAplikacja", "Prawidłowo wczytano JSON: " + json);
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonArray = jsonObject.getJSONArray("API");
-            PytaniaNewFormat pytanie = null;
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject pytania = jsonArray.getJSONObject(i);
-                //Log.d("pytanie"+i,""+pytania);
-                try{
-                pytanie = new PytaniaNewFormat(pytania);
-                } catch (JSONException e){
-                    Log.d("exception", String.valueOf(e));
-                }
-                if(!pytanie.getTyp().equals("ZLOZONE")) {
-                    int h=0;
-                    boolean hasKat = false;
-                    while (h < listaKategoriiNew.size()) {
-                        if (listaKategoriiNew.get(h) == Integer.valueOf(pytanie.getKatID())) {
-                            hasKat = true;
-                            break;
-                        }
-                        h++;
-                    }
-                    if (!hasKat) {
-                        listaKategoriiNew.add(Integer.valueOf(pytanie.getKatID()));
-                        podzielonanowaListaPytan.add(new ArrayList<PytaniaNewFormat>());
-                    }
-                    podzielonanowaListaPytan.get(listaKategoriiNew.indexOf(Integer.valueOf(pytanie.getKatID()))).add(pytanie);
-                }else{
-                    ListaPytanZlozone.add(pytanie);
-                }
-                nowaListaPytan.add(pytanie);
-            }
-            Log.d("podzielona","kutas");
-            for(int i=0;i<podzielonanowaListaPytan.size();i++){
-                for(int j=0;j<podzielonanowaListaPytan.get(i).size();j++){
-                    Log.d("podzielona_"+podzielonanowaListaPytan.get(i).get(j).getKatID(),podzielonanowaListaPytan.get(i).get(j).getTyp());
-                }
-            }
-        } catch (Exception e){
-
-        }
-    }
     public void loadPytania(String response){
         if(!response.equals("")){
             try{
@@ -1127,6 +1060,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         Log.d("podzielona_"+podzielonanowaListaPytan.get(i).get(j).getKatID(),podzielonanowaListaPytan.get(i).get(j).getTyp());
                     }
                 }
+
                 isEverythingLoaded();
             }catch (JSONException e){
                 e.printStackTrace();
@@ -1136,6 +1070,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             zaladowanodb=true;
             isEverythingLoaded();
         }
+        getServerVersion(response);
     }
     public void loadOsiagnieciaFromAsset() {
         TextView cosiedzieje = findViewById(R.id.cosiedzieje);
@@ -2007,7 +1942,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 aktualizujTextPrzyciskow(kupButton);
             }
             Log.w("CURRENT_INDEX_CAZAPA",String.valueOf(current_item_index));
-        }
+        }//TODO: jak będziesz mieć czas, zoptymalizuj.
     public int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
@@ -2086,7 +2021,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             break;
         }
 
-    }
+    }//todo: zoptymalizuj kod, bo jest nasrane.
     public void ustawStateJedzenia(int id){
         switch (SELECTED_LIST){
             case 0:
@@ -3303,7 +3238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if(WyjasnijToggle){
             mainlayout.addView(wyjasnienie);
         }
-    }
+    }//todo: rozplącz to gówno
     public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){
         switch (pytanie.getTyp()){
             case "DOKONCZ":
@@ -3817,11 +3752,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             UpdateSettings();
             AddActions("settings");
         }
-        else if(v.getId()==R.id.wroc_do_pytania){
-            setContentView(R.layout.pytanie_wyglad_wyjasnienie);
-            Set_pytanie_bledne();
-            RemoveAction();
-        }
         else if(v.getId()==R.id.wroc_do_pytan_new_format){
             setContentView(R.layout.newformattest);
             GenerujTest();
@@ -3974,11 +3904,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Generuj_Sklep("czapki");
             AddActions("sklep");
         }
-        else if(v.getId()==R.id.wroc_do_pytan_bledne){
-            setContentView(R.layout.pytania_wybor_bledne);
-            Resume_Question_Buttons_Final();
-            AddActions("pytania_wybor_bledne");
-        }
         else if(v.getId()==R.id.zobacz_bledne){
             setContentView(R.layout.newformattest_bledne);
             GenerujTestBledne();
@@ -3999,7 +3924,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             updateLoader();
         }
         else if (v.getId()==R.id.Rozpocznij_test1){
-            ResetAllQuestions();
             setContentView(R.layout.newformattest);
             prepTest();
             ClosePopup();
@@ -4007,7 +3931,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             AddActions("pytania_wybor");
         }
         else if (v.getId()==R.id.Rozpocznij_test2){
-            ResetAllQuestions();
             setContentView(R.layout.newformattestpytanie_pojedyncze);
             GenerujPojPytania(v);
             ClosePopup();
@@ -4015,17 +3938,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             AddActions("pojedyncze_pytanie");
         }
         else if(v.getId()==R.id.testy_kategoria){
-            ResetAllQuestions();
-            setContentView(R.layout.pytania_wybor_kategoria);
+            setContentView(R.layout.newformattestkategoria);
             Create_Kategoria_Buttons();
             ClosePopup();
             bgmusictesty();
             AddActions("pytania_wybor_kategoria");
-        }
-        else if (v.getId()==R.id.wroc_do_pytan){
-            setContentView(R.layout.pytania_wybor);
-            Resume_Question_Buttons();
-            AddActions("pytania_wybor");
         }
         else if (v.getId()==R.id.testy3){
             setContentView(R.layout.testy_debug);
@@ -4037,21 +3954,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             AddActions("testy_debug");
             GenerujNewPytania();
         }
-        else if(v.getId()==R.id.testychallenge){
-            setContentView(R.layout.pytanie_wyglad_challenge);
-            CHALLENGE_MODE = true;
-            Set_pytanie_Poj();
-            ilosc_blednych=0;
-            ClosePopup();
-            bgmusictesty();
-            AddActions("challenge_pytanie");
-        }
         czypokazana = false;
         czyselectpokazany = false;
         LoadData();
         Wibracje();
     }
-
     boolean CHALLENGE_MODE = false;
     public void updateCrococoinsInShop(){
         TextView iloschajsu = findViewById(R.id.crococoinyilosc);
@@ -4301,112 +4208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
-    public void Set_Ids_List(String response){
-        int katIDs=0;
-        if(response.equals("")){
-            TextView cosiedzieje = findViewById(R.id.cosiedzieje);
-            cosiedzieje.setText("Błąd połączenia.\nŁadowanie Lokalnych pytań..");
-            String id,poprawne,tresc,wyjasnienie,A,B,C,D,kategoria,KatID;
-            Log.w("WarningDBError","DBCONNECTIONFAILED");
-            Toast.makeText(this,"Wystąpił bład, wczytano lokalne pytania",Toast.LENGTH_SHORT).show();
-            try{
-                JSONObject jsonObject = new JSONObject(loadJSONFromAssetVer2("DB.json"));
-                JSONArray jsonArray = jsonObject.getJSONArray("API");
-                    for(int i=0;i<jsonArray.length();i++){
-                        JSONObject jsonObject2 = jsonArray.getJSONObject(i);
-                        id = jsonObject2.getString("id");
-                        poprawne = jsonObject2.getString("poprawna_odp");
-                        tresc = jsonObject2.getString("tresc");
-                        wyjasnienie = jsonObject2.getString("wyjasnienie");
-                        kategoria = jsonObject2.getString("kategoria");
-                        A = jsonObject2.getString("A");
-                        B = jsonObject2.getString("B");
-                        C = jsonObject2.getString("C");
-                        D = jsonObject2.getString("D");
-                        PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria,0);
-                        listaPytan.add(pytanie);
-
-                    }
-                zaladowanodb=true;
-                isEverythingLoaded();
-                updateLoader();
-            }catch (Exception ee){
-                zaladowanodb=false;
-                ee.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Błąd połączenia z siecią i wczytania backupu", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else {
-            try {
-                TextView cosiedzieje = findViewById(R.id.cosiedzieje);
-                cosiedzieje.setText("Ładowanie pytań..");
-                JSONObject jsonObject = new JSONObject(response);
-                JSONArray jsonArray = jsonObject.getJSONArray("API");
-                getServerVersion(response);
-                String id, poprawne, tresc, wyjasnienie, A, B, C, D,kategoria,KatID;
-                boolean helper=false;
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject2 = jsonArray.getJSONObject(i);
-                    id = jsonObject2.getString("id");
-                    poprawne = jsonObject2.getString("poprawna_odp");
-                    tresc = jsonObject2.getString("tresc");
-                    wyjasnienie = jsonObject2.getString("wyjasnienie");
-                    A = jsonObject2.getString("A");
-                    B = jsonObject2.getString("B");
-                    C = jsonObject2.getString("C");
-                    D = jsonObject2.getString("D");
-                    kategoria = jsonObject2.getString("kategoria");
-                    KatID = jsonObject2.getString("katID");
-                    int j=0;
-                    boolean hasKat = false;
-                    while(j<listaKategorii.size()){
-                        if(listaKategorii.get(j)==Integer.valueOf(KatID)){
-                            hasKat=true;
-                        }
-                        j++;
-                    }
-                    if(!hasKat){
-                        listaKategorii.add(Integer.valueOf(KatID));
-                        podzielonaListaPytan.add(new ArrayList<PytaniaDB>());
-                    }
-                    PytaniaDB pytanie = new PytaniaDB(Integer.valueOf(id),tresc,poprawne.charAt(0),A,B,C,D,wyjasnienie,kategoria,Integer.valueOf(KatID));
-                    podzielonaListaPytan.get(listaKategorii.indexOf(Integer.valueOf(KatID))).add(pytanie);
-                    listaPytan.add(pytanie);
-                    pytanie.Wypisz();
-                    zaladowanodb=true;
-                    isEverythingLoaded();
-                }
-                isEverythingLoaded();
-                updateLoader();
-            } catch (JSONException e) {
-                e.printStackTrace();
-                zaladowanodb=true;
-                isEverythingLoaded();
-            }
-        }
-        try{
-            listaShuffled.addAll(listaPytan);
-        }catch (Exception e){
-            
-        }
-        //DebugTestWypiszPytania();
-        //DebugTestWypiszKategorie(9);
-    }
-    public void DebugTestWypiszPytania(){
-        for(int i=0;i<podzielonaListaPytan.size();i++){
-            for(int j=0;j<podzielonaListaPytan.get(i).size();j++){
-                podzielonaListaPytan.get(i).get(j).Wypisz();
-            }
-        }
-    }
-    public void DebugTestWypiszKategorie(int id){
-        id=id-1;
-        for(int j=0;j<podzielonaListaPytan.get(id).size();j++){
-            podzielonaListaPytan.get(id).get(j).Wypisz();
-        }
-    }
     public int CURRENT_INDEX;
-    public int KATEGORIA_ID;
     public void prepTest(){
         WyjasnijToggle = false;
         int localqnum=0;
@@ -4533,15 +4335,38 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void GenerujPojPytania(View v){
-        Random r = new Random();
-        int r1 = r.nextInt(podzielonanowaListaPytan.size());
-        int r2 = r.nextInt(podzielonanowaListaPytan.get(r1).size());
         LinearLayout layout = findViewById(R.id.miejsce_na_pytanie_pojedyncze);
-        podzielonanowaListaPytan.get(r1).get(r2).reset();
-        globalpytanie = podzielonanowaListaPytan.get(r1).get(r2);
-        set_new_pytanie_poj(podzielonanowaListaPytan.get(r1).get(r2),layout);
+        List<PytaniaNewFormat> shuffled = new ArrayList<>();
+        shuffled.addAll(nowaListaPytan);
+        Collections.shuffle(shuffled);
+        shuffled.get(0).reset();
+        globalpytanie = shuffled.get(0);
+        set_new_pytanie_poj(shuffled.get(0),layout);
+    }
+    int Global_katID = -1;
+    public void GnerujPytanieKategorie(View v){
+        if(Global_katID!=-1){
+            GenerujPytanieKategorie(v,Global_katID);
+        }
+    }
+    public void GenerujPytanieKategorie(View v,int KATID){
+        LinearLayout layout = findViewById(R.id.miejsce_na_pytanie_kategoria);
+        List<PytaniaNewFormat> shuffled = new ArrayList<>();
+        shuffled.addAll(podzielonanowaListaPytan.get(KATID));
+        Collections.shuffle(shuffled);
+        shuffled.get(0).reset();
+        globalpytanie = shuffled.get(0);
+        set_new_pytanie_kategoria(shuffled.get(0),layout);
     }
     PytaniaNewFormat globalpytanie;
+    public void set_new_pytanie_kategoria(PytaniaNewFormat pytanie,LinearLayout mainlayout){
+        mainlayout.removeAllViews();
+        miejsceNaPytanie_global = mainlayout;
+        WyjasnijToggle = false;
+        addNewPytania(pytanie,mainlayout,false,1);
+        Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+        wyjasnienieButton.setEnabled(false);
+    }
     public void set_new_pytanie_poj(PytaniaNewFormat pytanie,LinearLayout mainlayout){
         mainlayout.removeAllViews();
         miejsceNaPytanie_global = mainlayout;
@@ -4561,7 +4386,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Nr_pytania.setPadding(0,20,0,20);
         mainlayout.addView(Nr_pytania);
         addNewPytania(pytanie,mainlayout,checkPoprawne,0);
-
         if(CURRENT_INDEX==q_num-1){
             Button zmientekst = findViewById(R.id.nextnewbutton);
             if(!checkPoprawne_global){
@@ -4584,17 +4408,17 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void Create_Kategoria_Buttons(){
         Log.d("testaction","creating kategoria");
         try{
-            LinearLayout layout = findViewById(R.id.questions_select);
+            LinearLayout layout = findViewById(R.id.kategoria_select_new_format);
 
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT
             );
             params.setMargins(0, 0, 0, 20);
-            for(int i=0;i<podzielonaListaPytan.size();i++){
+            for(int i=0;i<podzielonanowaListaPytan.size();i++){
                 Button btn_tests = new Button(this);
                 btn_tests.setLayoutParams(params);
-                btn_tests.setText(podzielonaListaPytan.get(i).get(0).getKategoria()+" ("+podzielonaListaPytan.get(i).size()+")");
+                btn_tests.setText(podzielonanowaListaPytan.get(i).get(0).getKategoria()+" ("+podzielonanowaListaPytan.get(i).size()+")");
                 btn_tests.setTextSize(30);
                 btn_tests.setTag(i);
                 int finalI = i;
@@ -4602,54 +4426,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     @Override
                     public void onClick(View v) {
                         try{
-                            KATEGORIA_ID = finalI;
-                            SET_TEST_ID = listaShuffled.get(KATEGORIA_ID).getId();
-                            setContentView(R.layout.pytanie_kategoria);
+                            setContentView(R.layout.newformattestpytanie_kategoria);
+                            GenerujPytanieKategorie(v, finalI);
+                            Global_katID = finalI;
                             AddActions("pojedyncze_pytanie");
-                            Set_pytanie_kategoria();
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                layout.addView(btn_tests);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public void Resume_Question_Buttons(){
-        Log.d("testaction","creating");
-        try{
-            LinearLayout layout = findViewById(R.id.questions_select);
-
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(0, 0, 0, 20);
-            for(int i=0;i<q_num;i++){
-                Button btn_tests = new Button(this);
-                btn_tests.setLayoutParams(params);
-                btn_tests.setText(getString(R.string.pytanie)+" "+(i+1));
-                btn_tests.setTextSize(30);
-                btn_tests.setTag(i);
-                if(listaShuffled.get(i).getOdpUzytkownika()!='-'){
-                    btn_tests.setBackgroundColor(Color.parseColor("#4f5d75"));
-                    btn_tests.setTextColor(Color.parseColor("#ffffff"));
-                } else{
-                    btn_tests.setBackgroundColor(Color.parseColor("#333333"));
-                    btn_tests.setTextColor(Color.parseColor("#ffffff"));
-                }
-                int finalI = i;
-                btn_tests.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try{
-                            setContentView(R.layout.pytanie_wyglad);
-                            CURRENT_INDEX = finalI;
-                            AddActions("pytanie_wyglad");
-                            Set_pytanie();
                         } catch (Exception e){
                             e.printStackTrace();
                         }
@@ -4663,86 +4443,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public Random rand_num = new Random();
     public int q_num;
-    public void Resume_Question_Buttons_Final(){
-        try{
-            LinearLayout layout = findViewById(R.id.questions_select_bledne);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(0, 0, 0, 20);
-            for(int i=0;i<q_num;i++){
-                Button btn_tests = new Button(this);
-                btn_tests.setLayoutParams(params);
-                btn_tests.setText(getString(R.string.pytanie)+" "+(i+1));
-                btn_tests.setTextSize(30);
-                btn_tests.setTag(i);
-                PytaniaDB pytanie = listaShuffled.get(i);
-                if(pytanie.getOdpUzytkownika()!=pytanie.getPoprawnaOdp()){
-                    btn_tests.setBackgroundColor(color_incorrect);
-                } else{
-                    btn_tests.setBackgroundColor(color_correct);
-                }
-                if(pytanie.getOdpUzytkownika()=='-')
-                    btn_tests.setBackgroundColor(R.color.ckbez);
-                btn_tests.setTextColor(Color.parseColor("#000000"));
-
-                int finalI = i;
-                btn_tests.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try{
-                            CURRENT_INDEX = finalI;
-                            SET_TEST_ID = listaShuffled.get(CURRENT_INDEX).getId();
-                            setContentView(R.layout.pytanie_wyglad_wyjasnienie);
-                            AddActions("pytanie_wyglad_wyjasnienie");
-                            Set_pytanie_bledne();
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                layout.addView(btn_tests);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public void ResetAllQuestions(){
-        Log.d("testaction","reseting");
-        listaShuffled.clear();
-        for(int i=0;i<listaPytan.size();i++){
-            listaShuffled.add(listaPytan.get(i));
-            listaShuffled.get(i).ResetAnswer();
-        }
-    }
-    boolean wywolajfunkcje=false;
     public void NextPytanie(View v){
-        if(v.getId()==R.id.nextbutton||v.getId()==R.id.nextbuttonbledne){
-            if(wywolajfunkcje==true){
-                PopupTestyZakoncz(v);
-            }
-            if(CURRENT_INDEX<q_num-1){
-                try{
-                    CURRENT_INDEX++;
-                    SET_TEST_ID = listaShuffled.get(CURRENT_INDEX).getId();
-                    if(v.getId()==R.id.nextbutton){
-                        Set_pytanie();
-                        Button zmientekst = findViewById(R.id.nextbutton);
-                    }
-                    if(v.getId()==R.id.nextbuttonbledne) Set_pytanie_bledne();
-                } catch (Exception e){
-
-                }
-            }
-        }
-        else if(v.getId()==R.id.nextpojpytanie){
-            Set_pytanie_Poj();
-        }
-        else if(v.getId()==R.id.nextkatpytanie){
-            Set_pytanie_kategoria();
-        }
-        else if(v.getId()==R.id.nextnewbutton){
+        if(v.getId()==R.id.nextnewbutton){
             if(CURRENT_INDEX<q_num-1){
                 try{
                     CURRENT_INDEX++;
@@ -4763,21 +4465,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void PrevPytanie(View v){
-        if(v.getId()==R.id.prevbutton||v.getId()==R.id.prevbuttonbledne){
-            if(CURRENT_INDEX>0){
-                try{
-                    wywolajfunkcje = false;
-                    CURRENT_INDEX--;
-                    SET_TEST_ID = listaShuffled.get(CURRENT_INDEX).getId();
-                    if(v.getId()==R.id.prevbutton){
-                        Set_pytanie();
-                    }
-                    if(v.getId()==R.id.prevbuttonbledne) Set_pytanie_bledne();
-                } catch (Exception e){
-
-                }
-            }
-        }
         if(v.getId()==R.id.prevnewbutton){
             if(CURRENT_INDEX>0){
                 CURRENT_INDEX--;
@@ -4789,7 +4476,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
-    boolean oneshot=true;
     boolean WyjasnijToggle = false;
     public void WyjasnijToggle(View v){
         miejsceNaPytanie_global.removeAllViews();
@@ -4813,230 +4499,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
-    public void Wyjasnij(View v){
-
-        if(v.getId()==R.id.wyjasnienie){
-            setContentView(R.layout.wyjasnienie);
-            AddActions("wyjasnienie");
-
-            try{
-                PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-                ImageView wyjasnienie = findViewById(R.id.wyjasnienie_main);
-                String wyjasnienie_tekst = pytanie.getWyjasnienie();
-                wyjasnienie.setBackground(Math_syn.set_Math(wyjasnienie_tekst));
-            } catch (Exception e){
-
-            }
-        }
-        if(v.getId()==R.id.wyjasnij_poj){
-            if(oneshot==false){
-                try{
-                    PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-                    ImageView wyjasnienie = findViewById(R.id.tresc_pytania_i_wyjasnienie);
-                    String wyjasnienie_tekst = pytanie.getWyjasnienie();
-                    Test_Math_drawable=Math_syn.set_Math(wyjasnienie_tekst);
-                    wyjasnienie.setBackground(Test_Math_drawable);
-                } catch (Exception e){
-
-                }
-            }
-        }
-        if(v.getId()==R.id.wyjasnij_kat){
-            if(oneshot==false){
-                try{
-                    PytaniaDB pytanie = podzielonaListaPytan.get(KATEGORIA_ID).get(CURRENT_INDEX);
-                    ImageView wyjasnienie = findViewById(R.id.tresc_pytania_i_wyjasnienie);
-                    String wyjasnienie_tekst = pytanie.getWyjasnienie();
-                    Test_Math_drawable=Math_syn.set_Math(wyjasnienie_tekst);
-                    wyjasnienie.setBackground(Test_Math_drawable);
-                } catch (Exception e){
-
-                }
-            }
-        }
-    }
-    int ilosc_blednych=0;
-    public void Set_pytanie(){
-        Log.d("testaction","setting_question");
-        TextView numer_pytania = findViewById(R.id.numer_pytania);
-        numer_pytania.setText(getString(R.string.pytanie)+" "+(CURRENT_INDEX + 1));
-        Button[] buttony = {
-                findViewById(R.id.odp_A),
-                findViewById(R.id.odp_B),
-                findViewById(R.id.odp_C),
-                findViewById(R.id.odp_D)
-        };
-        ImageView tes = findViewById(R.id.tresc_pytania);
-        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-        SetPytanieParent(buttony,pytanie,tes);
-        if(CURRENT_INDEX==0){
-            Button zmientekst=findViewById(R.id.prevbutton);
-            zmientekst.setEnabled(false);
-        }else{
-            Button zmientekst=findViewById(R.id.prevbutton);
-            zmientekst.setEnabled(true);
-        }
-        if(q_num-1==CURRENT_INDEX){
-            Button zmientekst=findViewById(R.id.nextbutton);
-            zmientekst.setText(getString(R.string.zakoncz));
-            wywolajfunkcje=true;
-        }else{
-            Button zmientekst=findViewById(R.id.nextbutton);
-            zmientekst.setText(getString(R.string.next));
-            wywolajfunkcje=false;
-        }
-    }
-    int rerollindex=-1;
-    public void Set_pytanie_kategoria(){
-        Random r = new Random();
-        CURRENT_INDEX = r.nextInt(podzielonaListaPytan.get(KATEGORIA_ID).size());
-        switch(rerollindex){
-            case -1:{
-                rerollindex=CURRENT_INDEX;
-            }break;
-            default:{
-                Log.d("index",String.valueOf(CURRENT_INDEX));
-                if(podzielonaListaPytan.get(KATEGORIA_ID).size()>1) {
-                    while (rerollindex == CURRENT_INDEX) {
-                        CURRENT_INDEX = r.nextInt(podzielonaListaPytan.get(KATEGORIA_ID).size());
-                        Log.d("ROLLINN",String.valueOf(CURRENT_INDEX));
-                    }
-                    rerollindex=CURRENT_INDEX;
-                }
-            }break;
-        }
-
-        oneshot=true;
-        Button[] buttony = {
-                findViewById(R.id.odp_A_Poj),
-                findViewById(R.id.odp_B_Poj),
-                findViewById(R.id.odp_C_Poj),
-                findViewById(R.id.odp_D_Poj)
-        };
-        ResetAllQuestions();
-        listaShuffled.clear();
-        listaShuffled.addAll(podzielonaListaPytan.get(KATEGORIA_ID));
-        listaShuffled.get(CURRENT_INDEX).ResetAnswer();
-        ImageView tes = findViewById(R.id.tresc_pytania_i_wyjasnienie);
-        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-        SetPytanieParent(buttony,pytanie,tes);
-    }
-    public void Set_pytanie_Poj(){
-        Random r = new Random();
-        CURRENT_INDEX = r.nextInt(listaPytan.size());
-        oneshot=true;
-        if(CHALLENGE_MODE!=true){
-            Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
-            wyjasnienie_button.setEnabled(false);
-        }
-        Button[] buttony = {
-                findViewById(R.id.odp_A_Poj),
-                findViewById(R.id.odp_B_Poj),
-                findViewById(R.id.odp_C_Poj),
-                findViewById(R.id.odp_D_Poj)
-        };
-        Collections.shuffle(listaShuffled);
-        listaShuffled.get(CURRENT_INDEX).ResetAnswer();
-        ImageView tes = findViewById(R.id.tresc_pytania_i_wyjasnienie);
-        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-        SetPytanieParent(buttony,pytanie,tes);
-    }
-    public void Set_pytanie_bledne(){
-        Button[] buttony = {
-                findViewById(R.id.odp_Abledne),
-                findViewById(R.id.odp_Bbledne),
-                findViewById(R.id.odp_Cbledne),
-                findViewById(R.id.odp_Dbledne)
-        };
-        ImageView tes = findViewById(R.id.tresc_pytaniabledne);
-        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-        SetPytanieParent(buttony,pytanie,tes);
-        setBledneParent(buttony,pytanie);
-    }
-    public void UpdateAnswer_Poj(int questID){
-        Button[] buttony = {
-                findViewById(R.id.odp_A_Poj),
-                findViewById(R.id.odp_B_Poj),
-                findViewById(R.id.odp_C_Poj),
-                findViewById(R.id.odp_D_Poj)
-        };
-        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-        setBledneParent(buttony,pytanie);
-        if(pytanie.getOdpUzytkownika()==pytanie.getPoprawnaOdp()){
-            addProgress(questID); //może progress do challenge?
-        }else{
-            if(CHALLENGE_MODE==true){
-                ilosc_blednych++;
-                String japka = "zycie_";
-                int resID = getResources().getIdentifier((japka+String.valueOf(3-ilosc_blednych+1)), "id", getPackageName());
-                ImageView img = findViewById(resID);
-                img.setImageResource(R.drawable.japkodead);
-                PlaySound("life_lost",false);
-            }
-            if(ilosc_blednych>=3){
-                new Handler(getMainLooper()).postDelayed(() -> {
-                    DefaultMainPageActions();
-                }, 2500);
-            }
-        }
-        if(CHALLENGE_MODE==true){
-            new Handler(getMainLooper()).postDelayed(() -> {
-                Set_pytanie_Poj();
-            }, 2500);
-        }
-    }
-    public void setAnswer(View v){
-        int[] ids = {
-                R.id.odp_A,
-                R.id.odp_B,
-                R.id.odp_C,
-                R.id.odp_D
-        };
-        Button[] buttony = new Button[ids.length];
-        for(int i=0;i<ids.length;i++){
-            buttony[i] = findViewById(ids[i]);
-        }
-        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-        setAnswerParent(v,ids,pytanie);
-        UpdateAnswerParent(buttony);
-    }
-    public void setAnswerPoj(View v){
-        int[] ids = {
-                R.id.odp_A_Poj,
-                R.id.odp_B_Poj,
-                R.id.odp_C_Poj,
-                R.id.odp_D_Poj
-        };
-        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-        setAnswerParent(v,ids,pytanie);
-        if(oneshot==true){
-            UpdateAnswer_Poj(0);
-            if(CHALLENGE_MODE!=true){
-                Button wyjasnienie_button = findViewById(R.id.wyjasnij_poj);
-                wyjasnienie_button.setEnabled(true);
-            }
-        }
-        oneshot=false;
-    }
-    public void setAnswerKategoria(View v){
-        int[] ids = {
-                R.id.odp_A_Poj,
-                R.id.odp_B_Poj,
-                R.id.odp_C_Poj,
-                R.id.odp_D_Poj
-        };
-        PytaniaDB pytanie = listaShuffled.get(CURRENT_INDEX);
-        setAnswerParent(v,ids,pytanie);
-        if(oneshot==true){
-            UpdateAnswer_Poj(6);
-            if(CHALLENGE_MODE!=true){
-                Button wyjasnienie_button = findViewById(R.id.wyjasnij_kat);
-                wyjasnienie_button.setEnabled(true);
-            }
-        }
-        oneshot=false;
-    }
-    public int brak_odp=0;
     public static String fmt(double d)
     {
         if(d == (long) d)
@@ -5124,7 +4586,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 nagroda1.setText("0");
                 nagrodashadow1.setText("0");
                 if(oblicz_percenty>20){
-
                     //SaveFood(1);
                     finalnagroda = (int) Math.round(100*mnoznik);
                     SaveMoney(finalnagroda);
@@ -5183,97 +4644,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             nagrodaMultiplier.setText(String.valueOf(mnoznik*100)+"%");
         }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public void setBledneParent(Button[] buttony,PytaniaDB pytanie) {
-        try{
-            for(int j=0;j<4;j++){
-                CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
-                buttony[j].setBackground(CurrentQuestion[j]);
-                buttony[j].setText("");
-            }
-            char odp;
-            int odpint=pytanie.getPoprawnaOdpInt();
-            odp = pytanie.getOdpUzytkownika();
-            char correctansw = pytanie.getPoprawnaOdp();
-            int current_color= 0x00ffffff;
-
-            for(int j=0;j<4;j++){
-                current_color= 0x00ffffff;
-                if(listaShuffled.get(CURRENT_INDEX).getOdpUzytkownikaInt()==j+1){
-                    if(pytanie.getOdpUzytkownika()!=pytanie.getPoprawnaOdp()){
-                        current_color = color_incorrect;
-                    }
-                }
-                CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],current_color,color_text_incorrect);
-                buttony[j].setBackground(CurrentQuestion[j]);
-            }
-            if(odpint!=0){
-                CurrentQuestion[odpint-1] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[odpint-1],color_correct,color_text_incorrect);
-                buttony[odpint-1].setBackground(CurrentQuestion[odpint-1]);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public void SetPytanieParent(Button[] buttony, PytaniaDB pytanie, ImageView MiejsceNaPytanie){
-        Log.d("testaction","setting_question");
-        try{
-            String tresc;
-            Log.d("testaction","setting_tresc");
-            try{
-                MiejsceNaPytanie.setBackground(Math_syn.set_Math(pytanie.getTresc()));
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            Log.d("testaction","setting_odpowiedzi");
-            for(int j=0;j<4;j++){
-                try {
-                    Log.d("testaction",String.valueOf(j));
-                    StringCurrentQuestion[j] = "\\text{" + LitABCD[j] + ": }" + pytanie.getJednaOdpowiedz(j);
-                    CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
-                    buttony[j].setBackground(CurrentQuestion[j]);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    buttony[j].setText("crash");
-                }
-            }
-            UpdateAnswerParent(buttony);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public void setAnswerParent(View v,int[] ids,PytaniaDB pytanie){
-        try{
-            if(v.getId()==ids[0]){
-                pytanie.ZapiszOdpowiedz('A');
-            }
-            else if(v.getId()==ids[1]){
-                pytanie.ZapiszOdpowiedz('B');
-            }
-            else if(v.getId()==ids[2]){
-                pytanie.ZapiszOdpowiedz('C');
-            }
-            else if(v.getId()==ids[3]){
-                pytanie.ZapiszOdpowiedz('D');
-            }
-            listaShuffled.set(CURRENT_INDEX,pytanie);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public void UpdateAnswerParent(Button[] buttony){
-        Log.d("testaction","updating_answer");
-        try{
-            for(int j=0;j<4;j++){
-                CurrentQuestion[j] = Math_syn.set_Fancy_Math(StringCurrentQuestion[j],0x00ffffff);
-                if(listaShuffled.get(CURRENT_INDEX).getOdpUzytkownikaInt()==j+1){
-                    CurrentQuestion[j] = Math_syn.set_Very_Fancy_Math(StringCurrentQuestion[j],getResources().getDrawable(getResources().getIdentifier("zaznaczona_odp", "drawable", getPackageName())),0xffffffff);
-                }
-                buttony[j].setBackground(CurrentQuestion[j]);
-            }
-        } catch (Exception e){
             e.printStackTrace();
         }
     }
