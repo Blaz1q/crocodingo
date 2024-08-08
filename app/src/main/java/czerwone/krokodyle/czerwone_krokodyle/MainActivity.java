@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean zaladowano_jedzenie = false;
     boolean zaladowano_osiagniecia = false;
     boolean isPopupVisible = false;
+    boolean isLoaded = false;
     boolean zaladowanodb = false; //tylko w przypadku gdy nie ma połączenia z bazą
     String[] LitABCD = {"A","B","C","D"};
     final int color_correct = 0xff88d18a;
@@ -253,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private static final String PURCHASEDCZAPKA = "PURCHASEDCZAPKA";
     private static final String SAVED_LEVEL = "SAVED_LEVEL";
     private static final String SAVED_EXP = "SAVED_EXP";
-    private static final String final_connection= "https://blaz1q.github.io/crocodingo/androidAPIVER2.json"; //"https://jncrew.5v.pl/androidAPI.php";
+    private static final String final_connection= "https://blaz1q.github.io/crocodingo/androidAPIVER2.json";
     private static final String imgs_server = "https://blaz1q.github.io/crocodingo/serverimgs/";
     String[] SERVER_VERSION = {"",""};
     AppUpdateManager appUpdateManager;
@@ -419,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     int LoadedCounter=0;
     private void isEverythingLoaded(){
-        if(zaladowanodb){
+        if(!isLoaded){
             handler.removeCallbacks(loadingrunnable);
             bgloadinghandler.removeCallbacks(loadingrunnablebg);
             RelativeLayout bgimg = findViewById(R.id.MAIN_LOADING_BG);
@@ -436,6 +437,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             PierwszeUruchomienie();
             Uruchomienie_animajca();
             ustawCzapke();
+            isLoaded = true;
         }
     }
     private void checkForUpdates(){
@@ -1067,7 +1069,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }else{
             Toast.makeText(getApplicationContext(),"nie udało się wczytać pytań",Toast.LENGTH_SHORT).show();
-            zaladowanodb=true;
+            zaladowanodb=false;
             isEverythingLoaded();
         }
         getServerVersion(response);
@@ -3918,10 +3920,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             bgmusicnormal();
         }
         else if (v.getId()==R.id.ZmienNaTesty){
-            setContentView(R.layout.select_tests);
-            PierwszeUruchomienieTesty();
-            AddActions("select_tests");
-            updateLoader();
+            if(zaladowanodb){
+                setContentView(R.layout.select_tests);
+                PierwszeUruchomienieTesty();
+                AddActions("select_tests");
+                updateLoader();
+            }else{
+                fetchData(0);
+            }
+
         }
         else if (v.getId()==R.id.Rozpocznij_test1){
             setContentView(R.layout.newformattest);
@@ -4204,7 +4211,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 SERVER_VERSION[0] = version.get(0).toString();
                 SERVER_VERSION[1] = version.get(1).toString();
             } catch (JSONException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
     }
@@ -4719,8 +4726,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     public void fetchData(int action){
         RequestQueue queue = Volley.newRequestQueue(this);
         String url =final_connection;
-        TextView cosiedzieje = findViewById(R.id.cosiedzieje);
-        cosiedzieje.setText("Pobieranie Pytań..");
+        try{
+            TextView cosiedzieje = findViewById(R.id.cosiedzieje);
+            cosiedzieje.setText("Pobieranie Pytań..");
+        }
+        catch (Exception e){
+
+        }
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override

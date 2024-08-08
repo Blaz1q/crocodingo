@@ -12,7 +12,7 @@ android {
         minSdk 24
         targetSdk 34
         versionCode 8
-        versionName "CD1.7.0"
+        versionName "CD1.8.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
