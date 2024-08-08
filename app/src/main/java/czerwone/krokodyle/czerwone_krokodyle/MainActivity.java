@@ -26,6 +26,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,6 +43,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.pdf.PdfRenderer;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -50,6 +52,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
@@ -59,6 +62,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -125,8 +129,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -3738,6 +3744,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         counet.setText(String.valueOf(newpytaniacounterdebug));
         addNewPytania(pytanie,mainlayout,true,0);
     }
+    public void PokazKarteWzorow(View v){
+
+        String path="https://cke.gov.pl/images/_EGZAMIN_MATURALNY_OD_2023/Informatory/wybrane_wzory_matematyczne_EM2023.pdf";
+        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(path));
+        startActivity(intent);
+
+    }
     public void DefaultMainPageActions(){
         setContentView(R.layout.main_page);
         updateAccInfo();
@@ -4543,7 +4556,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         addProgress(1);
         addProgressOsiagniecia(11);
         AddActions("test_final");
-        Toast.makeText(getApplicationContext(),("Pkt:"+pkt+" ŁącznePkt:"+laczne_pkt),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),("Pkt:"+pkt+" ŁącznePkt:"+laczne_pkt),Toast.LENGTH_SHORT).show();
         try{
             TextView wynik_pkt = findViewById(R.id.wynik_punktowy);
             TextView ilosc_pytan = findViewById(R.id.iloscpytan);

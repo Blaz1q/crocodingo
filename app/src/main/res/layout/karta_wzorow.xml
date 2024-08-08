@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/hiddentop"
+        android:orientation="horizontal"
+        >
+    </LinearLayout>
+    <Button
+        android:id="@+id/wrocmenu"
+        android:layout_below="@id/hiddentop"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#333333"
+        android:onClick="Zamknij_Popup"
+        android:text="@string/zamknij" />
+    <WebView
+        android:id="@+id/webviewpdf"
+        android:layout_below="@id/wrocmenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/hiddenbottom"/>
+    <LinearLayout
+        android:id="@+id/hiddenbottom"
+        android:layout_alignParentBottom="true"
+        android:alwaysDrawnWithCache="false"
+        android:orientation="horizontal"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        />
+</RelativeLayout>

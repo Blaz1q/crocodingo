@@ -37,10 +37,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="karta wzorów"
-            android:onClick="Zmien_widoki"
             android:layout_weight="1"
             android:layout_marginRight="3dp"
             android:backgroundTint="#333333"
+            android:onClick="PokazKarteWzorow"
             />
     </LinearLayout>
     <ScrollView

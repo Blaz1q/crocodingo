@@ -28,4 +28,5 @@
     <string name="wybierz_kat">Select category</string>
     <string name="powiadomienia">Notifications</string>
     <string name="zakoncz">Finish</string>
+    <string name="zamknij">Close</string>
 </resources>

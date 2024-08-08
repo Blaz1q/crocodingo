@@ -11,7 +11,7 @@
         android:id="@+id/questions_select_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/zakoncz_test_bledne"
+        android:layout_above="@id/wroc_do_menu_poj"
         android:contentDescription="@string/app_name"
         tools:ignore="UselessParent"
         android:layout_marginBottom="20dp"
@@ -36,14 +36,14 @@
         />
 
     <Button
-        android:id="@+id/zakoncz_test_bledne"
+        android:id="@+id/wroc_do_menu_poj"
         style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:alwaysDrawnWithCache="false"
-        android:onClick="PopupTestyZakoncz"
+        android:onClick="Zmien_widoki"
         android:text="@string/wroc_do_startu"
         android:textSize="16sp"
         android:layout_marginBottom="15dp"
