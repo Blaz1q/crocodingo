@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="35dp"
@@ -22,12 +24,20 @@
         android:backgroundTint="#333333"
         android:onClick="Zamknij_Popup"
         android:text="@string/zamknij" />
-    <WebView
-        android:id="@+id/webviewpdf"
-        android:layout_below="@id/wrocmenu"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/hiddenbottom"/>
+        android:layout_below="@+id/wrocmenu"
+        android:layout_above="@id/hiddenbottom"
+        >
+        <LinearLayout
+            android:id="@+id/PDFrenderer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+        </LinearLayout>
+    </ScrollView>
     <LinearLayout
         android:id="@+id/hiddenbottom"
         android:layout_alignParentBottom="true"

@@ -11,7 +11,7 @@ android {
         applicationId "czerwone.krokodyle.czerwone_krokodyle"
         minSdk 24
         targetSdk 34
-        versionCode 8
+        versionCode 9
         versionName "CD1.8.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

@@ -7,8 +7,8 @@
     <string name="google_storage_bucket" translatable="false">czerwone-krokodyle.appspot.com</string>
     <string name="project_id" translatable="false">czerwone-krokodyle</string>
     <string name="version" translatable="false">1.8.0</string>
-    <string name="priority" translatable="false">BETA</string>
-    <string name="priority_version" translatable="false">BETA 1.8.0</string>
+    <string name="priority" translatable="false">RELEASE</string>
+    <string name="priority_version" translatable="false">RELEASE 1.8.0</string>
     <string name="Credits">Realizacja</string>
     <string name="wroc_do_startu">Wróć do startu</string>
     <string name="special_thanks">Specjalne\npodziękowania:</string>

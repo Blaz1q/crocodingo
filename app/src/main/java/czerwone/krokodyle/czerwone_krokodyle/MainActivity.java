@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -130,9 +131,12 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -3744,12 +3748,71 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         counet.setText(String.valueOf(newpytaniacounterdebug));
         addNewPytania(pytanie,mainlayout,true,0);
     }
+    List<Bitmap> pdfBitmap = new ArrayList<>();
     public void PokazKarteWzorow(View v){
+        POPUP_EXCEPTION_MODE=1;
+        POPUP_RESOLUTION=1;
+        ShowPopup(R.layout.karta_wzorow);
+        LinearLayout layout = myDialog.findViewById(R.id.PDFrenderer);
+        if(pdfBitmap.size()==0){
+            AssetManager assetManager = getAssets();
+            InputStream inputStream = null;
+            try {
+                inputStream = assetManager.open("wybrane_wzory_matematyczne_em2023.pdf");
+                // Create a temporary file
+                File file = new File(getCacheDir(), "temp.pdf");
+                OutputStream outputStream = new FileOutputStream(file);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
+                }
+                outputStream.close();
+                inputStream.close();
 
-        String path="https://cke.gov.pl/images/_EGZAMIN_MATURALNY_OD_2023/Informatory/wybrane_wzory_matematyczne_EM2023.pdf";
-        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(path));
-        startActivity(intent);
+                // Open the PDF using PdfRenderer
+                ParcelFileDescriptor fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+                PdfRenderer pdfRenderer = new PdfRenderer(fileDescriptor);
 
+                int pageCount = pdfRenderer.getPageCount();
+                for (int i = 0; i < pageCount; i++) {
+                    PdfRenderer.Page page = pdfRenderer.openPage(i);
+
+                    // Create a Bitmap for the page
+                    Bitmap bitmap = Bitmap.createBitmap(page.getWidth(), page.getHeight(), Bitmap.Config.ARGB_8888);
+                    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+
+                    // Create an ImageView and set the Bitmap to it
+                    pdfBitmap.add(bitmap);
+
+                    // Close the page
+                    page.close();
+                }
+
+                pdfRenderer.close();
+                fileDescriptor.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        for(int i=0;i<pdfBitmap.size();i++){
+            ImageView imageView = new ImageView(this);
+            imageView.setImageBitmap(pdfBitmap.get(i));
+            ViewGroup.LayoutParams imageparams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT
+            );
+            imageView.setScaleType(ImageView.ScaleType.FIT_START);
+            imageView.setAdjustViewBounds(true);
+            imageView.setLayoutParams(imageparams);
+            // Add the ImageView to the LinearLayout
+            layout.addView(imageView);
+        }
+        // Load the PDF from assets
+
+        myDialog.show();
+        POPUP_EXCEPTION_MODE=0;
+        POPUP_RESOLUTION=0;
     }
     public void DefaultMainPageActions(){
         setContentView(R.layout.main_page);
@@ -4658,6 +4721,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 Pokaz_Topbar();
                 Aktualizuj_Hajs(getMoney()-finalnagroda,getMoney());
                 Ukryj_Topbar();
+                addProgressOsiagniecia(0);
             }
             if(czyZalogowany==true){
                 updateFirebaseData(acct.getIdToken());
