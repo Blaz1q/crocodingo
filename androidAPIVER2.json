@@ -1,4 +1,5 @@
-{"API": [
+{"VERSION":["1.8.0","RELEASE"],
+    "API": [
     {
       "typ": "DOKONCZ",
       "kat": "Liczby Rzeczywiste",
