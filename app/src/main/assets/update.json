@@ -22,5 +22,9 @@
   {
     "Wersja": "RELEASE 1.8.0",
     "Opis": [["Dodano pytania Otwarte","Dodano pytania Prawda/Fałsz","Dodano pytania Dopasuj","Dodano Pytania Złożone","Dodano nowe tłumaczenia","Poprawiono działanie pytań","Dodano karte wzorów"],["Added open questions","Added True/False questions","Added Matching questions","Added Complex questions","Added new translations","Improved questions"]]
+  },
+  {
+    "Wersja": "RELEASE 1.8.1",
+    "Opis": [["Poprawiono nieoczekiwany błąd","dodano wyświetlanie punktów"],["Fixed unknown bug","Now questions display points"]]
   }
 ]

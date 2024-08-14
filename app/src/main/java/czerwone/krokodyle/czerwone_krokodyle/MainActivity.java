@@ -4465,16 +4465,61 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
         wyjasnienieButton.setEnabled(false);
     }
-    public void set_new_pytanie(PytaniaNewFormat pytanie,LinearLayout mainlayout,Boolean checkPoprawne){
+    public void set_new_pytanie(PytaniaNewFormat pytanie,LinearLayout mainlayout,Boolean checkPoprawne){//todo dodaj tutaj pkty.
         mainlayout.removeAllViews();
+        RelativeLayout rootLayout = new RelativeLayout(this);
+        RelativeLayout.LayoutParams rootParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        rootLayout.setLayoutParams(rootParams);
+        rootLayout.setBackgroundResource(R.drawable.custom_container);
+        rootLayout.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.gray_active));
+
         TextView Nr_pytania = new TextView(this);
+        Nr_pytania.setLayoutParams(rootParams);
         Nr_pytania.setText((getString(R.string.pytanie)+" "+(CURRENT_INDEX+1)).toUpperCase());
-        Nr_pytania.setBackgroundColor(getColor(R.color.gray_active));
         Nr_pytania.setTextSize(30);
         Nr_pytania.setTextColor(0xffffffff);
         Nr_pytania.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         Nr_pytania.setPadding(0,20,0,20);
-        mainlayout.addView(Nr_pytania);
+
+        rootLayout.addView(Nr_pytania);
+// Inner RelativeLayout
+        RelativeLayout innerLayout = new RelativeLayout(this);
+        RelativeLayout.LayoutParams innerParams = new RelativeLayout.LayoutParams(
+                dpToPx(55),
+                dpToPx(55));
+        innerParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+        innerParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        innerLayout.setLayoutParams(innerParams);
+
+// Set background and backgroundTint
+        innerLayout.setBackgroundResource(R.drawable.custom_container);
+        innerLayout.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.cklightgray));
+        if(checkPoprawne){
+            if(pytanie.czyTrochePoprawne()&&!pytanie.czyPoprawne()) innerLayout.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.ckgolden));
+            else if(pytanie.czyBledne()) innerLayout.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.ckpink));
+            if(pytanie.czyPoprawne()) innerLayout.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.ckcorrect));
+        }
+        rootLayout.addView(innerLayout);
+
+        TextView pkty = new TextView(this);
+
+        pkty.setText(String.valueOf(pytanie.getPkt())+"pkt");
+        if(checkPoprawne)
+            pkty.setText(pytanie.ObliczPkty()+"/"+pytanie.getPkt());
+
+        RelativeLayout.LayoutParams innerTextParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        innerTextParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        pkty.setLayoutParams(innerTextParams);
+        pkty.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        pkty.setTextSize(20);
+        pkty.setTextColor(getColor(R.color.white));
+        innerLayout.addView(pkty);
+
+        mainlayout.addView(rootLayout);
         addNewPytania(pytanie,mainlayout,checkPoprawne,0);
         if(CURRENT_INDEX==q_num-1){
             Button zmientekst = findViewById(R.id.nextnewbutton);
@@ -4667,7 +4712,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             int finalnagroda;
             procenty.setText(fmt(oblicz_percenty) +"%");
-            wynik_pkt.setText("("+String.valueOf(pkt)+"/"+String.valueOf(laczne_pkt)+")");
+            wynik_pkt.setText(String.valueOf(pkt)+"/"+String.valueOf(laczne_pkt)+" pkt");
             if(oblicz_percenty>=30){
                 SavePassedTest();
                 AddStreak();
