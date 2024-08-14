@@ -759,10 +759,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }catch (Exception e){
                 e.printStackTrace();
             }
-            ViewGroup testconfetti = myDialog.findViewById(R.id.kolo_fortuny_box);
-            Rect bounding_box=new Rect(testconfetti.getLeft(),testconfetti.getTop(),testconfetti.getRight(),testconfetti.getBottom());
-            int[] colors = {getColor(R.color.ckgolden),getColor(R.color.ckred)};
-            CommonConfetti.explosion(testconfetti,testconfetti.getWidth()/2,testconfetti.getHeight()/2,colors).oneShot().setBound(bounding_box).animate();
+            try {
+                ViewGroup testconfetti = myDialog.findViewById(R.id.kolo_fortuny_box);
+                Rect bounding_box=new Rect(testconfetti.getLeft(),testconfetti.getTop(),testconfetti.getRight(),testconfetti.getBottom());
+                int[] colors = {getColor(R.color.ckgolden),getColor(R.color.ckred)};
+                CommonConfetti.explosion(testconfetti,testconfetti.getWidth()/2,testconfetti.getHeight()/2,colors).oneShot().setBound(bounding_box).animate();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         },10500);
     }
     public void krec(View v){
@@ -3251,7 +3255,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             mainlayout.addView(wyjasnienie);
         }
     }//todo: rozplącz to gówno
-    public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){
+    public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){ //TODO: dodaj punkty
         switch (pytanie.getTyp()){
             case "DOKONCZ":
             {
@@ -3779,7 +3783,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     PdfRenderer.Page page = pdfRenderer.openPage(i);
 
                     // Create a Bitmap for the page
-                    Bitmap bitmap = Bitmap.createBitmap(page.getWidth(), page.getHeight(), Bitmap.Config.ARGB_8888);
+                    int scale = 1;
+                    int width = page.getWidth()*scale;
+                    int height = page.getHeight()*scale;
+                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                     page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
 
                     // Create an ImageView and set the Bitmap to it
@@ -3802,7 +3809,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             ViewGroup.LayoutParams imageparams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT
             );
-            imageView.setScaleType(ImageView.ScaleType.FIT_START);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageView.setAdjustViewBounds(true);
             imageView.setLayoutParams(imageparams);
             // Add the ImageView to the LinearLayout
@@ -4280,7 +4287,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
     public void getServerVersion(String response){
         if(!response.equals("")){
-            //Log.d("res",response);
+            Log.d("res",response);
             try{
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray version = jsonObject.getJSONArray("VERSION");

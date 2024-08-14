@@ -20,7 +20,7 @@
     "Opis": [["Dodano popup 'dostępna aktualizacja'","Poprawiono dzienne zadania","Poprawiono powiadomienia"],["Added popup 'update available'","Improved daily quests","Improved notifications"]]
   },
   {
-    "Wersja": "ALPHA 1.8.0",
-    "Opis": [["Dodano pytania Otwarte","Dodano pytania Prawda/Fałsz","Dodano pytania Dopasuj","Dodano Pytania Złożone","Dodano nowe tłumaczenia"],["Added open questions","Added True/False questions","Added Matching questions","Added Complex questions","Added new translations"]]
+    "Wersja": "RELEASE 1.8.0",
+    "Opis": [["Dodano pytania Otwarte","Dodano pytania Prawda/Fałsz","Dodano pytania Dopasuj","Dodano Pytania Złożone","Dodano nowe tłumaczenia","Poprawiono działanie pytań","Dodano karte wzorów"],["Added open questions","Added True/False questions","Added Matching questions","Added Complex questions","Added new translations","Improved questions"]]
   }
 ]
