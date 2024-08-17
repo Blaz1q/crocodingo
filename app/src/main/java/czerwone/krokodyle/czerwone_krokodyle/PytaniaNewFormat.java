@@ -16,6 +16,7 @@ public class PytaniaNewFormat {
 
     //private final String[] FormatTypes = {"ABX","PFX","ZMK","DEF"};
     private List<PytaniaNewFormat> ListaZlozone = new ArrayList<>();
+    private String matura;
     private int Id;
     private int Pkt;
     private String Typ ;
@@ -43,11 +44,16 @@ public class PytaniaNewFormat {
     JSONObject translatable = null;
     private Bitmap ZdjBitmap = null;
     private Bitmap[] OdpZdjBitmap;
+    boolean hasMatura = false;
 
     public PytaniaNewFormat(JSONObject pytanie) throws JSONException {
         //Log.d("Loading","kapi kapi kapiciulo");
         this.Typ = pytanie.getString("typ");
         this.Id = pytanie.getInt("id");
+        if(pytanie.has("matura")) {
+            this.matura = pytanie.getString("matura");
+            hasMatura = true;
+        }
         Log.d("typ",this.Typ);
         if(Typ.equals("DOKONCZ")){
             this.Pkt = pytanie.getInt("pkt");
@@ -81,6 +87,9 @@ public class PytaniaNewFormat {
             if(pytanie.has("info")) {this.Info = initS1D(pytanie.getJSONArray("info")); hasInfo=true;}
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
+            if(pytanie.has("translatable_info")){
+                translatable = pytanie.getJSONObject("translatable_info");
+            }
         }
         if (Typ.equals("OTWARTE")) {
             this.Pkt = pytanie.getInt("pkt");
@@ -102,6 +111,9 @@ public class PytaniaNewFormat {
                 this.Zdj = pytanie.getString("zdj");
                 hasZdj = true;
             }
+            if(pytanie.has("translatable_info")){
+                translatable = pytanie.getJSONObject("translatable_info");
+            }
         }
         if(Typ.equals("DOPASUJ_1TO1")){
             this.Pkt = pytanie.getInt("pkt");
@@ -121,6 +133,9 @@ public class PytaniaNewFormat {
             OdpZdjBitmap = new Bitmap[OdpowiedziZdj.length];
             Arrays.fill(this.OdpZdjBitmap,null);
             }
+            if(pytanie.has("translatable_info")){
+                translatable = pytanie.getJSONObject("translatable_info");
+            }
         }
         if(Typ.equals("DOPASUJ_NTO1")){
             this.Pkt = pytanie.getInt("pkt");
@@ -136,6 +151,9 @@ public class PytaniaNewFormat {
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
             if(pytanie.has("odp_zdj")) {this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp_zdj")); hasOdpowiedziZdj=true; OdpZdjBitmap = new Bitmap[OdpowiedziZdj.length]; Arrays.fill(this.OdpZdjBitmap,null);}
+            if(pytanie.has("translatable_info")){
+                translatable = pytanie.getJSONObject("translatable_info");
+            }
         }
         if(Typ.equals("DOPASUJ_TABELA")){
             this.Pkt = pytanie.getInt("pkt");
@@ -152,6 +170,9 @@ public class PytaniaNewFormat {
             if(pytanie.has("odp")) {this.Odpowiedzi = initS2D(pytanie.getJSONArray("odp")); hasOdpowiedzi=true;}
             if(pytanie.has("zdj")) {this.Zdj = pytanie.getString("zdj"); hasZdj=true;}
             if(pytanie.has("odp_zdj")) {this.OdpowiedziZdj = initS1D(pytanie.getJSONArray("odp_zdj")); hasOdpowiedziZdj=true; OdpZdjBitmap = new Bitmap[OdpowiedziZdj.length]; Arrays.fill(this.OdpZdjBitmap,null);}
+            if(pytanie.has("translatable_info")){
+                translatable = pytanie.getJSONObject("translatable_info");
+            }
         }
         if(Typ.equals("ZLOZONE")){
             //this.Podpunkty = pytanie.getInt("ilosc_podpunktow");
@@ -164,7 +185,6 @@ public class PytaniaNewFormat {
                 PytaniaNewFormat pytanieObj = new PytaniaNewFormat(podpunkt);
                 ListaZlozone.add(pytanieObj);
             }
-
         }
     }
     public List<PytaniaNewFormat> getListaZlozone() {
@@ -185,6 +205,11 @@ public class PytaniaNewFormat {
             }
         }
         return zmienna;
+    }
+
+    public String getMatura() {
+        if(hasMatura) return matura;
+        return "";
     }
 
     private String[][] initS2D(JSONArray array) throws JSONException {

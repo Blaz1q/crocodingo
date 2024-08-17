@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private List<List<PytaniaNewFormat>> podzielonanowaListaPytan = new ArrayList<>();
     private List<PytaniaNewFormat> NewlistaShuffled = new ArrayList<>();
     private List<PytaniaNewFormat> ListaPytanZlozone = new ArrayList<>();
+    private List<List<PytaniaNewFormat>> ListaMatur = new ArrayList<>();
     // zmienne do akcji
     private List<String> actions = new ArrayList<>();
     private List<Integer> popups = new ArrayList<>();
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     boolean czyZalogowany = false;
     boolean isExitEnabled = true;
     boolean IGNORE_UPDATES = false;
-    private static final boolean canShowAds = false;
+    private static final boolean canShowAds = true;
     int radioButtonChecked = 0;
     int currentVol = -1;
     int current_item_index=-1;
@@ -1036,38 +1037,40 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
     }
     public void loadPytania(String response){
+        getServerVersion(response);
         if(!response.equals("")){
             try{
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray jsonArray = jsonObject.getJSONArray("API");
                 PytaniaNewFormat pytanie = null;
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject pytania = jsonArray.getJSONObject(i);
                     //Log.d("pytanie"+i,""+pytania);
                     try{
+                        Log.d("index:",i+".");
+                        JSONObject pytania = jsonArray.getJSONObject(i);
                         pytanie = new PytaniaNewFormat(pytania);
+                        if(!pytanie.getTyp().equals("ZLOZONE")) {
+                            int h=0;
+                            boolean hasKat = false;
+                            while (h < listaKategoriiNew.size()) {
+                                if (listaKategoriiNew.get(h) == Integer.valueOf(pytanie.getKatID())) {
+                                    hasKat = true;
+                                    break;
+                                }
+                                h++;
+                            }
+                            if (!hasKat) {
+                                listaKategoriiNew.add(Integer.valueOf(pytanie.getKatID()));
+                                podzielonanowaListaPytan.add(new ArrayList<PytaniaNewFormat>());
+                            }
+                            podzielonanowaListaPytan.get(listaKategoriiNew.indexOf(Integer.valueOf(pytanie.getKatID()))).add(pytanie);
+                        }else{
+                            ListaPytanZlozone.add(pytanie);
+                        }
+                        nowaListaPytan.add(pytanie);
                     } catch (JSONException e){
                         Log.d("exception", String.valueOf(e));
                     }
-                    if(!pytanie.getTyp().equals("ZLOZONE")) {
-                        int h=0;
-                        boolean hasKat = false;
-                        while (h < listaKategoriiNew.size()) {
-                            if (listaKategoriiNew.get(h) == Integer.valueOf(pytanie.getKatID())) {
-                                hasKat = true;
-                                break;
-                            }
-                            h++;
-                        }
-                        if (!hasKat) {
-                            listaKategoriiNew.add(Integer.valueOf(pytanie.getKatID()));
-                            podzielonanowaListaPytan.add(new ArrayList<PytaniaNewFormat>());
-                        }
-                        podzielonanowaListaPytan.get(listaKategoriiNew.indexOf(Integer.valueOf(pytanie.getKatID()))).add(pytanie);
-                    }else{
-                        ListaPytanZlozone.add(pytanie);
-                    }
-                    nowaListaPytan.add(pytanie);
                 }
                 zaladowanodb=true;
                 Log.d("podzielona","kutas");
@@ -1076,17 +1079,18 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         Log.d("podzielona_"+podzielonanowaListaPytan.get(i).get(j).getKatID(),podzielonanowaListaPytan.get(i).get(j).getTyp());
                     }
                 }
-
                 isEverythingLoaded();
             }catch (JSONException e){
                 e.printStackTrace();
+                Toast.makeText(getApplicationContext(),"Wystąpił nieoczekiwany błąd",Toast.LENGTH_SHORT).show();
+                zaladowanodb=false;
+                isEverythingLoaded();
             }
         }else{
             Toast.makeText(getApplicationContext(),"nie udało się wczytać pytań",Toast.LENGTH_SHORT).show();
             zaladowanodb=false;
             isEverythingLoaded();
         }
-        getServerVersion(response);
     }
     public void loadOsiagnieciaFromAsset() {
         TextView cosiedzieje = findViewById(R.id.cosiedzieje);
