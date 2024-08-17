@@ -129,6 +129,23 @@
       "tresc": false,
       "wyjasnienie": false
     }
-  }
+  },
+{
+    "id":0,
+  "pkt":1,
+  "typ":"DOKONCZ",
+  "kat":"Potęgi",
+  "katID":2,
+  "poprawna":[1],
+  "matura": "maj 2024",
+  "tresc":["\\text{Liczba \\(\\left(\\frac{1}{16}\\right)^8\\cdot8^{16}\\) jest równa:}"],
+  "polecenie":["\\text{Dokończ zdanie. Wybierz właściwą odpowiedź spośród podanych.}"],
+  "odp":[["2^{24}","2^{16}","2^{12}","2^{8}"]],
+  "wyjasnienie":["\\left(\\frac{1}{16}\\right)^8\\cdot8^{16}=\\\\\\left(2^{-4}\\right)^8\\cdot\\left(2^3\\right)^{16}=\\\\2^{-32}\\cdot2^{48}=\\\\2^{-32+48}=\\\\2^{16}"],
+    "translatable_info": {
+      "odp": false,
+      "wyjasnienie": false
+    }
+}
 ]
 }
