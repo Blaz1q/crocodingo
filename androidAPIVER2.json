@@ -19,25 +19,13 @@
       }
     },
     {
-      "typ": "PF",
-      "kat": "Ciąg geometryczny",
-      "katID": 22,
-      "pkt": 1,
-      "id": 1,
-      "info": ["\\text{Ciąg \\(a_n\\) \\\\jest określony wzorem \\(a_n = (n−1)^n \\cdot (n − 5)\\) \\\\dla każdej liczby naturalnej \\(n \\geq 1\\).}"],
-      "polecenie": ["\\text{Oceń prawdziwość poniższych stwierdzeń. \\\\Wybierz P, jeśli stwierdzenie jest prawdziwe,\\\\ albo F – jeśli jest fałszywe.}"],
-      "odp": [["\\text{Pierwszy wyraz ciągu (\\(a_n\\)) \\\\jest dwa razy większy od \\\\trzeciego wyrazu tego ciągu.}","\\text{Wszystkie wyrazy ciągu (\\(a_n\\)) są dodatnie}"]],
-      "poprawna": [1,0],
-      "wyjasnienie": ["\\text{yeah}"]
-    },
-    {
       "typ": "OTWARTE",
       "kat": "Wykaz",
       "katID": 2,
-      "pkt":4,
+      "pkt":2,
       "id": 2,
       "polecenie": ["\\text{Wykaż, że dla każdej liczby naturalnej \\(n\\geq1\\) liczba \\(n^2 + (n + 1)^2 + (n + 2)^2 \\) przy dzieleniu przez 3 daje resztę 2.}"],
-      "poprawna": ["\\text{poprawna skrocona}"],
+      "poprawna": ["\\text{Udowodniono, rozpisując podaną liczbę z użyciem wzoru skróconego mnożenia.}"],
       "wyjasnienie": ["\\text{eyah}"]
     },
     {
@@ -120,7 +108,7 @@
     "pkt": 1,
     "id": 0,
     "matura": "maj 2024",
-    "info": "\\text{Dana jest nierówność \\(|x-1|\\ge3\\)}",
+    "info": ["\\text{Dana jest nierówność \\(|x-1|\\ge3\\)}"],
     "polecenie": ["\\text{Na którym rysunku poprawnie zaznaczono na osi}\\\\\\text{liczbowej zbiór wszystkich liczb rzeczywistych spełniających }\\\\\\text{powyższą nierówność? Wybierz właściwą odpowiedź}\\\\\\text{spośród podanych.}"],
     "odp_zdj": ["odp1.png","odp2.png","odp3.png","odp4.png"],
     "poprawna": [1],
