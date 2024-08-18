@@ -391,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Log.d("LANG",getLang());
         canplayanimations = false;
         //ResumeTimePassage(); //DEBUG ŚMIERĆ CROCO
-        checkForUpdates();
+        //checkForUpdates();
         LoadData();
         UpdateLocale();
         loadJSONFromAsset();
@@ -3259,7 +3259,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             mainlayout.addView(wyjasnienie);
         }
     }//todo: rozplącz to gówno
-    public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){ //TODO: dodaj punkty
+    public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){
         switch (pytanie.getTyp()){
             case "DOKONCZ":
             {
@@ -3469,13 +3469,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 ImageView zdj = new ImageView(this);
                 TextView polecenie = new TextView(this);
                 TextView wyjasnienie = new TextView(this);
+                TextView tresc = new TextView(this);
                 Spinner[] dropdown = new Spinner[pytanie.getPoprawnaOdp().length];
+                tresc.setBackground(Math_syn.set_Math(pytanie.getTresc(getLang())));
                 polecenie.setBackground(Math_syn.set_Math(pytanie.getPolecenie(getLang())));
                 info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
                 wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
                 mainlayout.addView(info);
                 loadImgFromServer(zdj,pytanie,mainlayout);
                 mainlayout.addView(polecenie);
+                mainlayout.addView(tresc);
                 TextView[] odpowiedz = new Button[0];
                 if(pytanie.hasOdpowiedzi) {
                     odpowiedz = new TextView[pytanie.getOdpowiedzi(getLang()).length];
@@ -3555,6 +3558,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 ImageView zdj = new ImageView(this);
                 TextView wyjasnienie = new TextView(this);
                 TextView polecenie = new TextView(this);
+                TextView tresc = new TextView(this);
                 Spinner[] dropdown = new Spinner[pytanie.getPoprawnaOdp().length];
                 info.setBackground(Math_syn.set_Math(pytanie.getInfo(getLang())));
                 wyjasnienie.setBackground(Math_syn.set_Math(pytanie.getWyjasnienie(getLang())));
@@ -4314,7 +4318,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         for(int i=0;i<podzielonanowaListaPytan.size();i++){
             PreShuffle.clear();
             localqnum=0;
-            localqnum = rand_num.nextInt(3)+1;
+            localqnum = rand_num.nextInt(2)+1;
             PreShuffle.addAll(podzielonanowaListaPytan.get(i));
             Collections.shuffle(PreShuffle);
             if(localqnum<=podzielonanowaListaPytan.get(i).size()){

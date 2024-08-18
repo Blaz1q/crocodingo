@@ -26,5 +26,9 @@
   {
     "Wersja": "RELEASE 1.8.1",
     "Opis": [["Poprawiono nieoczekiwany błąd","dodano wyświetlanie punktów"],["Fixed unknown bug","Now questions display points"]]
+  },
+  {
+    "Wersja": "RELEASE 1.8.2",
+    "Opis": [["Poprawiono nieoczekiwany błąd","Poprawiono ładowanie pytań"],["Fixed unknown bug","Poprawiono ładowanie pytań"]]
   }
 ]
