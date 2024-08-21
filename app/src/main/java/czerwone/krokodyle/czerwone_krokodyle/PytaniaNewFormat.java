@@ -586,7 +586,7 @@ public class PytaniaNewFormat {
                 }
                 localpkt-=dupe_number;
                 return Math.max(localpkt, 0);
-            }
+            }//todo: napraw to.
             case "DOKONCZ":
             case "DOPASUJ_TABELA":
                 if(checkPoprawna()) return Pkt;

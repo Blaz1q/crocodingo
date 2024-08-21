@@ -3121,6 +3121,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
         }
     }
+    boolean addProgressOnce = true;
+    private void addProgressPojedyncze(PytaniaNewFormat pytanie){
+        if(addProgressOnce){
+            Log.d("Progress!!","pojedyncze");
+            if(pytanie.czy_wszystko_zaznaczyl()&&pytanie.czyPoprawne()){
+                addProgress(0);
+                addProgressOnce = false;
+            }
+        }
+    }
     public void GenerujDokoncz(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){
         TextView info = new TextView(this);
         ImageView zdj = new ImageView(this);
@@ -3166,10 +3176,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 //odpowiedz[i].setBackground(Math_syn.set_Math("\\text{"+alfabet.charAt(i)+": }"+pytanie.getOdpowiedzi(getLang())[i]));
             }
         }
-        if(pytanie.hasOdpowiedzi) {
-            for (int i = 0; i < odpowiedz.length; i++) {
-                switch (testMode) {
-                    case 0: {
+        for(int i=0;i<arrayLength;i++){
+            switch (testMode) {
+                case 0:
+                    if(pytanie.hasOdpowiedzi){
                         if (!checkpoprawne) {
                             int finalI = i;
                             Button[] finalOdpowiedz = odpowiedz;
@@ -3186,34 +3196,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             });
                         }
                     }
-                    break;
-                    case 1: {
-                        int finalI = i;
-                        Button[] finalOdpowiedz1 = odpowiedz;
-                        odpowiedz[i].setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    if (!pytanie.czy_wszystko_zaznaczyl())
-                                        pytanie.setOdpowiedziUzytkownika(finalI, 0);
-                                    setSelectedNewPytaniaDOKONCZ(finalOdpowiedz1, pytanie, true);
-                                    Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
-                                    wyjasnienieButton.setEnabled(true);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-                    break;
-                }
-                mainlayout.addView(odpowiedz[i]);
-            }
-            setSelectedNewPytaniaDOKONCZ(odpowiedz, pytanie, checkpoprawne);
-        }else if(pytanie.hasOdpowiedziZdj){
-            for (int i = 0; i < odpowiedzZdj.length; i++) {
-                switch (testMode) {
-                    case 0: {
+                    else if(pytanie.hasOdpowiedziZdj){
                         if (!checkpoprawne) {
                             int finalI = i;
                             ImageButton[] finalOdpowiedz = odpowiedzZdj;
@@ -3231,15 +3214,37 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         }
                     }
                     break;
-                    case 1: {
+                case 1:
+                    if(pytanie.hasOdpowiedzi){
+                        int finalI = i;
+                        Button[] finalOdpowiedz1 = odpowiedz;
+                        odpowiedz[i].setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    if (!pytanie.czy_wszystko_zaznaczyl()){
+                                        pytanie.setOdpowiedziUzytkownika(finalI, 0);
+                                    }
+                                    addProgressPojedyncze(pytanie);
+                                    setSelectedNewPytaniaDOKONCZ(finalOdpowiedz1, pytanie, true);
+                                    Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
+                                    wyjasnienieButton.setEnabled(true);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }else if(pytanie.hasOdpowiedziZdj){
                         int finalI = i;
                         ImageButton[] finalOdpowiedz1 = odpowiedzZdj;
                         odpowiedzZdj[i].setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 try {
-                                    if (!pytanie.czy_wszystko_zaznaczyl())
+                                    if (!pytanie.czy_wszystko_zaznaczyl()){
                                         pytanie.setOdpowiedziUzytkownika(finalI, 0);
+                                    }
+                                    addProgressPojedyncze(pytanie);
                                     setSelectedNewPytaniaDOKONCZ(finalOdpowiedz1, pytanie, true);
                                     Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
                                     wyjasnienieButton.setEnabled(true);
@@ -3250,15 +3255,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         });
                     }
                     break;
-                }
+            }
+            if(pytanie.hasOdpowiedzi){
+                mainlayout.addView(odpowiedz[i]);
+            }
+            if(pytanie.hasOdpowiedziZdj){
                 mainlayout.addView(odpowiedzZdj[i]);
             }
+        }
+        if(pytanie.hasOdpowiedzi){
+            setSelectedNewPytaniaDOKONCZ(odpowiedz, pytanie, checkpoprawne);
+        }else if(pytanie.hasOdpowiedziZdj){
             setSelectedNewPytaniaDOKONCZ(odpowiedzZdj, pytanie, checkpoprawne);
         }
         if(WyjasnijToggle){
             mainlayout.addView(wyjasnienie);
         }
-    }//todo: rozplącz to gówno
+    }
     public void addNewPytania(PytaniaNewFormat pytanie,LinearLayout mainlayout,boolean checkpoprawne,int testMode){
         switch (pytanie.getTyp()){
             case "DOKONCZ":
@@ -3339,6 +3352,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                             Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
                                             wyjasnienieButton.setEnabled(true);
                                         }
+                                        addProgressPojedyncze(pytanie);
                                     } catch (Exception e){
                                         e.printStackTrace();
                                     }
@@ -3355,6 +3369,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                             Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
                                             wyjasnienieButton.setEnabled(true);
                                         }
+                                        addProgressPojedyncze(pytanie);
                                     } catch (Exception e){
                                         e.printStackTrace();
                                     }
@@ -3430,6 +3445,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                         for(int k=0;k<radioButtons.length;k++){
                                             radioButtons[k].setEnabled(false);
                                         }//głupie ale działa
+                                        addProgressPojedyncze(pytanie);
                                     } catch (Exception e){
                                         e.printStackTrace();
                                     }
@@ -3518,6 +3534,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                                     Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
                                                     wyjasnienieButton.setEnabled(true);
                                                 }
+                                                addProgressPojedyncze(pytanie);
                                             break;
                                         }
                                     }
@@ -3611,6 +3628,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                     if(pytanie.czy_wszystko_zaznaczyl()){
                                     Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
                                     wyjasnienieButton.setEnabled(true);
+                                    addProgressPojedyncze(pytanie);
                                 }
                                 break;
                                 }
@@ -3708,6 +3726,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                                                     if(!pytanie.czy_zaznaczyl(1)) pytanie.setOdpowiedziUzytkownika(finalJ,1);
                                                     setSelectedNewPytaniaDOPASUJ_TABELA(odp,pytanie,2,true);
                                                 }
+                                            addProgressPojedyncze(pytanie);
                                             }
                                         break;
                                     }
@@ -4439,6 +4458,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         Collections.shuffle(shuffled);
         shuffled.get(0).reset();
         globalpytanie = shuffled.get(0);
+
         set_new_pytanie_poj(shuffled.get(0),layout);
     }
     int Global_katID = -1;
@@ -4469,11 +4489,13 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         mainlayout.removeAllViews();
         miejsceNaPytanie_global = mainlayout;
         WyjasnijToggle = false;
+        addProgressOnce = true;
         addNewPytania(pytanie,mainlayout,false,1);
         Button wyjasnienieButton = findViewById(R.id.wyjasnienie_poj);
         wyjasnienieButton.setEnabled(false);
+        addProgress(0);
     }
-    public void set_new_pytanie(PytaniaNewFormat pytanie,LinearLayout mainlayout,Boolean checkPoprawne){//todo dodaj tutaj pkty.
+    public void set_new_pytanie(PytaniaNewFormat pytanie,LinearLayout mainlayout,Boolean checkPoprawne){
         mainlayout.removeAllViews();
         RelativeLayout rootLayout = new RelativeLayout(this);
         RelativeLayout.LayoutParams rootParams = new RelativeLayout.LayoutParams(
