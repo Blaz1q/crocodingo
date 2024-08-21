@@ -565,7 +565,7 @@ public class PytaniaNewFormat {
                 if(OdpowiedziUzytkownika[0]==-1) return 0;
                 else return OdpowiedziUzytkownika[0];
             case "PF":
-            case "DOPASUJ_1TO1":
+            case "DOPASUJ_1TO1":{
                 int incorrect=0;
                 int localpkty = Pkt;
                 for(int i=0;i<OdpowiedziUzytkownika.length;i++){
@@ -574,16 +574,21 @@ public class PytaniaNewFormat {
                 localpkty-=incorrect;
                 if(localpkty<0) localpkty=0;
                 return  localpkty;
+            }
             case "DOPASUJ_NTO1":{
                 int dupe_number =0;
                 int localpkt =Pkt;
+                int incorrect=0;
                 for (int j=0;j<OdpowiedziUzytkownika.length;j++){
                     for (int k=j+1;k<OdpowiedziUzytkownika.length;k++){
                         if (k!=j && OdpowiedziUzytkownika[k] == OdpowiedziUzytkownika[j]){
-                        dupe_number++;
+                            if(checkPoprawna(j)) dupe_number++;
                         }
+                        Log.d("array:","j["+j+"]k["+k+"]");
                     }
+                    if(!checkPoprawnaAny(j)) incorrect++;
                 }
+                localpkt-=incorrect;
                 localpkt-=dupe_number;
                 return Math.max(localpkt, 0);
             }//todo: napraw to.
