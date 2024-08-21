@@ -52,4 +52,4 @@ Kopiowanie, modyfikowanie i/lub dystrybucja kodu źródłowego nie jest dozwolon
 - Dodano Jedzenie
 ### Dalsze wersje weszły w zapomnienie....
 ## 1.0.0 (ALPHA)
-- Wydanie Crocodingo w najprostrzej formie
+- Wydanie Crocodingo w najprostszej formie
