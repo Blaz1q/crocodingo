@@ -19,54 +19,6 @@
       }
     },
     {
-      "typ": "OTWARTE",
-      "kat": "Wykaz",
-      "katID": 2,
-      "pkt":2,
-      "id": 2,
-      "polecenie": ["\\text{Wykaż, że dla każdej liczby naturalnej \\(n\\geq1\\) liczba \\(n^2 + (n + 1)^2 + (n + 2)^2 \\) przy dzieleniu przez 3 daje resztę 2.}"],
-      "poprawna": ["\\text{Udowodniono, rozpisując podaną liczbę z użyciem wzoru skróconego mnożenia.}"],
-      "wyjasnienie": ["\\text{eyah}"]
-    },
-    {
-      "typ": "DOPASUJ_NTO1",
-      "kat": "zbiór",
-      "katID": 3,
-      "id": 3,
-      "pkt": 2,
-      "info": ["\\text{dopasuj nto1}"],
-      "polecenie": ["\\text{kutas}"],
-      "poprawna": [1,2],
-      "odp": [["1","2","3","4","5"]],
-      "wyjasnienie": ["\\text{mega wyjasnienie}"]
-    },
-    {
-      "typ": "DOPASUJ_TABELA",
-      "kat": "zbiór",
-      "katID": 3,
-      "id": 4,
-      "pkt": 1,
-      "info": ["\\text{super info}"],
-      "polecenie": ["\\text{kutas}"],
-      "tresc": ["\\text{tresc do tabeli}"],
-      "poprawna": [1,2],
-      "tabela": [[["k1z1","k1z2"],["k2z1"],["k3z1","k3z2","k3z3"]]],
-      "wyjasnienie": ["\\text{mega wyjasnienie}"]
-    },
-  {
-    "typ": "DOPASUJ_1TO1",
-    "kat": "zbiór",
-    "katID": 3,
-    "id": 3,
-    "pkt": 2,
-    "info": ["\\text{dopasuj 1to1}"],
-    "polecenie": ["\\text{Uzupełnij tabelę.\\\\Zaznacz właściwą odpowiedź,\\\\wybraną spośród oznaczonych Literami A-F}"],
-    "polecenie_mini": [["\\text{Dziedziną funkcji \\(f\\) jest zbiór}","\\text{Zbiorem wartości funkcji \\(f\\) jest zbiór}"]],
-    "poprawna": [1,2],
-    "odp": [["[-3,-1]\\cup[1,3]","(-3,3)","(-3,-1)\\cup(1,3)","[-5,-1]\\cup[1,5]","(-5,5)","(-5,-1)\\cup(1,5)"]],
-    "wyjasnienie": ["\\text{mega wyjasnienie}"]
-  },
-    {
     "typ": "ZLOZONE",
     "id": 148,
     "zdj": "czerwiec2024-zlozone.png",
