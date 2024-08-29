@@ -30,7 +30,7 @@
       "pkt":1,
       "id": 2,
       "polecenie": ["\\text{Uzupełnij poniższe zadanie tak, aby zdanie było prawdziwe.}"],
-      "poprawna": [0,4],
+      "poprawna": ["[0,4]"],
       "wyjasnienie": ["\\text{aby rozwiązać to zadanie, trzeba poprawnie odczytać funkcje.}"]
     },
       {
